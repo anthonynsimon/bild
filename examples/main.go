@@ -29,7 +29,7 @@ func main() {
 	}
 
 	for _, file := range files {
-		loadApplySave(file.Name(), bild.Invert)
+		loadApplySave(file.Name(), bild.Box)
 	}
 }
 
