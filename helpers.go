@@ -35,3 +35,20 @@ func apply(img *image.NRGBA, fn func(color.NRGBA) color.NRGBA) {
 		}
 	})
 }
+
+func min(a, b uint8) uint8 {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func clamp(value, min, max int) int {
+	if value > max {
+		return max
+	}
+	if value < min {
+		return min
+	}
+	return value
+}
