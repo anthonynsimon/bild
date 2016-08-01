@@ -5,50 +5,32 @@ import (
 	"image/color"
 )
 
-// returns an NRGBA copy of the image
-func cloneAsNRGBA(src image.Image) *image.NRGBA {
-	bounds := src.Bounds()
-	w, h := bounds.Max.X, bounds.Max.Y
-	result := image.NewNRGBA(bounds)
+// Invert returns a negated version of the image
+func Invert(src image.Image) *image.NRGBA {
+	img := cloneAsNRGBA(src)
 
-	parallelize(h, func(start, end int) {
-		for x := 0; x < w; x++ {
-			for y := start; y < end; y++ {
-				result.Set(x, y, src.At(x, y))
-			}
-		}
-	})
+	fn := func(c color.NRGBA) color.NRGBA {
+		return color.NRGBA{255 - c.R, 255 - c.G, 255 - c.B, c.A}
+	}
 
-	return result
+	apply(img, fn)
+
+	return img
 }
 
-// applies a color function to each pixel on an image
-func apply(img *image.NRGBA, fn func(color.NRGBA) color.NRGBA) {
-	bounds := img.Bounds()
-	w, h := bounds.Max.X, bounds.Max.Y
+// Brightness returns a copy of the image with the adjusted brightness
+func Brightness(src image.Image, value int) *image.NRGBA {
+	img := cloneAsNRGBA(src)
 
-	parallelize(h, func(start, end int) {
-		for x := 0; x < w; x++ {
-			for y := start; y < end; y++ {
-				img.Set(x, y, fn(img.NRGBAAt(x, y)))
-			}
-		}
-	})
-}
+	fn := func(c color.NRGBA) color.NRGBA {
+		return color.NRGBA{
+			uint8(clamp(int(c.R)+value, 0, 255)),
+			uint8(clamp(int(c.G)+value, 0, 255)),
+			uint8(clamp(int(c.B)+value, 0, 255)),
+			c.A}
+	}
 
-func min(a, b uint8) uint8 {
-	if a < b {
-		return a
-	}
-	return b
-}
+	apply(img, fn)
 
-func clamp(value, min, max int) int {
-	if value > max {
-		return max
-	}
-	if value < min {
-		return min
-	}
-	return value
+	return img
 }
