@@ -41,5 +41,7 @@ func loadApplySave(filename string, fn func(image.Image) *image.NRGBA) {
 
 	result := fn(img)
 
-	bild.Save(filepath.Join(OutDir, filename), result, bild.PNG)
+	if err := bild.Save(filepath.Join(OutDir, filename), result, bild.PNG); err != nil {
+		panic(err)
+	}
 }
