@@ -3,6 +3,7 @@ package bild
 import (
 	"image"
 	"image/color"
+	"math"
 )
 
 // returns an NRGBA copy of the image
@@ -51,4 +52,8 @@ func clamp(value, min, max int) int {
 		return min
 	}
 	return value
+}
+
+func gaussianFunc(x, y, sigma float64) float64 {
+	return math.Exp(-(x*x/sigma + y*y/sigma))
 }
