@@ -2,7 +2,6 @@ package bild
 
 import (
 	"image"
-	"image/color"
 	"math"
 )
 
@@ -11,14 +10,14 @@ type ConvolutionMatrix interface {
 	At(x, y int) float64
 	Sum() float64
 	Normalized() ConvolutionMatrix
-	Size() int
+	Diameter() int
 }
 
 // NewKernel returns a kernel of the provided size
-func NewKernel(size int) *Kernel {
-	matrix := make([][]float64, size)
-	for i := 0; i < size; i++ {
-		matrix[i] = make([]float64, size)
+func NewKernel(diameter int) *Kernel {
+	matrix := make([][]float64, diameter)
+	for i := 0; i < diameter; i++ {
+		matrix[i] = make([]float64, diameter)
 	}
 	return &Kernel{matrix}
 }
@@ -31,9 +30,9 @@ type Kernel struct {
 // Sum returns the cumulative value of the matrix
 func (k *Kernel) Sum() float64 {
 	var sum float64
-	size := k.Size()
-	for x := 0; x < size; x++ {
-		for y := 0; y < size; y++ {
+	diameter := k.Diameter()
+	for x := 0; x < diameter; x++ {
+		for y := 0; y < diameter; y++ {
 			sum += k.Matrix[x][y]
 		}
 	}
@@ -43,11 +42,11 @@ func (k *Kernel) Sum() float64 {
 // Normalized returns a new Kernel with normalized values
 func (k *Kernel) Normalized() ConvolutionMatrix {
 	sum := k.Sum()
-	size := k.Size()
-	nk := NewKernel(size)
+	diameter := k.Diameter()
+	nk := NewKernel(diameter)
 
-	for x := 0; x < size; x++ {
-		for y := 0; y < size; y++ {
+	for x := 0; x < diameter; x++ {
+		for y := 0; y < diameter; y++ {
 			nk.Matrix[x][y] = k.Matrix[x][y] / sum
 		}
 	}
@@ -55,8 +54,8 @@ func (k *Kernel) Normalized() ConvolutionMatrix {
 	return nk
 }
 
-// Size returns the row/column length for the kernel
-func (k *Kernel) Size() int {
+// Diameter returns the row/column length for the kernel
+func (k *Kernel) Diameter() int {
 	return len(k.Matrix)
 }
 
@@ -66,49 +65,44 @@ func (k *Kernel) At(x, y int) float64 {
 }
 
 // convolute applies a convolution matrix (kernel) to an image
-func convolute(src *image.NRGBA, k ConvolutionMatrix) *image.NRGBA {
-	bounds := src.Bounds()
-	w, h := bounds.Max.X, bounds.Max.Y
-	dst := image.NewNRGBA(bounds)
+func convolute(img image.Image, k ConvolutionMatrix) *image.RGBA {
+	bounds := img.Bounds()
+	src := CloneAsRGBA(img)
+	dst := image.NewRGBA(bounds)
 
-	nk := k.Normalized()
-	nksize := nk.Size()
+	w, h := bounds.Max.X, bounds.Max.Y
+	diameter := k.Diameter()
+	normKernel := k.Normalized()
 
 	parallelize(h, func(start, end int) {
 		for x := 0; x < w; x++ {
 			for y := start; y < end; y++ {
 
 				var r, g, b, a float64
-				for kx := 0; kx < nksize; kx++ {
-					for ky := 0; ky < nksize; ky++ {
-						ix := x + kx - (nksize / 2)
-						iy := y + ky - (nksize / 2)
+				for kx := 0; kx < diameter; kx++ {
+					for ky := 0; ky < diameter; ky++ {
+						ix := x - diameter/2 + kx
+						iy := y - diameter/2 + ky
 
-						// Quality threshold
-						if nk.At(kx, ky) < 0.00001 {
-							continue
-						}
-						if ix < 0 || kx >= w || iy < 0 || ky >= h {
+						if ix < 0 || ix >= w || iy < 0 || iy >= h {
 							continue
 						}
 
-						c := src.NRGBAAt(ix, iy)
-						m := nk.At(kx, ky)
-						r += float64(c.R) * m
-						g += float64(c.G) * m
-						b += float64(c.B) * m
-						a += float64(c.A) * m
+						ipos := iy*dst.Stride + ix*4
+						kvalue := normKernel.At(kx, ky)
+						r += float64(src.Pix[ipos+0]) * kvalue
+						g += float64(src.Pix[ipos+1]) * kvalue
+						b += float64(src.Pix[ipos+2]) * kvalue
+						a += float64(src.Pix[ipos+3]) * kvalue
 					}
 				}
 
-				c := color.NRGBA{
-					uint8(math.Max(0, math.Min(r, 255))),
-					uint8(math.Max(0, math.Min(g, 255))),
-					uint8(math.Max(0, math.Min(b, 255))),
-					uint8(math.Max(0, math.Min(a, 255))),
-				}
+				pos := y*dst.Stride + x*4
 
-				dst.Set(x, y, c)
+				dst.Pix[pos+0] = uint8(math.Max(math.Min(r, 255), 0))
+				dst.Pix[pos+1] = uint8(math.Max(math.Min(g, 255), 0))
+				dst.Pix[pos+2] = uint8(math.Max(math.Min(b, 255), 0))
+				dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
 			}
 		}
 	})
