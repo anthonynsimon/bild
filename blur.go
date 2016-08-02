@@ -6,7 +6,7 @@ import (
 )
 
 // BoxBlur returns a blurred (average) version of the image
-func BoxBlur(src image.Image, size int) *image.NRGBA {
+func BoxBlur(src image.Image, size int) *image.RGBA {
 	k := NewKernel(size)
 
 	for x := 0; x < size; x++ {
@@ -15,22 +15,20 @@ func BoxBlur(src image.Image, size int) *image.NRGBA {
 		}
 	}
 
-	img := cloneAsNRGBA(src)
-	return convolute(img, k)
+	return convolute(src, k)
 }
 
 // GaussianBlur returns a smoothly blurred version of the image using
 // a Gaussian function
-func GaussianBlur(src image.Image, radius float64) *image.NRGBA {
-	size := int(math.Ceil(radius) * 2)
-	k := NewKernel(size + 1)
+func GaussianBlur(src image.Image, radius float64) *image.RGBA {
+	size := int(math.Ceil(2*radius + 1))
+	k := NewKernel(size)
 
-	for x := 0; x <= size; x++ {
-		for y := 0; y <= size; y++ {
+	for x := 0; x < size; x++ {
+		for y := 0; y < size; y++ {
 			k.Matrix[x][y] = gaussianFunc(float64(x)-radius, float64(y)-radius, radius)
 		}
 	}
 
-	img := cloneAsNRGBA(src)
-	return convolute(img, k)
+	return convolute(src, k)
 }
