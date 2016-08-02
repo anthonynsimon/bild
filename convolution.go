@@ -3,6 +3,7 @@ package bild
 import (
 	"image"
 	"image/color"
+	"math"
 )
 
 // ConvolutionMatrix interface for use as an image Kernel
@@ -71,7 +72,7 @@ func convolute(src *image.NRGBA, k ConvolutionMatrix) *image.NRGBA {
 	dst := image.NewNRGBA(bounds)
 
 	nk := k.Normalized()
-	nksize := k.Size()
+	nksize := nk.Size()
 
 	parallelize(h, func(start, end int) {
 		for x := 0; x < w; x++ {
@@ -87,20 +88,27 @@ func convolute(src *image.NRGBA, k ConvolutionMatrix) *image.NRGBA {
 						if nk.At(kx, ky) < 0.00001 {
 							continue
 						}
-
 						if ix < 0 || kx >= w || iy < 0 || ky >= h {
 							continue
 						}
 
 						c := src.NRGBAAt(ix, iy)
-						r += float64(c.R) * nk.At(kx, ky)
-						g += float64(c.G) * nk.At(kx, ky)
-						b += float64(c.B) * nk.At(kx, ky)
-						a += float64(c.A) * nk.At(kx, ky)
+						m := nk.At(kx, ky)
+						r += float64(c.R) * m
+						g += float64(c.G) * m
+						b += float64(c.B) * m
+						a += float64(c.A) * m
 					}
 				}
 
-				dst.Set(x, y, color.NRGBA{uint8(r), uint8(g), uint8(b), uint8(a)})
+				c := color.NRGBA{
+					uint8(math.Max(0, math.Min(r, 255))),
+					uint8(math.Max(0, math.Min(g, 255))),
+					uint8(math.Max(0, math.Min(b, 255))),
+					uint8(math.Max(0, math.Min(a, 255))),
+				}
+
+				dst.Set(x, y, c)
 			}
 		}
 	})
