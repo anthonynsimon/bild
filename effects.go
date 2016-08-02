@@ -24,3 +24,32 @@ func Grayscale(src image.Image) *image.RGBA {
 
 	return img
 }
+
+// EdgeDetection returns a copy of the image with it's edges marked
+func EdgeDetection(src image.Image, radius float64) *image.RGBA {
+	size := int(math.Ceil(2*radius + 1))
+	k := NewKernel(size)
+
+	for x := 0; x < size; x++ {
+		for y := 0; y < size; y++ {
+			v := -1.0
+			if x == size/2 && y == size/2 {
+				v = float64(size*size) - 1
+			}
+			k.Matrix[x][y] = v
+
+		}
+	}
+	return convolute(src, k, 0)
+}
+
+// Emboss returns a copy of the image with a 3D shadow effect
+func Emboss(src image.Image) *image.RGBA {
+	k := Kernel{[][]float64{
+		{-1, -1, 0},
+		{-1, 0, 1},
+		{0, 1, 1},
+	}}
+
+	return convolute(src, &k, 128)
+}
