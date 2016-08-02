@@ -5,8 +5,8 @@ import (
 	"math"
 )
 
-// Box Blur returns a blurred (average) version of the image
-func Box(src image.Image, size int) *image.NRGBA {
+// BoxBlur returns a blurred (average) version of the image
+func BoxBlur(src image.Image, size int) *image.NRGBA {
 	k := NewKernel(size)
 
 	for x := 0; x < size; x++ {
@@ -19,9 +19,9 @@ func Box(src image.Image, size int) *image.NRGBA {
 	return convolute(img, k)
 }
 
-// Gaussian Blur returns a blurred version of the image using
-// an approximation to the Gaussian function
-func Gaussian(src image.Image, radius float64) *image.NRGBA {
+// GaussianBlur returns a smoothly blurred version of the image using
+// a Gaussian function
+func GaussianBlur(src image.Image, radius float64) *image.NRGBA {
 	size := int(math.Ceil(radius) * 2)
 	k := NewKernel(size + 1)
 
