@@ -65,14 +65,13 @@ func (k *Kernel) At(x, y int) float64 {
 }
 
 // convolute applies a convolution matrix (kernel) to an image
-func convolute(img image.Image, k ConvolutionMatrix) *image.RGBA {
+func convolute(img image.Image, k ConvolutionMatrix, bias float64) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
 	dst := image.NewRGBA(bounds)
 
 	w, h := bounds.Max.X, bounds.Max.Y
 	diameter := k.Diameter()
-	normKernel := k.Normalized()
 
 	parallelize(h, func(start, end int) {
 		for x := 0; x < w; x++ {
@@ -89,7 +88,7 @@ func convolute(img image.Image, k ConvolutionMatrix) *image.RGBA {
 						}
 
 						ipos := iy*dst.Stride + ix*4
-						kvalue := normKernel.At(kx, ky)
+						kvalue := k.At(kx, ky)
 						r += float64(src.Pix[ipos+0]) * kvalue
 						g += float64(src.Pix[ipos+1]) * kvalue
 						b += float64(src.Pix[ipos+2]) * kvalue
@@ -99,10 +98,10 @@ func convolute(img image.Image, k ConvolutionMatrix) *image.RGBA {
 
 				pos := y*dst.Stride + x*4
 
-				dst.Pix[pos+0] = uint8(math.Max(math.Min(r, 255), 0))
-				dst.Pix[pos+1] = uint8(math.Max(math.Min(g, 255), 0))
-				dst.Pix[pos+2] = uint8(math.Max(math.Min(b, 255), 0))
-				dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
+				dst.Pix[pos+0] = uint8(math.Max(math.Min(r+bias, 255), 0))
+				dst.Pix[pos+1] = uint8(math.Max(math.Min(g+bias, 255), 0))
+				dst.Pix[pos+2] = uint8(math.Max(math.Min(b+bias, 255), 0))
+				dst.Pix[pos+3] = uint8(math.Max(math.Min(a+bias, 255), 0))
 			}
 		}
 	})
