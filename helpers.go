@@ -37,7 +37,7 @@ func apply(img *image.NRGBA, fn func(color.NRGBA) color.NRGBA) {
 	})
 }
 
-func clamp(value, min, max int) int {
+func clamp(value, min, max float64) float64 {
 	if value > max {
 		return max
 	}

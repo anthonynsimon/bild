@@ -3,6 +3,7 @@ package bild
 import (
 	"image"
 	"image/color"
+	"math"
 )
 
 // Invert returns a negated version of the image
@@ -19,14 +20,19 @@ func Invert(src image.Image) *image.NRGBA {
 }
 
 // Brightness returns a copy of the image with the adjusted brightness
-func Brightness(src image.Image, value int) *image.NRGBA {
+func Brightness(src image.Image, percentChange float64) *image.NRGBA {
 	img := cloneAsNRGBA(src)
 
 	fn := func(c color.NRGBA) color.NRGBA {
+
+		changeR := 1 + percentChange/100.0
+		changeG := 1 + percentChange/100.0
+		changeB := 1 + percentChange/100.0
+
 		return color.NRGBA{
-			uint8(clamp(int(c.R)+value, 0, 255)),
-			uint8(clamp(int(c.G)+value, 0, 255)),
-			uint8(clamp(int(c.B)+value, 0, 255)),
+			uint8(clamp(math.Ceil(float64(c.R)*changeR), 0, 255)),
+			uint8(clamp(math.Ceil(float64(c.G)*changeG), 0, 255)),
+			uint8(clamp(math.Ceil(float64(c.B)*changeB), 0, 255)),
 			c.A}
 	}
 
