@@ -14,14 +14,20 @@ func parallelize(size int, fn func(start, end int)) {
 	} else {
 		var wg sync.WaitGroup
 		procs := runtime.GOMAXPROCS(0)
-		partSize := size / procs
-		wg.Add(procs)
 
-		for i := 0; i < procs; i++ {
-			i := i // needed for the closure to work
+		counter := size
+		partSize := size / procs
+		for counter > 0 {
+			start := counter - partSize
+			end := counter
+			if start < 0 {
+				start = 0
+			}
+			counter -= partSize
+			wg.Add(1)
 			go func() {
 				defer wg.Done()
-				fn(partSize*i, partSize*(i+1))
+				fn(start, end)
 			}()
 		}
 
