@@ -1,3 +1,2 @@
 .DS_Store
-examples/out/*.*
-!examples/out/.gitkeep
+examples/*
