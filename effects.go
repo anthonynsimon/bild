@@ -44,7 +44,7 @@ func EdgeDetection(src image.Image, radius float64) *image.RGBA {
 
 		}
 	}
-	return convolute(src, k, 0)
+	return Convolute(src, k, 0)
 }
 
 // Emboss returns a copy of the image with a 3D shadow effect
@@ -55,5 +55,5 @@ func Emboss(src image.Image) *image.RGBA {
 		{0, 1, 1},
 	}}
 
-	return convolute(src, &k, 128)
+	return Convolute(src, &k, 128)
 }

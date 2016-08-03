@@ -20,7 +20,7 @@ func BoxBlur(src image.Image, radius float64) *image.RGBA {
 		}
 	}
 
-	return convolute(src, k.Normalized(), 0)
+	return Convolute(src, k.Normalized(), 0)
 }
 
 // GaussianBlur returns a smoothly blurred version of the image using
@@ -39,5 +39,5 @@ func GaussianBlur(src image.Image, radius float64) *image.RGBA {
 		}
 	}
 
-	return convolute(src, k.Normalized(), 0)
+	return Convolute(src, k.Normalized(), 0)
 }

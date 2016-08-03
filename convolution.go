@@ -77,8 +77,9 @@ func (k *Kernel) String() string {
 	return result
 }
 
-// convolute applies a convolution matrix (kernel) to an image
-func convolute(img image.Image, k ConvolutionMatrix, bias float64) *image.RGBA {
+// Convolute applies a convolution matrix (kernel) to an image.
+// It wraps the image for indices outside of image dimensions
+func Convolute(img image.Image, k ConvolutionMatrix, bias float64) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
 	dst := image.NewRGBA(bounds)
