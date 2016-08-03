@@ -27,6 +27,10 @@ func Grayscale(src image.Image) *image.RGBA {
 
 // EdgeDetection returns a copy of the image with it's edges marked
 func EdgeDetection(src image.Image, radius float64) *image.RGBA {
+	if radius <= 0 {
+		return CloneAsRGBA(src)
+	}
+
 	size := int(math.Ceil(2*radius + 1))
 	k := NewKernel(size)
 

@@ -6,7 +6,12 @@ import (
 )
 
 // BoxBlur returns a blurred (average) version of the image
-func BoxBlur(src image.Image, size int) *image.RGBA {
+func BoxBlur(src image.Image, radius float64) *image.RGBA {
+	if radius <= 0 {
+		return CloneAsRGBA(src)
+	}
+
+	size := int(math.Ceil(2*radius + 1))
 	k := NewKernel(size)
 
 	for x := 0; x < size; x++ {
@@ -21,6 +26,10 @@ func BoxBlur(src image.Image, size int) *image.RGBA {
 // GaussianBlur returns a smoothly blurred version of the image using
 // a Gaussian function
 func GaussianBlur(src image.Image, radius float64) *image.RGBA {
+	if radius <= 0 {
+		return CloneAsRGBA(src)
+	}
+
 	size := int(math.Ceil(2*radius + 1))
 	k := NewKernel(size)
 
