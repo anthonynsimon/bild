@@ -26,7 +26,7 @@ func GaussianBlur(src image.Image, radius float64) *image.RGBA {
 
 	for x := 0; x < size; x++ {
 		for y := 0; y < size; y++ {
-			k.Matrix[x][y] = gaussianFunc(float64(x)-radius, float64(y)-radius, radius)
+			k.Matrix[x][y] = gaussianFunc(float64(x)-radius, float64(y)-radius, 4*radius)
 		}
 	}
 
