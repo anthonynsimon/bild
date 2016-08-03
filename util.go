@@ -42,7 +42,7 @@ func Encode(w io.Writer, img image.Image, format Format) error {
 	case PNG:
 		err = png.Encode(w, img)
 	case JPEG:
-		err = jpeg.Encode(w, img, &jpeg.Options{Quality: 100})
+		err = jpeg.Encode(w, img, &jpeg.Options{Quality: 95})
 	}
 
 	return err
