@@ -1,6 +1,7 @@
 package bild
 
 import (
+	"fmt"
 	"image"
 	"math"
 )
@@ -64,6 +65,18 @@ func (k *Kernel) At(x, y int) float64 {
 	return k.Matrix[x][y]
 }
 
+func (k *Kernel) String() string {
+	result := ""
+	size := k.Diameter()
+	for x := 0; x < size; x++ {
+		result += fmt.Sprintf("\n")
+		for y := 0; y < size; y++ {
+			result += fmt.Sprintf("%-8.4f", k.Matrix[x][y])
+		}
+	}
+	return result
+}
+
 // convolute applies a convolution matrix (kernel) to an image
 func convolute(img image.Image, k ConvolutionMatrix, bias float64) *image.RGBA {
 	bounds := img.Bounds()
@@ -80,12 +93,8 @@ func convolute(img image.Image, k ConvolutionMatrix, bias float64) *image.RGBA {
 				var r, g, b, a float64
 				for kx := 0; kx < diameter; kx++ {
 					for ky := 0; ky < diameter; ky++ {
-						ix := x - diameter/2 + kx
-						iy := y - diameter/2 + ky
-
-						if ix < 0 || ix >= w || iy < 0 || iy >= h {
-							continue
-						}
+						ix := (x - diameter/2 + kx + w) % (w)
+						iy := (y - diameter/2 + ky + h) % h
 
 						ipos := iy*dst.Stride + ix*4
 						kvalue := k.At(kx, ky)
