@@ -75,15 +75,24 @@ func Overlay(a image.Image, b image.Image) *image.RGBA {
 		a1 := float64(c1.A) / 255
 
 		var r2, g2, b2, a2 uint8
-		if 0.3*r1+0.6*g1+0.1*b1 < 0.5 {
+		if r1 < 0.5 {
 			r2 = uint8(clampFloat64(r0*r1*2*255, 0, 255))
-			g2 = uint8(clampFloat64(g0*g1*2*255, 0, 255))
-			b2 = uint8(clampFloat64(b0*b1*2*255, 0, 255))
-			a2 = uint8(clampFloat64(a0*a1*2*255, 0, 255))
 		} else {
 			r2 = uint8(clampFloat64((1-2*(1-r0)*(1-r1))*255, 0, 255))
+		}
+		if g1 < 0.5 {
+			g2 = uint8(clampFloat64(g0*g1*2*255, 0, 255))
+		} else {
 			g2 = uint8(clampFloat64((1-2*(1-g0)*(1-g1))*255, 0, 255))
+		}
+		if b1 < 0.5 {
+			b2 = uint8(clampFloat64(b0*b1*2*255, 0, 255))
+		} else {
 			b2 = uint8(clampFloat64((1-2*(1-b0)*(1-b1))*255, 0, 255))
+		}
+		if a1 < 0.5 {
+			a2 = uint8(clampFloat64(a0*a1*2*255, 0, 255))
+		} else {
 			a2 = uint8(clampFloat64((1-2*(1-a0)*(1-a1))*255, 0, 255))
 		}
 
@@ -189,6 +198,54 @@ func Opacity(a image.Image, b image.Image, percent float64) *image.RGBA {
 		g2 := uint8(clampFloat64((percent*g1+(1-percent)*g0)*255, 0, 255))
 		b2 := uint8(clampFloat64((percent*b1+(1-percent)*b0)*255, 0, 255))
 		a2 := uint8(clampFloat64((percent*a1+(1-percent)*a0)*255, 0, 255))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// Darken returns an image which has the respective darker pixel from each input image
+func Darken(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+		r0 := float64(c0.R)
+		g0 := float64(c0.G)
+		b0 := float64(c0.B)
+		a0 := float64(c0.A)
+
+		r1 := float64(c1.R)
+		g1 := float64(c1.G)
+		b1 := float64(c1.B)
+		a1 := float64(c1.A)
+
+		r2 := uint8(math.Min(r0, r1))
+		g2 := uint8(math.Min(g0, g1))
+		b2 := uint8(math.Min(b0, b1))
+		a2 := uint8(math.Min(a0, a1))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// Lighten returns an image which has the respective brighter pixel from each input image
+func Lighten(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+		r0 := float64(c0.R)
+		g0 := float64(c0.G)
+		b0 := float64(c0.B)
+		a0 := float64(c0.A)
+
+		r1 := float64(c1.R)
+		g1 := float64(c1.G)
+		b1 := float64(c1.B)
+		a1 := float64(c1.A)
+
+		r2 := uint8(math.Max(r0, r1))
+		g2 := uint8(math.Max(g0, g1))
+		b2 := uint8(math.Max(b0, b1))
+		a2 := uint8(math.Max(a0, a1))
 
 		return color.RGBA{r2, g2, b2, a2}
 	})
