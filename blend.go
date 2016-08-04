@@ -3,6 +3,7 @@ package bild
 import (
 	"image"
 	"image/color"
+	"math"
 )
 
 type normColor struct {
@@ -135,6 +136,59 @@ func Screen(a image.Image, b image.Image) *image.RGBA {
 		g2 := uint8(clampFloat64((1-(1-g0)*(1-g1))*255, 0, 255))
 		b2 := uint8(clampFloat64((1-(1-b0)*(1-b1))*255, 0, 255))
 		a2 := uint8(clampFloat64((1-(1-a0)*(1-a1))*255, 0, 255))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// Difference returns an image which represts the absolute difference between the input images
+func Difference(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+
+		r0 := float64(c0.R) / 255
+		g0 := float64(c0.G) / 255
+		b0 := float64(c0.B) / 255
+		a0 := float64(c0.A) / 255
+
+		r1 := float64(c1.R) / 255
+		g1 := float64(c1.G) / 255
+		b1 := float64(c1.B) / 255
+		a1 := float64(c1.A) / 255
+
+		r2 := uint8(clampFloat64(math.Abs(r0-r1)*255, 0, 255))
+		g2 := uint8(clampFloat64(math.Abs(g0-g1)*255, 0, 255))
+		b2 := uint8(clampFloat64(math.Abs(b0-b1)*255, 0, 255))
+		a2 := uint8(clampFloat64(math.Abs(a0-a1)*255, 0, 255))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// Opacity returns an image which blends the two input images by the percentage provided.
+// Percent must be of range 0 <= percent <= 1.0
+func Opacity(a image.Image, b image.Image, percent float64) *image.RGBA {
+	percent = clampFloat64(percent, 0, 1.0)
+
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+
+		r0 := float64(c0.R) / 255
+		g0 := float64(c0.G) / 255
+		b0 := float64(c0.B) / 255
+		a0 := float64(c0.A) / 255
+
+		r1 := float64(c1.R) / 255
+		g1 := float64(c1.G) / 255
+		b1 := float64(c1.B) / 255
+		a1 := float64(c1.A) / 255
+
+		r2 := uint8(clampFloat64((percent*r1+(1-percent)*r0)*255, 0, 255))
+		g2 := uint8(clampFloat64((percent*g1+(1-percent)*g0)*255, 0, 255))
+		b2 := uint8(clampFloat64((percent*b1+(1-percent)*b0)*255, 0, 255))
+		a2 := uint8(clampFloat64((percent*a1+(1-percent)*a0)*255, 0, 255))
 
 		return color.RGBA{r2, g2, b2, a2}
 	})
