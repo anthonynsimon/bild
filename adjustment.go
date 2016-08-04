@@ -26,9 +26,9 @@ func Brightness(src image.Image, percentChange float64) *image.RGBA {
 		changeB := 1 + percentChange/100.0
 
 		return color.RGBA{
-			uint8(clamp(math.Ceil(float64(c.R)*changeR), 0, 255)),
-			uint8(clamp(math.Ceil(float64(c.G)*changeG), 0, 255)),
-			uint8(clamp(math.Ceil(float64(c.B)*changeB), 0, 255)),
+			uint8(clampFloat64(math.Ceil(float64(c.R)*changeR), 0, 255)),
+			uint8(clampFloat64(math.Ceil(float64(c.G)*changeG), 0, 255)),
+			uint8(clampFloat64(math.Ceil(float64(c.B)*changeB), 0, 255)),
 			c.A}
 	}
 
