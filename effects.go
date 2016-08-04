@@ -11,7 +11,7 @@ func Grayscale(src image.Image) *image.RGBA {
 	fn := func(c color.RGBA) color.RGBA {
 
 		v := 0.3*float64(c.R) + 0.6*float64(c.G) + 0.1*float64(c.B)
-		result := uint8(clamp(math.Ceil(v), 0, 255))
+		result := uint8(clampFloat64(math.Ceil(v), 0, 255))
 
 		return color.RGBA{
 			result,
@@ -56,6 +56,27 @@ func Emboss(src image.Image) *image.RGBA {
 	}}
 
 	return Convolute(src, &k, 128)
+}
+
+// Sobel returns an image emphasising edges using an approximation to the Sobel–Feldman operator
+func Sobel(src image.Image) *image.RGBA {
+
+	hk := Kernel{[][]float64{
+		{1, 2, 1},
+		{0, 0, 0},
+		{-1, -2, -1},
+	}}
+
+	vk := Kernel{[][]float64{
+		{-1, 0, 1},
+		{-2, 0, 2},
+		{-1, 0, 1},
+	}}
+
+	vSobel := Convolute(src, &vk, 0)
+	hSobel := Convolute(src, &hk, 0)
+
+	return Add(Multiply(vSobel, vSobel), Multiply(hSobel, hSobel))
 }
 
 // Median returns a new image in which each pixel is the mean of it's neighbors
