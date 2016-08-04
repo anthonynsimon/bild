@@ -74,16 +74,16 @@ func Overlay(a image.Image, b image.Image) *image.RGBA {
 		a1 := float64(c1.A) / 255
 
 		var r2, g2, b2, a2 uint8
-		if 0.3*r0+0.6*g0+0.1*b0 < 0.5 {
+		if 0.3*r1+0.6*g1+0.1*b1 < 0.5 {
 			r2 = uint8(clampFloat64(r0*r1*2*255, 0, 255))
 			g2 = uint8(clampFloat64(g0*g1*2*255, 0, 255))
 			b2 = uint8(clampFloat64(b0*b1*2*255, 0, 255))
 			a2 = uint8(clampFloat64(a0*a1*2*255, 0, 255))
 		} else {
-			r2 = uint8(clampFloat64((1-(2*(1-r0)*(1-r1)))*255, 0, 255))
-			g2 = uint8(clampFloat64((1-(2*(1-g0)*(1-g1)))*255, 0, 255))
-			b2 = uint8(clampFloat64((1-(2*(1-b0)*(1-b1)))*255, 0, 255))
-			a2 = uint8(clampFloat64((1-(2*(1-a0)*(1-a1)))*255, 0, 255))
+			r2 = uint8(clampFloat64((1-2*(1-r0)*(1-r1))*255, 0, 255))
+			g2 = uint8(clampFloat64((1-2*(1-g0)*(1-g1))*255, 0, 255))
+			b2 = uint8(clampFloat64((1-2*(1-b0)*(1-b1))*255, 0, 255))
+			a2 = uint8(clampFloat64((1-2*(1-a0)*(1-a1))*255, 0, 255))
 		}
 
 		return color.RGBA{r2, g2, b2, a2}
