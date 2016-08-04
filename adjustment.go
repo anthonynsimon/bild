@@ -6,17 +6,6 @@ import (
 	"math"
 )
 
-// Invert returns a negated version of the image
-func Invert(src image.Image) *image.RGBA {
-	fn := func(c color.RGBA) color.RGBA {
-		return color.RGBA{255 - c.R, 255 - c.G, 255 - c.B, c.A}
-	}
-
-	img := apply(src, fn)
-
-	return img
-}
-
 // Brightness returns a copy of the image with the adjusted brightness
 func Brightness(src image.Image, percentChange float64) *image.RGBA {
 	fn := func(c color.RGBA) color.RGBA {
