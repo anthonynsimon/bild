@@ -38,20 +38,20 @@ func Add(a image.Image, b image.Image) *image.RGBA {
 func Multiply(a image.Image, b image.Image) *image.RGBA {
 	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
-		r0 := float64(c0.R) / 255
-		g0 := float64(c0.G) / 255
-		b0 := float64(c0.B) / 255
-		a0 := float64(c0.A) / 255
+		r0 := float64(c0.R)
+		g0 := float64(c0.G)
+		b0 := float64(c0.B)
+		a0 := float64(c0.A)
 
-		r1 := float64(c1.R) / 255
-		g1 := float64(c1.G) / 255
-		b1 := float64(c1.B) / 255
-		a1 := float64(c1.A) / 255
+		r1 := float64(c1.R)
+		g1 := float64(c1.G)
+		b1 := float64(c1.B)
+		a1 := float64(c1.A)
 
-		r2 := uint8(r0 * r1 * 255)
-		g2 := uint8(g0 * g1 * 255)
-		b2 := uint8(b0 * b1 * 255)
-		a2 := uint8(a0 * a1 * 255)
+		r2 := uint8(r0 * r1 / 255)
+		g2 := uint8(g0 * g1 / 255)
+		b2 := uint8(b0 * b1 / 255)
+		a2 := uint8(a0 * a1 / 255)
 
 		return color.RGBA{r2, g2, b2, a2}
 	})
@@ -85,6 +85,56 @@ func Overlay(a image.Image, b image.Image) *image.RGBA {
 			b2 = uint8(clampFloat64((1-(2*(1-b0)*(1-b1)))*255, 0, 255))
 			a2 = uint8(clampFloat64((1-(2*(1-a0)*(1-a1)))*255, 0, 255))
 		}
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// SoftLight returns an image has the Soft Light blend mode applied
+func SoftLight(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+
+		r0 := float64(c0.R) / 255
+		g0 := float64(c0.G) / 255
+		b0 := float64(c0.B) / 255
+		a0 := float64(c0.A) / 255
+
+		r1 := float64(c1.R) / 255
+		g1 := float64(c1.G) / 255
+		b1 := float64(c1.B) / 255
+		a1 := float64(c1.A) / 255
+
+		r2 := uint8(clampFloat64(((1-2*r1)*r0*r0+2*r0*r1)*255, 0, 255))
+		g2 := uint8(clampFloat64(((1-2*g1)*g0*g0+2*g0*g1)*255, 0, 255))
+		b2 := uint8(clampFloat64(((1-2*b1)*b0*b0+2*b0*b1)*255, 0, 255))
+		a2 := uint8(clampFloat64(((1-2*a1)*a0*a0+2*a0*a1)*255, 0, 255))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// Screen returns an image that has the screen blend mode applied
+func Screen(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+
+		r0 := float64(c0.R) / 255
+		g0 := float64(c0.G) / 255
+		b0 := float64(c0.B) / 255
+		a0 := float64(c0.A) / 255
+
+		r1 := float64(c1.R) / 255
+		g1 := float64(c1.G) / 255
+		b1 := float64(c1.B) / 255
+		a1 := float64(c1.A) / 255
+
+		r2 := uint8(clampFloat64((1-(1-r0)*(1-r1))*255, 0, 255))
+		g2 := uint8(clampFloat64((1-(1-g0)*(1-g1))*255, 0, 255))
+		b2 := uint8(clampFloat64((1-(1-b0)*(1-b1))*255, 0, 255))
+		a2 := uint8(clampFloat64((1-(1-a0)*(1-a1))*255, 0, 255))
 
 		return color.RGBA{r2, g2, b2, a2}
 	})
