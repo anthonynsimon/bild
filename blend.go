@@ -177,6 +177,181 @@ func Difference(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
+// Divide returns an image after Dividing the value of A by B
+func Divide(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+
+		r0 := float64(c0.R) / 255
+		g0 := float64(c0.G) / 255
+		b0 := float64(c0.B) / 255
+		a0 := float64(c0.A) / 255
+
+		r1 := float64(c1.R) / 255
+		g1 := float64(c1.G) / 255
+		b1 := float64(c1.B) / 255
+		a1 := float64(c1.A) / 255
+
+		r2 := uint8(clampFloat64((r0/r1)*255, 0, 255))
+		g2 := uint8(clampFloat64((g0/g1)*255, 0, 255))
+		b2 := uint8(clampFloat64((b0/b1)*255, 0, 255))
+		a2 := uint8(clampFloat64((a0/a1)*255, 0, 255))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// ColorBurn returns an image after applying a Color Burn blend mode
+func ColorBurn(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+
+		r0 := float64(c0.R) / 255
+		g0 := float64(c0.G) / 255
+		b0 := float64(c0.B) / 255
+		a0 := float64(c0.A) / 255
+
+		r1 := float64(c1.R) / 255
+		g1 := float64(c1.G) / 255
+		b1 := float64(c1.B) / 255
+		a1 := float64(c1.A) / 255
+
+		r2 := uint8(clampFloat64((1-(1-r0)/r1)*255, 0, 255))
+		g2 := uint8(clampFloat64((1-(1-g0)/g1)*255, 0, 255))
+		b2 := uint8(clampFloat64((1-(1-b0)/b1)*255, 0, 255))
+		a2 := uint8(clampFloat64((1-(1-a0)/a1)*255, 0, 255))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// Exclusion returns an image after applying a Exclusion blend mode
+func Exclusion(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+
+		r0 := float64(c0.R) / 255
+		g0 := float64(c0.G) / 255
+		b0 := float64(c0.B) / 255
+		a0 := float64(c0.A) / 255
+
+		r1 := float64(c1.R) / 255
+		g1 := float64(c1.G) / 255
+		b1 := float64(c1.B) / 255
+		a1 := float64(c1.A) / 255
+
+		r2 := uint8(clampFloat64((r0+r1-2*r0*r1)*255, 0, 255))
+		g2 := uint8(clampFloat64((g0+g1-2*g0*g1)*255, 0, 255))
+		b2 := uint8(clampFloat64((b0+b1-2*b0*b1)*255, 0, 255))
+		a2 := uint8(clampFloat64((a0+a1-2*a0*a1)*255, 0, 255))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// ColorDodge returns an image after applying a Color Dodge blend mode
+func ColorDodge(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+
+		r0 := float64(c0.R) / 255
+		g0 := float64(c0.G) / 255
+		b0 := float64(c0.B) / 255
+		a0 := float64(c0.A) / 255
+
+		r1 := float64(c1.R) / 255
+		g1 := float64(c1.G) / 255
+		b1 := float64(c1.B) / 255
+		a1 := float64(c1.A) / 255
+
+		r2 := uint8(clampFloat64((r0/(1-r1))*255, 0, 255))
+		g2 := uint8(clampFloat64((g0/(1-g1))*255, 0, 255))
+		b2 := uint8(clampFloat64((b0/(1-b1))*255, 0, 255))
+		a2 := uint8(clampFloat64((a0/(1-a1))*255, 0, 255))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// LinearBurn returns an image after applying a Linear Burn blend mode
+func LinearBurn(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+
+		r0 := float64(c0.R)
+		g0 := float64(c0.G)
+		b0 := float64(c0.B)
+		a0 := float64(c0.A)
+
+		r1 := float64(c1.R)
+		g1 := float64(c1.G)
+		b1 := float64(c1.B)
+		a1 := float64(c1.A)
+
+		r2 := uint8(clampFloat64(r1+r0-255, 0, 255))
+		g2 := uint8(clampFloat64(g1+g0-255, 0, 255))
+		b2 := uint8(clampFloat64(b1+b0-255, 0, 255))
+		a2 := uint8(clampFloat64(a1+a0-255, 0, 255))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// LinearLight returns an image after applying a Linear Light blend mode
+func LinearLight(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+
+		r0 := float64(c0.R)
+		g0 := float64(c0.G)
+		b0 := float64(c0.B)
+		a0 := float64(c0.A)
+
+		r1 := float64(c1.R)
+		g1 := float64(c1.G)
+		b1 := float64(c1.B)
+		a1 := float64(c1.A)
+
+		r2 := uint8(clampFloat64(r1+2*r0-255, 0, 255))
+		g2 := uint8(clampFloat64(g1+2*g0-255, 0, 255))
+		b2 := uint8(clampFloat64(b1+2*b0-255, 0, 255))
+		a2 := uint8(clampFloat64(a1+2*a0-255, 0, 255))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
+// Substract returns an image after substracting the value of B from A
+func Substract(a image.Image, b image.Image) *image.RGBA {
+	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+
+		r0 := float64(c0.R)
+		g0 := float64(c0.G)
+		b0 := float64(c0.B)
+		a0 := float64(c0.A)
+
+		r1 := float64(c1.R)
+		g1 := float64(c1.G)
+		b1 := float64(c1.B)
+		a1 := float64(c1.A)
+
+		r2 := uint8(clampFloat64(r0-r1, 0, 255))
+		g2 := uint8(clampFloat64(g0-g1, 0, 255))
+		b2 := uint8(clampFloat64(b0-b1, 0, 255))
+		a2 := uint8(clampFloat64(a0-a1, 0, 255))
+
+		return color.RGBA{r2, g2, b2, a2}
+	})
+
+	return dst
+}
+
 // Opacity returns an image which blends the two input images by the percentage provided.
 // Percent must be of range 0 <= percent <= 1.0
 func Opacity(a image.Image, b image.Image, percent float64) *image.RGBA {
