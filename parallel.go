@@ -5,18 +5,19 @@ import (
 	"sync"
 )
 
-// ParallelizationEnabled sets if package should use goroutines when possible
-var ParallelizationEnabled = true
+func init() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
+}
 
 func parallelize(size int, fn func(start, end int)) {
-	if !ParallelizationEnabled {
+	procs := runtime.GOMAXPROCS(0)
+	if procs <= 1 {
 		fn(0, size)
 	} else {
 		var wg sync.WaitGroup
-		procs := runtime.GOMAXPROCS(0)
-
 		counter := size
 		partSize := size / procs
+
 		for counter > 0 {
 			start := counter - partSize
 			end := counter
