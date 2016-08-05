@@ -1,6 +1,7 @@
 # Bild
 
 [![GoDoc](https://godoc.org/github.com/anthonynsimon/bild?status.svg)](https://godoc.org/github.com/anthonynsimon/bild)
+[![Build Status](https://travis-ci.org/anthonynsimon/bild.svg?branch=master)](https://travis-ci.org/anthonynsimon/bild)
 
 Simple image processing in Go with parallel processing support  
 
