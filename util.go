@@ -46,7 +46,7 @@ func Open(filename string) (image.Image, error) {
 // Usage example:
 //		// Encode an image to a writer in PNG format,
 //		// returns an error if something went wrong
-//		err := Encode(outFile, img, Format.PNG)
+//		err := Encode(outFile, img, bild.PNG)
 //
 func Encode(w io.Writer, img image.Image, format Format) error {
 	var err error
@@ -66,7 +66,7 @@ func Encode(w io.Writer, img image.Image, format Format) error {
 // Usage example:
 //		// Save an image to a file in PNG format,
 //		// returns an error if something went wrong
-//		err := Save("exampleName", img, Format.PNG)
+//		err := Save("exampleName", img, bild.PNG)
 //
 func Save(filename string, img image.Image, format Format) error {
 	filename = strings.TrimSuffix(filename, filepath.Ext(filename))
