@@ -1,5 +1,8 @@
 # Bild
-Simple image processing in Go with parallel processing support
+
+[![GoDoc](https://godoc.org/github.com/anthonynsimon/bild?status.svg)](https://godoc.org/github.com/anthonynsimon/bild)
+
+Simple image processing in Go with parallel processing support  
 
 Blend Modes:
 - Add
