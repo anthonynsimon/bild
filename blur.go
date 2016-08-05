@@ -5,7 +5,8 @@ import (
 	"math"
 )
 
-// BoxBlur returns a blurred (average) version of the image
+// BoxBlur returns a blurred (average) version of the image.
+// Radius must be larger than 0.
 func BoxBlur(src image.Image, radius float64) *image.RGBA {
 	if radius <= 0 {
 		return CloneAsRGBA(src)
@@ -20,11 +21,11 @@ func BoxBlur(src image.Image, radius float64) *image.RGBA {
 		}
 	}
 
-	return Convolute(src, k.Normalized(), 0)
+	return Convolute(src, k.Normalized(), 0, true)
 }
 
 // GaussianBlur returns a smoothly blurred version of the image using
-// a Gaussian function
+// a Gaussian function. Radius must be larger than 0.
 func GaussianBlur(src image.Image, radius float64) *image.RGBA {
 	if radius <= 0 {
 		return CloneAsRGBA(src)
@@ -39,5 +40,5 @@ func GaussianBlur(src image.Image, radius float64) *image.RGBA {
 		}
 	}
 
-	return Convolute(src, k.Normalized(), 0)
+	return Convolute(src, k.Normalized(), 0, true)
 }

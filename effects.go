@@ -6,7 +6,7 @@ import (
 	"math"
 )
 
-// Invert returns a negated version of the image
+// Invert returns a negated version of the image.
 func Invert(src image.Image) *image.RGBA {
 	fn := func(c color.RGBA) color.RGBA {
 		return color.RGBA{255 - c.R, 255 - c.G, 255 - c.B, c.A}
@@ -17,7 +17,8 @@ func Invert(src image.Image) *image.RGBA {
 	return img
 }
 
-// Grayscale returns a copy of the image in Grayscale using the weights: 0.3R + 0.6G + 0.1B
+// Grayscale returns a copy of the image in Grayscale using the weights
+// 0.3R + 0.6G + 0.1B as a heuristic.
 func Grayscale(src image.Image) *image.RGBA {
 	fn := func(c color.RGBA) color.RGBA {
 
@@ -36,7 +37,7 @@ func Grayscale(src image.Image) *image.RGBA {
 	return img
 }
 
-// EdgeDetection returns a copy of the image with it's edges marked
+// EdgeDetection returns a copy of the image with it's edges highlighted.
 func EdgeDetection(src image.Image, radius float64) *image.RGBA {
 	if radius <= 0 {
 		return CloneAsRGBA(src)
@@ -55,10 +56,11 @@ func EdgeDetection(src image.Image, radius float64) *image.RGBA {
 
 		}
 	}
-	return Convolute(src, k, 0)
+	return Convolute(src, k, 0, false)
 }
 
-// Emboss returns a copy of the image with a 3D shadow effect
+// Emboss returns a copy of the image in which each pixel has been
+// replaced either by a highlight or a shadow representation.
 func Emboss(src image.Image) *image.RGBA {
 	k := Kernel{[][]float64{
 		{-1, -1, 0},
@@ -66,10 +68,10 @@ func Emboss(src image.Image) *image.RGBA {
 		{0, 1, 1},
 	}}
 
-	return Convolute(src, &k, 128)
+	return Convolute(src, &k, 128, false)
 }
 
-// Sobel returns an image emphasising edges using an approximation to the Sobel–Feldman operator
+// Sobel returns an image emphasising edges using an approximation to the Sobel–Feldman operator.
 func Sobel(src image.Image) *image.RGBA {
 
 	hk := Kernel{[][]float64{
@@ -84,13 +86,14 @@ func Sobel(src image.Image) *image.RGBA {
 		{-1, 0, 1},
 	}}
 
-	vSobel := Convolute(src, &vk, 0)
-	hSobel := Convolute(src, &hk, 0)
+	vSobel := Convolute(src, &vk, 0, false)
+	hSobel := Convolute(src, &hk, 0, false)
 
 	return Add(Multiply(vSobel, vSobel), Multiply(hSobel, hSobel))
 }
 
-// Median returns a new image in which each pixel is the mean of it's neighbors
+// Median returns a new image in which each pixel is the median of it's neighbors.
+// Size sets the amount of neighbors to be searched.
 func Median(img image.Image, size int) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)

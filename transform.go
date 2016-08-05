@@ -2,7 +2,7 @@ package bild
 
 import "image"
 
-// FlipH returns a horizontally flipped version of the image
+// FlipH returns a horizontally flipped version of the image.
 func FlipH(img image.Image) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
@@ -28,7 +28,7 @@ func FlipH(img image.Image) *image.RGBA {
 	return dst
 }
 
-// FlipV returns a vertically flipped version of the image
+// FlipV returns a vertically flipped version of the image.
 func FlipV(img image.Image) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)

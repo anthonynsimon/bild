@@ -1,3 +1,8 @@
+/*Package bild provides a collection of common image processing functions.
+The input images must implement the image.Image interface and the functions return an *image.RGBA.
+
+The aim of this project is simplicity in use and development over high performance, but most algorithms are designed to be efficient and make use of parallelism when available.
+It is based on standard Go packages to reduce dependecy use and development abstractions.*/
 package bild
 
 import (
@@ -10,9 +15,10 @@ type normColor struct {
 	r, g, b, a float64
 }
 
-// Add returns an image with the added color values of two images
-func Add(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// Add combines the foreground and background images by adding their values and
+// returns the resulting image.
+func Add(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R)
 		g0 := float64(c0.G)
@@ -35,9 +41,10 @@ func Add(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// Multiply returns an image with the normalized color values of two images multiplied
-func Multiply(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// Multiply combines the foreground and background images by multiplying their
+// normalized values and returns the resulting image.
+func Multiply(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R)
 		g0 := float64(c0.G)
@@ -60,9 +67,10 @@ func Multiply(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// Overlay returns an image that combines Multiply and Screen blend modes
-func Overlay(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// Overlay combines the foreground and background images by using Multiply when channel values < 0.5
+// or using Screen otherwise and returns the resulting image.
+func Overlay(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R) / 255
 		g0 := float64(c0.G) / 255
@@ -102,9 +110,10 @@ func Overlay(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// SoftLight returns an image has the Soft Light blend mode applied
-func SoftLight(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// SoftLight combines the foreground and background images by using Pegtop's Soft Light formula and
+// returns the resulting image.
+func SoftLight(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R) / 255
 		g0 := float64(c0.G) / 255
@@ -127,9 +136,10 @@ func SoftLight(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// Screen returns an image that has the screen blend mode applied
-func Screen(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// Screen combines the foreground and background images by inverting, multiplying and inverting the output.
+// The result is a brighter image which is then returned.
+func Screen(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R) / 255
 		g0 := float64(c0.G) / 255
@@ -152,9 +162,10 @@ func Screen(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// Difference returns an image which represts the absolute difference between the input images
-func Difference(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// Difference calculates the absolute difference between the foreground and background images and
+// returns the resulting image.
+func Difference(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R) / 255
 		g0 := float64(c0.G) / 255
@@ -177,9 +188,10 @@ func Difference(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// Divide returns an image after Dividing the value of A by B
-func Divide(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// Divide combines the foreground and background images by diving the values from the background
+// by the foreground and returns the resulting image.
+func Divide(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R) / 255
 		g0 := float64(c0.G) / 255
@@ -202,9 +214,10 @@ func Divide(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// ColorBurn returns an image after applying a Color Burn blend mode
-func ColorBurn(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// ColorBurn combines the foreground and background images by dividing the inverted
+// background by the foreground image and then inverting the result which is then returned.
+func ColorBurn(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R) / 255
 		g0 := float64(c0.G) / 255
@@ -227,9 +240,10 @@ func ColorBurn(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// Exclusion returns an image after applying a Exclusion blend mode
-func Exclusion(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// Exclusion combines the foreground and background images applying the Exclusion blend mode and
+// returns the resulting image.
+func Exclusion(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R) / 255
 		g0 := float64(c0.G) / 255
@@ -252,9 +266,10 @@ func Exclusion(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// ColorDodge returns an image after applying a Color Dodge blend mode
-func ColorDodge(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// ColorDodge combines the foreground and background images by dividing background by the
+// inverted foreground image and returns the result.
+func ColorDodge(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R) / 255
 		g0 := float64(c0.G) / 255
@@ -277,9 +292,10 @@ func ColorDodge(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// LinearBurn returns an image after applying a Linear Burn blend mode
-func LinearBurn(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// LinearBurn combines the foreground and background images by adding them and
+// then substracting 255 (1.0 in normalized scale). The resulting image is then returned.
+func LinearBurn(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R)
 		g0 := float64(c0.G)
@@ -302,9 +318,10 @@ func LinearBurn(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// LinearLight returns an image after applying a Linear Light blend mode
-func LinearLight(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// LinearLight combines the foreground and background images by a mix of a Linear Dodge and
+// Linear Burn operation. The resulting image is then returned.
+func LinearLight(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R)
 		g0 := float64(c0.G)
@@ -327,9 +344,10 @@ func LinearLight(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// Substract returns an image after substracting the value of B from A
-func Substract(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// Substract combines the foreground and background images by substracting the background from the
+// foreground. The result is then returned.
+func Substract(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R)
 		g0 := float64(c0.G)
@@ -354,10 +372,10 @@ func Substract(a image.Image, b image.Image) *image.RGBA {
 
 // Opacity returns an image which blends the two input images by the percentage provided.
 // Percent must be of range 0 <= percent <= 1.0
-func Opacity(a image.Image, b image.Image, percent float64) *image.RGBA {
+func Opacity(bg image.Image, fg image.Image, percent float64) *image.RGBA {
 	percent = clampFloat64(percent, 0, 1.0)
 
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R) / 255
 		g0 := float64(c0.G) / 255
@@ -380,9 +398,10 @@ func Opacity(a image.Image, b image.Image, percent float64) *image.RGBA {
 	return dst
 }
 
-// Darken returns an image which has the respective darker pixel from each input image
-func Darken(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// Darken combines the foreground and background images by picking the darkest value per channel
+// for each pixel. The result is then returned.
+func Darken(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 		r0 := float64(c0.R)
 		g0 := float64(c0.G)
 		b0 := float64(c0.B)
@@ -404,9 +423,10 @@ func Darken(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-// Lighten returns an image which has the respective brighter pixel from each input image
-func Lighten(a image.Image, b image.Image) *image.RGBA {
-	dst := blendOperation(a, b, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
+// Lighten combines the foreground and background images by picking the brightest value per channel
+// for each pixel. The result is then returned.
+func Lighten(bg image.Image, fg image.Image) *image.RGBA {
+	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 		r0 := float64(c0.R)
 		g0 := float64(c0.G)
 		b0 := float64(c0.B)
@@ -428,15 +448,15 @@ func Lighten(a image.Image, b image.Image) *image.RGBA {
 	return dst
 }
 
-func blendOperation(a image.Image, b image.Image, fn func(color.RGBA, color.RGBA) color.RGBA) *image.RGBA {
+func blendOperation(bg image.Image, fg image.Image, fn func(color.RGBA, color.RGBA) color.RGBA) *image.RGBA {
 	// Currently only equal size images are supported
-	if a.Bounds() != b.Bounds() {
+	if bg.Bounds() != fg.Bounds() {
 		panic("blend operation: only equal size images are supported")
 	}
 
-	bounds := a.Bounds()
-	srcA := CloneAsRGBA(a)
-	srcB := CloneAsRGBA(b)
+	bounds := bg.Bounds()
+	srcA := CloneAsRGBA(bg)
+	srcB := CloneAsRGBA(fg)
 
 	dst := image.NewRGBA(bounds)
 

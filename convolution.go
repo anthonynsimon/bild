@@ -6,15 +6,15 @@ import (
 	"math"
 )
 
-// ConvolutionMatrix interface for use as an image Kernel
+// ConvolutionMatrix interface for use as an image Kernel.
 type ConvolutionMatrix interface {
 	At(x, y int) float64
 	Sum() float64
 	Normalized() ConvolutionMatrix
-	Diameter() int
+	Length() int
 }
 
-// NewKernel returns a kernel of the provided size
+// NewKernel returns a kernel of the provided size.
 func NewKernel(diameter int) *Kernel {
 	matrix := make([][]float64, diameter)
 	for i := 0; i < diameter; i++ {
@@ -23,15 +23,15 @@ func NewKernel(diameter int) *Kernel {
 	return &Kernel{matrix}
 }
 
-// Kernel is used as a convolution matrix
+// Kernel is used as a convolution matrix.
 type Kernel struct {
 	Matrix [][]float64
 }
 
-// Sum returns the cumulative value of the matrix
+// Sum returns the cumulative value of the matrix.
 func (k *Kernel) Sum() float64 {
 	var sum float64
-	diameter := k.Diameter()
+	diameter := k.Length()
 	for x := 0; x < diameter; x++ {
 		for y := 0; y < diameter; y++ {
 			sum += k.Matrix[x][y]
@@ -40,14 +40,14 @@ func (k *Kernel) Sum() float64 {
 	return sum
 }
 
-// Normalized returns a new Kernel with normalized values
+// Normalized returns a new Kernel with normalized values.
 func (k *Kernel) Normalized() ConvolutionMatrix {
 	sum := k.Sum()
-	diameter := k.Diameter()
-	nk := NewKernel(diameter)
+	length := k.Length()
+	nk := NewKernel(length)
 
-	for x := 0; x < diameter; x++ {
-		for y := 0; y < diameter; y++ {
+	for x := 0; x < length; x++ {
+		for y := 0; y < length; y++ {
 			nk.Matrix[x][y] = k.Matrix[x][y] / sum
 		}
 	}
@@ -55,22 +55,23 @@ func (k *Kernel) Normalized() ConvolutionMatrix {
 	return nk
 }
 
-// Diameter returns the row/column length for the kernel
-func (k *Kernel) Diameter() int {
+// Length returns the row/column length for the kernel.
+func (k *Kernel) Length() int {
 	return len(k.Matrix)
 }
 
-// At returns the matrix value at position x, y
+// At returns the matrix value at position x, y.
 func (k *Kernel) At(x, y int) float64 {
 	return k.Matrix[x][y]
 }
 
+// String returns the string representation of the matrix.
 func (k *Kernel) String() string {
 	result := ""
-	size := k.Diameter()
-	for x := 0; x < size; x++ {
+	length := k.Length()
+	for x := 0; x < length; x++ {
 		result += fmt.Sprintf("\n")
-		for y := 0; y < size; y++ {
+		for y := 0; y < length; y++ {
 			result += fmt.Sprintf("%-8.4f", k.Matrix[x][y])
 		}
 	}
@@ -78,24 +79,35 @@ func (k *Kernel) String() string {
 }
 
 // Convolute applies a convolution matrix (kernel) to an image.
-// It wraps the image for indices outside of image dimensions
-func Convolute(img image.Image, k ConvolutionMatrix, bias float64) *image.RGBA {
+// If wrap is set to true, indices outside of image dimensions will be taken from the opposite side,
+// otherwise the pixel at that index will be skipped.
+func Convolute(img image.Image, k ConvolutionMatrix, bias float64, wrap bool) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
 	dst := image.NewRGBA(bounds)
 
 	w, h := bounds.Max.X, bounds.Max.Y
-	diameter := k.Diameter()
+	kernelLength := k.Length()
 
 	parallelize(h, func(start, end int) {
 		for x := 0; x < w; x++ {
 			for y := start; y < end; y++ {
 
 				var r, g, b, a float64
-				for kx := 0; kx < diameter; kx++ {
-					for ky := 0; ky < diameter; ky++ {
-						ix := (x - diameter/2 + kx + w) % (w)
-						iy := (y - diameter/2 + ky + h) % h
+				for kx := 0; kx < kernelLength; kx++ {
+					for ky := 0; ky < kernelLength; ky++ {
+						var ix, iy int
+						if wrap {
+							ix = (x - kernelLength/2 + kx + w) % w
+							iy = (y - kernelLength/2 + ky + h) % h
+						} else {
+							ix = x - kernelLength/2 + kx
+							iy = y - kernelLength/2 + ky
+
+							if ix < 0 || ix >= w || iy < 0 || iy >= h {
+								continue
+							}
+						}
 
 						ipos := iy*dst.Stride + ix*4
 						kvalue := k.At(kx, ky)
