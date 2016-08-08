@@ -57,7 +57,7 @@ func TestNewKernel(t *testing.T) {
 	}
 }
 
-func TestKernelAbsSum(t *testing.T) {
+func TestAbsum(t *testing.T) {
 	cases := []struct {
 		kernel   *Kernel
 		expected float64
@@ -102,7 +102,7 @@ func TestKernelAbsSum(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := c.kernel.AbsSum()
+		actual := absum(c.kernel)
 		if actual != c.expected {
 			t.Error(testFailMessage("KernelAbsSum", c.expected, actual))
 		}
