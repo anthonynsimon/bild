@@ -1,6 +1,7 @@
 package bild
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"math"
@@ -9,9 +10,9 @@ import (
 
 func TestCloneAsRGBA(t *testing.T) {
 	cases := []struct {
-		desc  string
-		value image.Image
-		want  *image.RGBA
+		desc     string
+		value    image.Image
+		expected *image.RGBA
 	}{
 		{
 			desc: "RGBA",
@@ -23,7 +24,7 @@ func TestCloneAsRGBA(t *testing.T) {
 					0x80, 0x80, 0x80, 0x80,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 1, 2),
 				Stride: 4,
 				Pix: []uint8{
@@ -42,7 +43,7 @@ func TestCloneAsRGBA(t *testing.T) {
 					0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 1, 2),
 				Stride: 4,
 				Pix: []uint8{
@@ -61,7 +62,7 @@ func TestCloneAsRGBA(t *testing.T) {
 					0xFF, 0xFF, 0xFF, 0x80,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 1, 2),
 				Stride: 4,
 				Pix: []uint8{
@@ -80,7 +81,7 @@ func TestCloneAsRGBA(t *testing.T) {
 					0xFF, 0xFF, 0xFF, 0x80, 0xFF, 0xFF, 0xFF, 0x80,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 1, 2),
 				Stride: 4,
 				Pix: []uint8{
@@ -99,7 +100,7 @@ func TestCloneAsRGBA(t *testing.T) {
 					0x80, 0x80,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 1, 2),
 				Stride: 4,
 				Pix: []uint8{
@@ -118,7 +119,7 @@ func TestCloneAsRGBA(t *testing.T) {
 					0x80, 0x80,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 1, 2),
 				Stride: 4,
 				Pix: []uint8{
@@ -137,7 +138,7 @@ func TestCloneAsRGBA(t *testing.T) {
 					0x80,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 1, 2),
 				Stride: 4,
 				Pix: []uint8{
@@ -156,7 +157,7 @@ func TestCloneAsRGBA(t *testing.T) {
 					0x80, 0x80,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 1, 2),
 				Stride: 4,
 				Pix: []uint8{
@@ -179,7 +180,7 @@ func TestCloneAsRGBA(t *testing.T) {
 					0x1, 0x2,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 1, 2),
 				Stride: 4,
 				Pix: []uint8{
@@ -191,22 +192,22 @@ func TestCloneAsRGBA(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got := CloneAsRGBA(c.value)
-		if !rgbaImageEqual(got, c.want) {
-			t.Errorf("Test [CloneAsRGBA(%s)] failed: got %#v want %#v", c.desc, got, c.want)
+		actual := CloneAsRGBA(c.value)
+		if !rgbaImageEqual(actual, c.expected) {
+			t.Error(testFailMessage("CloneAsRGBA from "+c.desc, c.expected, actual))
 		}
 	}
 }
 
 func TestApply(t *testing.T) {
 	cases := []struct {
-		desc  string
-		fn    func(color.RGBA) color.RGBA
-		value image.Image
-		want  *image.RGBA
+		desc     string
+		fn       func(color.RGBA) color.RGBA
+		value    image.Image
+		expected *image.RGBA
 	}{
 		{
-			desc: "Apply no change",
+			desc: "no change",
 			fn: func(c color.RGBA) color.RGBA {
 				return c
 			},
@@ -218,7 +219,7 @@ func TestApply(t *testing.T) {
 					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 2 * 4,
 				Pix: []uint8{
@@ -228,7 +229,7 @@ func TestApply(t *testing.T) {
 			},
 		},
 		{
-			desc: "Apply plus 128",
+			desc: "plus 128",
 			fn: func(c color.RGBA) color.RGBA {
 				return color.RGBA{c.R + 128, c.G + 128, c.B + 128, c.A + 128}
 			},
@@ -240,7 +241,7 @@ func TestApply(t *testing.T) {
 					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 2 * 4,
 				Pix: []uint8{
@@ -250,7 +251,7 @@ func TestApply(t *testing.T) {
 			},
 		},
 		{
-			desc: "Apply minus 64",
+			desc: "minus 64",
 			fn: func(c color.RGBA) color.RGBA {
 				return color.RGBA{c.R - 64, c.G - 64, c.B - 64, c.A - 64}
 			},
@@ -262,7 +263,7 @@ func TestApply(t *testing.T) {
 					0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 				},
 			},
-			want: &image.RGBA{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 2 * 4,
 				Pix: []uint8{
@@ -274,17 +275,17 @@ func TestApply(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got := apply(c.value, c.fn)
-		if !rgbaImageEqual(got, c.want) {
-			t.Errorf("Test [%s] failed", c.desc)
+		actual := apply(c.value, c.fn)
+		if !rgbaImageEqual(actual, c.expected) {
+			t.Error(testFailMessage("apply "+c.desc, c.expected, actual))
 		}
 	}
 }
 
 func TestClampFloat64(t *testing.T) {
 	cases := []struct {
-		value float64
-		want  float64
+		value    float64
+		expected float64
 	}{
 		{-1.0, 0.0},
 		{1.0, 1.0},
@@ -294,71 +295,71 @@ func TestClampFloat64(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got := clampFloat64(c.value, 0.0, 1.0)
-		if got != c.want {
-			t.Errorf("Test [clampFloat64] failed: got %#v want %#v", got, c.want)
+		actual := clampFloat64(c.value, 0.0, 1.0)
+		if actual != c.expected {
+			t.Error(testFailMessage("clampFloat64", c.expected, actual))
 		}
 	}
 }
 
 func TestQuickSortRGBA(t *testing.T) {
 	cases := []struct {
-		value []color.RGBA
-		want  []color.RGBA
+		value    []color.RGBA
+		expected []color.RGBA
 	}{
 		{
-			value: []color.RGBA{color.RGBA{0, 0, 0, 0}},
-			want:  []color.RGBA{color.RGBA{0, 0, 0, 0}},
+			value:    []color.RGBA{color.RGBA{0, 0, 0, 0}},
+			expected: []color.RGBA{color.RGBA{0, 0, 0, 0}},
 		},
 		{
-			value: []color.RGBA{color.RGBA{1, 0, 0, 0}, color.RGBA{0, 0, 0, 0}, color.RGBA{0, 0, 0, 0}},
-			want:  []color.RGBA{color.RGBA{0, 0, 0, 0}, color.RGBA{0, 0, 0, 0}, color.RGBA{1, 0, 0, 0}},
+			value:    []color.RGBA{color.RGBA{1, 0, 0, 0}, color.RGBA{0, 0, 0, 0}, color.RGBA{0, 0, 0, 0}},
+			expected: []color.RGBA{color.RGBA{0, 0, 0, 0}, color.RGBA{0, 0, 0, 0}, color.RGBA{1, 0, 0, 0}},
 		},
 		{
-			value: []color.RGBA{color.RGBA{255, 0, 128, 0}, color.RGBA{255, 255, 0, 0}, color.RGBA{0, 0, 0, 0}},
-			want:  []color.RGBA{color.RGBA{0, 0, 0, 0}, color.RGBA{255, 0, 128, 0}, color.RGBA{255, 255, 0, 0}},
+			value:    []color.RGBA{color.RGBA{255, 0, 128, 0}, color.RGBA{255, 255, 0, 0}, color.RGBA{0, 0, 0, 0}},
+			expected: []color.RGBA{color.RGBA{0, 0, 0, 0}, color.RGBA{255, 0, 128, 0}, color.RGBA{255, 255, 0, 0}},
 		},
 		{
-			value: []color.RGBA{color.RGBA{255, 255, 128, 0}, color.RGBA{255, 255, 0, 0}, color.RGBA{0, 0, 0, 0}},
-			want:  []color.RGBA{color.RGBA{0, 0, 0, 0}, color.RGBA{255, 255, 0, 0}, color.RGBA{255, 255, 128, 0}},
+			value:    []color.RGBA{color.RGBA{255, 255, 128, 0}, color.RGBA{255, 255, 0, 0}, color.RGBA{0, 0, 0, 0}},
+			expected: []color.RGBA{color.RGBA{0, 0, 0, 0}, color.RGBA{255, 255, 0, 0}, color.RGBA{255, 255, 128, 0}},
 		},
 	}
 
 	for _, c := range cases {
 		quicksortRGBA(c.value, 0, len(c.value)-1)
-		if !rgbaSlicesEqual(c.value, c.want) {
-			t.Errorf("Test [quicksortRGBA] failed: got %#v want %#v", c.value, c.want)
+		if !rgbaSlicesEqual(c.value, c.expected) {
+			t.Error(testFailMessage("quicksortRGBA", c.expected, c.value))
 		}
 	}
 }
 
 func TestRank(t *testing.T) {
 	cases := []struct {
-		value color.RGBA
-		want  float64
+		value    color.RGBA
+		expected float64
 	}{
 		{
-			value: color.RGBA{0, 0, 0, 0},
-			want:  0,
+			value:    color.RGBA{0, 0, 0, 0},
+			expected: 0,
 		},
 		{
-			value: color.RGBA{255, 255, 255, 255},
-			want:  255,
+			value:    color.RGBA{255, 255, 255, 255},
+			expected: 255,
 		},
 		{
-			value: color.RGBA{128, 128, 128, 255},
-			want:  128,
+			value:    color.RGBA{128, 128, 128, 255},
+			expected: 128,
 		},
 		{
-			value: color.RGBA{128, 64, 32, 255},
-			want:  80,
+			value:    color.RGBA{128, 64, 32, 255},
+			expected: 80,
 		},
 	}
 
 	for _, c := range cases {
-		got := math.Ceil(rank(c.value))
-		if got != c.want {
-			t.Errorf("Test [rank] failed: got %#v want %#v", got, c.want)
+		actual := math.Ceil(rank(c.value))
+		if actual != c.expected {
+			t.Error(testFailMessage("rank", c.expected, actual))
 		}
 	}
 }
@@ -400,4 +401,8 @@ func rgbaImageEqual(a, b *image.RGBA) bool {
 		}
 	}
 	return true
+}
+
+func testFailMessage(name string, expected, actual interface{}) string {
+	return fmt.Sprintf("Test %s failed. Expected: %#v, Actual: %#v", name, expected, actual)
 }
