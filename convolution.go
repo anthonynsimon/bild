@@ -85,7 +85,7 @@ func Convolute(img image.Image, k ConvolutionMatrix, bias float64, wrap bool) *i
 		for x := 0; x < w; x++ {
 			for y := start; y < end; y++ {
 
-				var r, g, b, a float64
+				var r, g, b float64
 				for kx := 0; kx < kernelLength; kx++ {
 					for ky := 0; ky < kernelLength; ky++ {
 						var ix, iy int
@@ -106,7 +106,6 @@ func Convolute(img image.Image, k ConvolutionMatrix, bias float64, wrap bool) *i
 						r += float64(src.Pix[ipos+0]) * kvalue
 						g += float64(src.Pix[ipos+1]) * kvalue
 						b += float64(src.Pix[ipos+2]) * kvalue
-						a += float64(src.Pix[ipos+3]) * kvalue
 					}
 				}
 
@@ -115,7 +114,7 @@ func Convolute(img image.Image, k ConvolutionMatrix, bias float64, wrap bool) *i
 				dst.Pix[pos+0] = uint8(math.Max(math.Min(r+bias, 255), 0))
 				dst.Pix[pos+1] = uint8(math.Max(math.Min(g+bias, 255), 0))
 				dst.Pix[pos+2] = uint8(math.Max(math.Min(b+bias, 255), 0))
-				dst.Pix[pos+3] = uint8(math.Max(math.Min(a+bias, 255), 0))
+				dst.Pix[pos+3] = src.Pix[pos+3]
 			}
 		}
 	})
