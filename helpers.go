@@ -33,15 +33,6 @@ func apply(img image.Image, fn func(color.RGBA) color.RGBA) *image.RGBA {
 	return dst
 }
 
-func clampUint8(x, min, max uint8) uint8 {
-	if x < min {
-		return min
-	} else if x > max {
-		return max
-	}
-	return x
-}
-
 func clampFloat64(value, min, max float64) float64 {
 	if value > max {
 		return max
