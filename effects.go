@@ -98,7 +98,7 @@ func Median(img image.Image, size int) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
 
-	if size < 0 {
+	if size <= 0 {
 		return src
 	}
 
