@@ -293,7 +293,7 @@ func ColorDodge(bg image.Image, fg image.Image) *image.RGBA {
 }
 
 // LinearBurn combines the foreground and background images by adding them and
-// then substracting 255 (1.0 in normalized scale). The resulting image is then returned.
+// then subtracting 255 (1.0 in normalized scale). The resulting image is then returned.
 func LinearBurn(bg image.Image, fg image.Image) *image.RGBA {
 	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
@@ -344,9 +344,9 @@ func LinearLight(bg image.Image, fg image.Image) *image.RGBA {
 	return dst
 }
 
-// Substract combines the foreground and background images by substracting the background from the
+// Subtract combines the foreground and background images by Subtracting the background from the
 // foreground. The result is then returned.
-func Substract(bg image.Image, fg image.Image) *image.RGBA {
+func Subtract(bg image.Image, fg image.Image) *image.RGBA {
 	dst := blendOperation(bg, fg, func(c0 color.RGBA, c1 color.RGBA) color.RGBA {
 
 		r0 := float64(c0.R)

@@ -212,7 +212,7 @@ for each pixel. The result is then returned.
 func LinearBurn(bg image.Image, fg image.Image) *image.RGBA
 ```
 LinearBurn combines the foreground and background images by adding them and
-then substracting 255 (1.0 in normalized scale). The resulting image is then returned.
+then subtracting 255 (1.0 in normalized scale). The resulting image is then returned.
 
 
 ## func LinearLight
@@ -306,11 +306,11 @@ SoftLight combines the foreground and background images by using Pegtop's Soft L
 returns the resulting image.
 
 
-## func Substract
+## func Subtract
 ``` go
-func Substract(bg image.Image, fg image.Image) *image.RGBA
+func Subtract(bg image.Image, fg image.Image) *image.RGBA
 ```
-Substract combines the foreground and background images by substracting the background from the
+Subtract combines the foreground and background images by subtracting the background from the
 foreground. The result is then returned.
 
 
