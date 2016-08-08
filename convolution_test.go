@@ -260,6 +260,37 @@ func TestKernelNormalized(t *testing.T) {
 	}
 }
 
+func TestKernelString(t *testing.T) {
+	cases := []struct {
+		kernel   *Kernel
+		expected string
+	}{
+		{
+			kernel: &Kernel{[][]float64{
+				{0, 0, 0},
+				{0, -1, 0},
+				{0, 0, 0},
+			}},
+			expected: "\n0.0000  0.0000  0.0000  \n0.0000  -1.0000 0.0000  \n0.0000  0.0000  0.0000  ",
+		},
+		{
+			kernel: &Kernel{[][]float64{
+				{-2.75, 0, 0},
+				{0, -1, 0},
+				{0, 0, 92.32579},
+			}},
+			expected: "\n-2.7500 0.0000  0.0000  \n0.0000  -1.0000 0.0000  \n0.0000  0.0000  92.3258 ",
+		},
+	}
+
+	for _, c := range cases {
+		actual := c.kernel.String()
+		if actual != c.expected {
+			t.Error(testFailMessage("KernelString", c.expected, actual))
+		}
+	}
+}
+
 func kernelEqual(a, b *Kernel) bool {
 	if a.Matrix == nil && b.Matrix == nil {
 		return true
