@@ -7,7 +7,7 @@ import (
 	"math"
 )
 
-// CloneAsRGBA returns an RGBA copy of the image
+// CloneAsRGBA returns an RGBA copy of the supplied image.
 func CloneAsRGBA(src image.Image) *image.RGBA {
 	bounds := src.Bounds()
 	img := image.NewRGBA(bounds)
@@ -15,8 +15,7 @@ func CloneAsRGBA(src image.Image) *image.RGBA {
 	return img
 }
 
-// Apply returns a copy of the image after applying a color function
-// to each pixel on an image
+// Apply returns a copy of the supplied image with the provided color function applied to each pixel.
 func apply(img image.Image, fn func(color.RGBA) color.RGBA) *image.RGBA {
 	bounds := img.Bounds()
 	dst := CloneAsRGBA(img)
