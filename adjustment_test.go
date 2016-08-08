@@ -14,7 +14,7 @@ func TestBrightness(t *testing.T) {
 	}{
 		{
 			desc:    "+100%",
-			percent: 100.0,
+			percent: 1.0,
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,
@@ -54,7 +54,7 @@ func TestBrightness(t *testing.T) {
 		},
 		{
 			desc:    "+50%",
-			percent: 50.0,
+			percent: 0.50,
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,
@@ -74,7 +74,7 @@ func TestBrightness(t *testing.T) {
 		},
 		{
 			desc:    "-100%",
-			percent: -100.0,
+			percent: -1.0,
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,

@@ -7,13 +7,13 @@ import (
 )
 
 // Brightness returns a copy of the image with the adjusted brightness.
-// Percent is the relative amount of change to be applied (range -100.0 to 100.0).
-func Brightness(src image.Image, percentChange float64) *image.RGBA {
+// Change is the normalized amount of change to be applied (range -1.0 to 1.0).
+func Brightness(src image.Image, change float64) *image.RGBA {
 	fn := func(c color.RGBA) color.RGBA {
 
-		changeR := 1 + percentChange/100.0
-		changeG := 1 + percentChange/100.0
-		changeB := 1 + percentChange/100.0
+		changeR := 1 + change
+		changeG := 1 + change
+		changeB := 1 + change
 
 		return color.RGBA{
 			uint8(clampFloat64(math.Ceil(float64(c.R)*changeR), 0, 255)),

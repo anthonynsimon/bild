@@ -63,10 +63,10 @@ Radius must be larger than 0.
 
 ## func Brightness
 ``` go
-func Brightness(src image.Image, percentChange float64) *image.RGBA
+func Brightness(src image.Image, change float64) *image.RGBA
 ```
 Brightness returns a copy of the image with the adjusted brightness.
-Percent is the relative amount of change to be applied (range -100.0 to 100.0).
+Change is the normalized amount of change to be applied (range -1.0 to 1.0).
 
 
 ## func CloneAsRGBA
