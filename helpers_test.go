@@ -3,6 +3,7 @@ package bild
 import (
 	"image"
 	"image/color"
+	"math"
 	"testing"
 )
 
@@ -346,6 +347,37 @@ func TestQuickSortRGBA(t *testing.T) {
 		quicksortRGBA(c.value, 0, len(c.value)-1)
 		if !rgbaSlicesEqual(c.value, c.want) {
 			t.Errorf("Test [quicksortRGBA] failed: got %#v want %#v", c.value, c.want)
+		}
+	}
+}
+
+func TestRank(t *testing.T) {
+	cases := []struct {
+		value color.RGBA
+		want  float64
+	}{
+		{
+			value: color.RGBA{0, 0, 0, 0},
+			want:  0,
+		},
+		{
+			value: color.RGBA{255, 255, 255, 255},
+			want:  255,
+		},
+		{
+			value: color.RGBA{128, 128, 128, 255},
+			want:  128,
+		},
+		{
+			value: color.RGBA{128, 64, 32, 255},
+			want:  80,
+		},
+	}
+
+	for _, c := range cases {
+		got := math.Ceil(rank(c.value))
+		if got != c.want {
+			t.Errorf("Test [rank] failed: got %#v want %#v", got, c.want)
 		}
 	}
 }
