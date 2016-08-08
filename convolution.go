@@ -9,7 +9,7 @@ import (
 // ConvolutionMatrix interface for use as an image Kernel.
 type ConvolutionMatrix interface {
 	At(x, y int) float64
-	Sum() float64
+	AbsSum() float64
 	Normalized() ConvolutionMatrix
 	Length() int
 }
@@ -28,13 +28,13 @@ type Kernel struct {
 	Matrix [][]float64
 }
 
-// Sum returns the cumulative value of the matrix.
-func (k *Kernel) Sum() float64 {
+// AbsSum returns the absolute cumulative value of the matrix.
+func (k *Kernel) AbsSum() float64 {
 	var sum float64
-	diameter := k.Length()
-	for x := 0; x < diameter; x++ {
-		for y := 0; y < diameter; y++ {
-			sum += k.Matrix[x][y]
+	length := k.Length()
+	for x := 0; x < length; x++ {
+		for y := 0; y < length; y++ {
+			sum += math.Abs(k.Matrix[x][y])
 		}
 	}
 	return sum
@@ -42,9 +42,14 @@ func (k *Kernel) Sum() float64 {
 
 // Normalized returns a new Kernel with normalized values.
 func (k *Kernel) Normalized() ConvolutionMatrix {
-	sum := k.Sum()
+	sum := k.AbsSum()
 	length := k.Length()
 	nk := NewKernel(length)
+
+	// avoid division by 0
+	if sum == 0 {
+		sum = 1
+	}
 
 	for x := 0; x < length; x++ {
 		for y := 0; y < length; y++ {
