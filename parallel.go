@@ -11,13 +11,12 @@ func init() {
 
 func parallelize(size int, fn func(start, end int)) {
 	procs := runtime.GOMAXPROCS(0)
-	if procs <= 1 {
+	counter := size
+	partSize := size / procs
+	if procs <= 1 || partSize <= procs {
 		fn(0, size)
 	} else {
 		var wg sync.WaitGroup
-		counter := size
-		partSize := size / procs
-
 		for counter > 0 {
 			start := counter - partSize
 			end := counter
