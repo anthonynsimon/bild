@@ -166,25 +166,6 @@ func TestCloneAsRGBA(t *testing.T) {
 			},
 		},
 		{
-			desc: "CMYK",
-			value: &image.CMYK{
-				Rect:   image.Rect(0, 0, 1, 2),
-				Stride: 4,
-				Pix: []uint8{
-					0x00, 0x00, 0x00, 0x7F,
-					0x00, 0x00, 0x00, 0x7F,
-				},
-			},
-			want: &image.RGBA{
-				Rect:   image.Rect(0, 0, 1, 2),
-				Stride: 4,
-				Pix: []uint8{
-					0x80, 0x80, 0x80, 0xFF,
-					0x80, 0x80, 0x80, 0xFF,
-				},
-			},
-		},
-		{
 			desc: "Paletted",
 			value: &image.Paletted{
 				Rect:   image.Rect(0, 0, 1, 2),
