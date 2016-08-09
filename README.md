@@ -1,5 +1,6 @@
 # Bild
 
+[![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/anthonynsimon/bild/blob/master/LICENSE)
 [![GoDoc](https://godoc.org/github.com/anthonynsimon/bild?status.svg)](https://godoc.org/github.com/anthonynsimon/bild)
 [![Build Status](https://travis-ci.org/anthonynsimon/bild.svg?branch=master)](https://travis-ci.org/anthonynsimon/bild)
 [![Go Report Card](https://goreportcard.com/badge/github.com/anthonynsimon/bild)](https://goreportcard.com/report/github.com/anthonynsimon/bild)
@@ -73,7 +74,7 @@ Change is the normalized amount of change to be applied (range -1.0 to 1.0).
 ``` go
 func CloneAsRGBA(src image.Image) *image.RGBA
 ```
-CloneAsRGBA returns an RGBA copy of the image
+CloneAsRGBA returns an RGBA copy of the supplied image.
 
 
 ## func ColorBurn
@@ -94,11 +95,9 @@ inverted foreground image and returns the result.
 
 ## func Convolute
 ``` go
-func Convolute(img image.Image, k ConvolutionMatrix, bias float64, wrap bool) *image.RGBA
+func Convolute(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *image.RGBA
 ```
-Convolute applies a convolution matrix (kernel) to an image.
-If wrap is set to true, indices outside of image dimensions will be taken from the opposite side,
-otherwise the pixel at that index will be skipped.
+Convolute applies a convolution matrix (kernel) to an image with the supplied options.
 
 
 ## func Darken
@@ -310,7 +309,7 @@ returns the resulting image.
 ``` go
 func Subtract(bg image.Image, fg image.Image) *image.RGBA
 ```
-Subtract combines the foreground and background images by subtracting the background from the
+Subtract combines the foreground and background images by Subtracting the background from the
 foreground. The result is then returned.
 
 
@@ -319,12 +318,46 @@ foreground. The result is then returned.
 ``` go
 type ConvolutionMatrix interface {
     At(x, y int) float64
-    Sum() float64
     Normalized() ConvolutionMatrix
-    Length() int
+    SideLength() int
 }
 ```
-ConvolutionMatrix interface for use as an image Kernel.
+ConvolutionMatrix interface.
+At returns the matrix value at position x, y.
+Normalized returns a new matrix with normalized values.
+SideLength returns the matrix side length.
+
+
+
+
+
+
+
+
+
+
+
+## type ConvolutionOptions
+``` go
+type ConvolutionOptions struct {
+    Bias       float64
+    Wrap       bool
+    CarryAlpha bool
+}
+```
+ConvolutionOptions are the convolute function parameters.
+Bias is added to each RGB channel after convoluting. Range is -255 to 255.
+Wrap sets if indices outside of image dimensions should be taken from the opposite side.
+CarryAlpha sets if the alpha should be taken from the source image without convoluting
+
+
+
+
+
+
+
+
+
 
 
 ## type Format
@@ -334,21 +367,37 @@ type Format int
 Format is used to identify the image encoding type
 
 
+
+
+
+
+
+
+
+
+
 ## type Kernel
 ``` go
 type Kernel struct {
-    Matrix [][]float64
+    Matrix []float64
+    Stride int
 }
 ```
-Kernel is used as a convolution matrix.
+Kernel to be used as a convolution matrix.
+
+
+
+
+
+
 
 
 
 ### func NewKernel
 ``` go
-func NewKernel(diameter int) *Kernel
+func NewKernel(length int) *Kernel
 ```
-NewKernel returns a kernel of the provided size.
+NewKernel returns a kernel of the provided length.
 
 
 
@@ -361,14 +410,6 @@ At returns the matrix value at position x, y.
 
 
 
-### func (\*Kernel) Length
-``` go
-func (k *Kernel) Length() int
-```
-Length returns the row/column length for the kernel.
-
-
-
 ### func (\*Kernel) Normalized
 ``` go
 func (k *Kernel) Normalized() ConvolutionMatrix
@@ -377,14 +418,16 @@ Normalized returns a new Kernel with normalized values.
 
 
 
+### func (\*Kernel) SideLength
+``` go
+func (k *Kernel) SideLength() int
+```
+SideLength returns the matrix side length.
+
+
+
 ### func (\*Kernel) String
 ``` go
 func (k *Kernel) String() string
 ```
 String returns the string representation of the matrix.
-
-### func (\*Kernel) Sum
-``` go
-func (k *Kernel) Sum() float64
-```
-Sum returns the cumulative value of the matrix.
