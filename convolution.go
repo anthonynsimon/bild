@@ -70,10 +70,18 @@ func (k *Kernel) String() string {
 	return result
 }
 
-// Convolute applies a convolution matrix (kernel) to an image.
-// If wrap is set to true, indices outside of image dimensions will be taken from the opposite side,
-// otherwise the pixel at that index will be skipped.
-func Convolute(img image.Image, k ConvolutionMatrix, bias float64, wrap bool) *image.RGBA {
+// ConvolutionOptions are the convolute function parameters.
+// Bias is added to each RGB channel after convoluting. Range is -255 to 255.
+// Wrap sets if indices outside of image dimensions should be taken from the opposite side.
+// CarryAlpha sets if the alpha should be taken from the source image without convoluting
+type ConvolutionOptions struct {
+	Bias       float64
+	Wrap       bool
+	CarryAlpha bool
+}
+
+// Convolute applies a convolution matrix (kernel) to an image with the supplied options.
+func Convolute(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
 	dst := image.NewRGBA(bounds)
@@ -81,13 +89,23 @@ func Convolute(img image.Image, k ConvolutionMatrix, bias float64, wrap bool) *i
 	w, h := bounds.Max.X, bounds.Max.Y
 	kernelLength := k.Length()
 
+	bias := 0.0
+	wrap := false
+	carryAlpha := true
+	if o != nil {
+		bias = o.Bias
+		wrap = o.Wrap
+		carryAlpha = o.CarryAlpha
+	}
+
 	parallelize(h, func(start, end int) {
 		for x := 0; x < w; x++ {
 			for y := start; y < end; y++ {
 
-				var r, g, b float64
+				var r, g, b, a float64
 				for kx := 0; kx < kernelLength; kx++ {
 					for ky := 0; ky < kernelLength; ky++ {
+
 						var ix, iy int
 						if wrap {
 							ix = (x - kernelLength/2 + kx + w) % w
@@ -103,18 +121,25 @@ func Convolute(img image.Image, k ConvolutionMatrix, bias float64, wrap bool) *i
 
 						ipos := iy*dst.Stride + ix*4
 						kvalue := k.At(kx, ky)
+
 						r += float64(src.Pix[ipos+0]) * kvalue
 						g += float64(src.Pix[ipos+1]) * kvalue
 						b += float64(src.Pix[ipos+2]) * kvalue
+						if carryAlpha {
+							a += float64(src.Pix[ipos+3]) * kvalue
+						}
 					}
 				}
 
 				pos := y*dst.Stride + x*4
-
 				dst.Pix[pos+0] = uint8(math.Max(math.Min(r+bias, 255), 0))
 				dst.Pix[pos+1] = uint8(math.Max(math.Min(g+bias, 255), 0))
 				dst.Pix[pos+2] = uint8(math.Max(math.Min(b+bias, 255), 0))
-				dst.Pix[pos+3] = src.Pix[pos+3]
+				if carryAlpha {
+					dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
+				} else {
+					dst.Pix[pos+3] = src.Pix[pos+3]
+				}
 			}
 		}
 	})
