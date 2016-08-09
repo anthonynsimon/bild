@@ -291,6 +291,12 @@ func Screen(bg image.Image, fg image.Image) *image.RGBA
 Screen combines the foreground and background images by inverting, multiplying and inverting the output.
 The result is a brighter image which is then returned.
 
+## func Sharpen
+``` go
+func Sharpen(src image.Image) *image.RGBA
+```
+Sharpen returns a sharpened copy of the image by detecting it's edges
+and adding it to the original.
 
 ## func Sobel
 ``` go
