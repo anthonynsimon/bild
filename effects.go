@@ -43,16 +43,16 @@ func EdgeDetection(src image.Image, radius float64) *image.RGBA {
 		return CloneAsRGBA(src)
 	}
 
-	size := int(math.Ceil(2*radius + 1))
-	k := NewKernel(size)
+	length := int(math.Ceil(2*radius + 1))
+	k := NewKernel(length)
 
-	for x := 0; x < size; x++ {
-		for y := 0; y < size; y++ {
+	for x := 0; x < length; x++ {
+		for y := 0; y < length; y++ {
 			v := -1.0
-			if x == size/2 && y == size/2 {
-				v = float64(size*size) - 1
+			if x == length/2 && y == length/2 {
+				v = float64(length*length) - 1
 			}
-			k.Matrix[x][y] = v
+			k.Matrix[y*length+x] = v
 
 		}
 	}
@@ -62,11 +62,11 @@ func EdgeDetection(src image.Image, radius float64) *image.RGBA {
 // Emboss returns a copy of the image in which each pixel has been
 // replaced either by a highlight or a shadow representation.
 func Emboss(src image.Image) *image.RGBA {
-	k := Kernel{[][]float64{
-		{-1, -1, 0},
-		{-1, 0, 1},
-		{0, 1, 1},
-	}}
+	k := Kernel{[]float64{
+		-1, -1, 0,
+		-1, 0, 1,
+		0, 1, 1,
+	}, 3}
 
 	return Convolute(src, &k, &ConvolutionOptions{Bias: 128, Wrap: false, CarryAlpha: true})
 }
@@ -74,17 +74,17 @@ func Emboss(src image.Image) *image.RGBA {
 // Sobel returns an image emphasising edges using an approximation to the Sobel–Feldman operator.
 func Sobel(src image.Image) *image.RGBA {
 
-	hk := Kernel{[][]float64{
-		{1, 2, 1},
-		{0, 0, 0},
-		{-1, -2, -1},
-	}}
+	hk := Kernel{[]float64{
+		1, 2, 1,
+		0, 0, 0,
+		-1, -2, -1,
+	}, 3}
 
-	vk := Kernel{[][]float64{
-		{-1, 0, 1},
-		{-2, 0, 2},
-		{-1, 0, 1},
-	}}
+	vk := Kernel{[]float64{
+		-1, 0, 1,
+		-2, 0, 2,
+		-1, 0, 1,
+	}, 3}
 
 	vSobel := Convolute(src, &vk, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})
 	hSobel := Convolute(src, &hk, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})

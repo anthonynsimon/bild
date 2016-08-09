@@ -12,12 +12,12 @@ func BoxBlur(src image.Image, radius float64) *image.RGBA {
 		return CloneAsRGBA(src)
 	}
 
-	size := int(math.Ceil(2*radius + 1))
-	k := NewKernel(size)
+	length := int(math.Ceil(2*radius + 1))
+	k := NewKernel(length)
 
-	for x := 0; x < size; x++ {
-		for y := 0; y < size; y++ {
-			k.Matrix[x][y] = 1
+	for x := 0; x < length; x++ {
+		for y := 0; y < length; y++ {
+			k.Matrix[y*length+x] = 1
 		}
 	}
 
@@ -31,12 +31,12 @@ func GaussianBlur(src image.Image, radius float64) *image.RGBA {
 		return CloneAsRGBA(src)
 	}
 
-	size := int(math.Ceil(2*radius + 1))
-	k := NewKernel(size)
+	length := int(math.Ceil(2*radius + 1))
+	k := NewKernel(length)
 
-	for x := 0; x < size; x++ {
-		for y := 0; y < size; y++ {
-			k.Matrix[x][y] = gaussianFunc(float64(x)-radius, float64(y)-radius, 4*radius)
+	for x := 0; x < length; x++ {
+		for y := 0; y < length; y++ {
+			k.Matrix[y*length+x] = gaussianFunc(float64(x)-radius, float64(y)-radius, 4*radius)
 		}
 	}
 

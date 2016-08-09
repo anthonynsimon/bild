@@ -6,65 +6,63 @@ import (
 	"math"
 )
 
-// ConvolutionMatrix interface for use as an image Kernel.
+// ConvolutionMatrix interface.
+// At returns the matrix value at position x, y.
+// Normalized returns a new matrix with normalized values.
+// SideLength returns the matrix side length.
 type ConvolutionMatrix interface {
 	At(x, y int) float64
 	Normalized() ConvolutionMatrix
-	Length() int
+	SideLength() int
 }
 
-// NewKernel returns a kernel of the provided size.
-func NewKernel(diameter int) *Kernel {
-	matrix := make([][]float64, diameter)
-	for i := 0; i < diameter; i++ {
-		matrix[i] = make([]float64, diameter)
-	}
-	return &Kernel{matrix}
+// NewKernel returns a kernel of the provided length.
+func NewKernel(length int) *Kernel {
+	return &Kernel{make([]float64, length*length), length}
 }
 
-// Kernel is used as a convolution matrix.
+// Kernel to be used as a convolution matrix.
 type Kernel struct {
-	Matrix [][]float64
+	Matrix []float64
+	Stride int
 }
 
 // Normalized returns a new Kernel with normalized values.
 func (k *Kernel) Normalized() ConvolutionMatrix {
 	sum := absum(k)
-	length := k.Length()
-	nk := NewKernel(length)
+	stride := k.Stride
+	nk := NewKernel(stride)
 
 	// avoid division by 0
 	if sum == 0 {
 		sum = 1
 	}
 
-	for x := 0; x < length; x++ {
-		for y := 0; y < length; y++ {
-			nk.Matrix[x][y] = k.Matrix[x][y] / sum
-		}
+	for i := 0; i < stride*stride; i++ {
+		nk.Matrix[i] = k.Matrix[i] / sum
 	}
 
 	return nk
 }
 
-// Length returns the row/column length for the kernel.
-func (k *Kernel) Length() int {
-	return len(k.Matrix)
+// SideLength returns the matrix side length.
+func (k *Kernel) SideLength() int {
+	return k.Stride
 }
 
 // At returns the matrix value at position x, y.
 func (k *Kernel) At(x, y int) float64 {
-	return k.Matrix[x][y]
+	return k.Matrix[y*k.Stride+x]
 }
 
 // String returns the string representation of the matrix.
 func (k *Kernel) String() string {
 	result := ""
-	length := k.Length()
-	for x := 0; x < length; x++ {
+	stride := k.Stride
+	for x := 0; x < stride; x++ {
 		result += fmt.Sprintf("\n")
-		for y := 0; y < length; y++ {
-			result += fmt.Sprintf("%-8.4f", k.Matrix[x][y])
+		for y := 0; y < stride; y++ {
+			result += fmt.Sprintf("%-8.4f", k.At(x, y))
 		}
 	}
 	return result
@@ -87,7 +85,7 @@ func Convolute(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *ima
 	dst := image.NewRGBA(bounds)
 
 	w, h := bounds.Max.X, bounds.Max.Y
-	kernelLength := k.Length()
+	kernelLength := k.SideLength()
 
 	bias := 0.0
 	wrap := false
@@ -125,7 +123,7 @@ func Convolute(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *ima
 						r += float64(src.Pix[ipos+0]) * kvalue
 						g += float64(src.Pix[ipos+1]) * kvalue
 						b += float64(src.Pix[ipos+2]) * kvalue
-						if carryAlpha {
+						if !carryAlpha {
 							a += float64(src.Pix[ipos+3]) * kvalue
 						}
 					}
@@ -135,7 +133,7 @@ func Convolute(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *ima
 				dst.Pix[pos+0] = uint8(math.Max(math.Min(r+bias, 255), 0))
 				dst.Pix[pos+1] = uint8(math.Max(math.Min(g+bias, 255), 0))
 				dst.Pix[pos+2] = uint8(math.Max(math.Min(b+bias, 255), 0))
-				if carryAlpha {
+				if !carryAlpha {
 					dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
 				} else {
 					dst.Pix[pos+3] = src.Pix[pos+3]
@@ -150,11 +148,8 @@ func Convolute(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *ima
 // absum returns the absolute cumulative value of the matrix.
 func absum(k *Kernel) float64 {
 	var sum float64
-	length := k.Length()
-	for x := 0; x < length; x++ {
-		for y := 0; y < length; y++ {
-			sum += math.Abs(k.Matrix[x][y])
-		}
+	for _, v := range k.Matrix {
+		sum += math.Abs(v)
 	}
 	return sum
 }
