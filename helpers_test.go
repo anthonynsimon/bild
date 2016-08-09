@@ -308,20 +308,20 @@ func TestQuickSortRGBA(t *testing.T) {
 		expected []color.RGBA
 	}{
 		{
-			value:    []color.RGBA{color.RGBA{0, 0, 0, 0}},
-			expected: []color.RGBA{color.RGBA{0, 0, 0, 0}},
+			value:    []color.RGBA{{0, 0, 0, 0}},
+			expected: []color.RGBA{{0, 0, 0, 0}},
 		},
 		{
-			value:    []color.RGBA{color.RGBA{1, 0, 0, 0}, color.RGBA{0, 0, 0, 0}, color.RGBA{0, 0, 0, 0}},
-			expected: []color.RGBA{color.RGBA{0, 0, 0, 0}, color.RGBA{0, 0, 0, 0}, color.RGBA{1, 0, 0, 0}},
+			value:    []color.RGBA{{1, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}},
+			expected: []color.RGBA{{0, 0, 0, 0}, {0, 0, 0, 0}, {1, 0, 0, 0}},
 		},
 		{
-			value:    []color.RGBA{color.RGBA{255, 0, 128, 0}, color.RGBA{255, 255, 0, 0}, color.RGBA{0, 0, 0, 0}},
-			expected: []color.RGBA{color.RGBA{0, 0, 0, 0}, color.RGBA{255, 0, 128, 0}, color.RGBA{255, 255, 0, 0}},
+			value:    []color.RGBA{{255, 0, 128, 0}, {255, 255, 0, 0}, {0, 0, 0, 0}},
+			expected: []color.RGBA{{0, 0, 0, 0}, {255, 0, 128, 0}, {255, 255, 0, 0}},
 		},
 		{
-			value:    []color.RGBA{color.RGBA{255, 255, 128, 0}, color.RGBA{255, 255, 0, 0}, color.RGBA{0, 0, 0, 0}},
-			expected: []color.RGBA{color.RGBA{0, 0, 0, 0}, color.RGBA{255, 255, 0, 0}, color.RGBA{255, 255, 128, 0}},
+			value:    []color.RGBA{{255, 255, 128, 0}, {255, 255, 0, 0}, {0, 0, 0, 0}},
+			expected: []color.RGBA{{0, 0, 0, 0}, {255, 255, 0, 0}, {255, 255, 128, 0}},
 		},
 	}
 
