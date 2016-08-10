@@ -120,7 +120,7 @@ func main() {
 ![example](https://anthonynsimon.github.io/projects/bild/normal.jpg)  
 
 ### Opacity
-        bild.Opacity(bg, fg)
+        bild.Opacity(bg, fg, 0.5)
 
 ![example](https://anthonynsimon.github.io/projects/bild/opacity.jpg)  
 
