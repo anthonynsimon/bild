@@ -76,3 +76,15 @@ func partitionRGBASlice(data []color.RGBA, min, max int) int {
 func rank(c color.RGBA) float64 {
 	return float64(c.R)*0.3 + float64(c.G)*0.6 + float64(c.B)*0.1
 }
+
+// alphaComp returns a new color after compositing the two colors
+// based on the foreground's alpha channel.
+func alphaComp(bg, fg RGBAF64) RGBAF64 {
+	fg.Clamp()
+	fga := fg.A
+	r := (fg.R * fga / 1) + ((1 - fga) * bg.R / 1)
+	g := (fg.G * fga / 1) + ((1 - fga) * bg.G / 1)
+	b := (fg.B * fga / 1) + ((1 - fga) * bg.B / 1)
+	a := bg.A + fga
+	return RGBAF64{r, g, b, a}
+}

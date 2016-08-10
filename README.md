@@ -37,7 +37,55 @@ func main() {
 ```
 
 
-## Constants
+## <a name="pkg-index">Index</a>
+* [Constants](#pkg-constants)
+* [func Add(bg image.Image, fg image.Image) *image.RGBA](#Add)
+* [func BoxBlur(src image.Image, radius float64) *image.RGBA](#BoxBlur)
+* [func Brightness(src image.Image, change float64) *image.RGBA](#Brightness)
+* [func CloneAsRGBA(src image.Image) *image.RGBA](#CloneAsRGBA)
+* [func ColorBurn(bg image.Image, fg image.Image) *image.RGBA](#ColorBurn)
+* [func ColorDodge(bg image.Image, fg image.Image) *image.RGBA](#ColorDodge)
+* [func Convolute(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *image.RGBA](#Convolute)
+* [func Darken(bg image.Image, fg image.Image) *image.RGBA](#Darken)
+* [func Difference(bg image.Image, fg image.Image) *image.RGBA](#Difference)
+* [func Divide(bg image.Image, fg image.Image) *image.RGBA](#Divide)
+* [func EdgeDetection(src image.Image, radius float64) *image.RGBA](#EdgeDetection)
+* [func Emboss(src image.Image) *image.RGBA](#Emboss)
+* [func Encode(w io.Writer, img image.Image, format Format) error](#Encode)
+* [func Exclusion(bg image.Image, fg image.Image) *image.RGBA](#Exclusion)
+* [func FlipH(img image.Image) *image.RGBA](#FlipH)
+* [func FlipV(img image.Image) *image.RGBA](#FlipV)
+* [func GaussianBlur(src image.Image, radius float64) *image.RGBA](#GaussianBlur)
+* [func Grayscale(src image.Image) *image.RGBA](#Grayscale)
+* [func Invert(src image.Image) *image.RGBA](#Invert)
+* [func Lighten(bg image.Image, fg image.Image) *image.RGBA](#Lighten)
+* [func LinearBurn(bg image.Image, fg image.Image) *image.RGBA](#LinearBurn)
+* [func LinearLight(bg image.Image, fg image.Image) *image.RGBA](#LinearLight)
+* [func Median(img image.Image, size int) *image.RGBA](#Median)
+* [func Multiply(bg image.Image, fg image.Image) *image.RGBA](#Multiply)
+* [func Opacity(bg image.Image, fg image.Image, percent float64) *image.RGBA](#Opacity)
+* [func Open(filename string) (image.Image, error)](#Open)
+* [func Overlay(bg image.Image, fg image.Image) *image.RGBA](#Overlay)
+* [func Save(filename string, img image.Image, format Format) error](#Save)
+* [func Screen(bg image.Image, fg image.Image) *image.RGBA](#Screen)
+* [func Sharpen(src image.Image) *image.RGBA](#Sharpen)
+* [func Sobel(src image.Image) *image.RGBA](#Sobel)
+* [func SoftLight(bg image.Image, fg image.Image) *image.RGBA](#SoftLight)
+* [func Subtract(bg image.Image, fg image.Image) *image.RGBA](#Subtract)
+* [type ConvolutionMatrix](#ConvolutionMatrix)
+* [type ConvolutionOptions](#ConvolutionOptions)
+* [type Format](#Format)
+* [type Kernel](#Kernel)
+  * [func NewKernel(length int) *Kernel](#NewKernel)
+  * [func (k *Kernel) At(x, y int) float64](#Kernel.At)
+  * [func (k *Kernel) Normalized() ConvolutionMatrix](#Kernel.Normalized)
+  * [func (k *Kernel) SideLength() int](#Kernel.SideLength)
+  * [func (k *Kernel) String() string](#Kernel.String)
+* [type RGBAF64](#RGBAF64)
+  * [func NewRGBAF64(r, g, b, a uint8) RGBAF64](#NewRGBAF64)
+  * [func (c *RGBAF64) Clamp()](#RGBAF64.Clamp)
+
+## <a name="pkg-constants">Constants</a>
 ``` go
 const (
     JPEG = iota
@@ -48,7 +96,8 @@ Supported image encoding types
 
 
 
-## func Add
+
+## <a name="Add">func</a> [Add](/src/target/blend.go?s=599:651#L5)
 ``` go
 func Add(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -56,7 +105,8 @@ Add combines the foreground and background images by adding their values and
 returns the resulting image.
 
 
-## func BoxBlur
+
+## <a name="BoxBlur">func</a> [BoxBlur](/src/target/blur.go?s=137:194#L1)
 ``` go
 func BoxBlur(src image.Image, radius float64) *image.RGBA
 ```
@@ -64,7 +114,8 @@ BoxBlur returns a blurred (average) version of the image.
 Radius must be larger than 0.
 
 
-## func Brightness
+
+## <a name="Brightness">func</a> [Brightness](/src/target/adjustment.go?s=210:270#L1)
 ``` go
 func Brightness(src image.Image, change float64) *image.RGBA
 ```
@@ -72,14 +123,16 @@ Brightness returns a copy of the image with the adjusted brightness.
 Change is the normalized amount of change to be applied (range -1.0 to 1.0).
 
 
-## func CloneAsRGBA
+
+## <a name="CloneAsRGBA">func</a> [CloneAsRGBA](/src/target/helpers.go?s=131:176#L1)
 ``` go
 func CloneAsRGBA(src image.Image) *image.RGBA
 ```
 CloneAsRGBA returns an RGBA copy of the supplied image.
 
 
-## func ColorBurn
+
+## <a name="ColorBurn">func</a> [ColorBurn](/src/target/blend.go?s=3758:3816#L122)
 ``` go
 func ColorBurn(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -87,7 +140,8 @@ ColorBurn combines the foreground and background images by dividing the inverted
 background by the foreground image and then inverting the result which is then returned.
 
 
-## func ColorDodge
+
+## <a name="ColorDodge">func</a> [ColorDodge](/src/target/blend.go?s=4748:4807#L166)
 ``` go
 func ColorDodge(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -95,14 +149,16 @@ ColorDodge combines the foreground and background images by dividing background 
 inverted foreground image and returns the result.
 
 
-## func Convolute
+
+## <a name="Convolute">func</a> [Convolute](/src/target/convolution.go?s=1931:2018#L72)
 ``` go
 func Convolute(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *image.RGBA
 ```
 Convolute applies a convolution matrix (kernel) to an image with the supplied options.
 
 
-## func Darken
+
+## <a name="Darken">func</a> [Darken](/src/target/blend.go?s=7116:7171#L256)
 ``` go
 func Darken(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -110,7 +166,8 @@ Darken combines the foreground and background images by picking the darkest valu
 for each pixel. The result is then returned.
 
 
-## func Difference
+
+## <a name="Difference">func</a> [Difference](/src/target/blend.go?s=2903:2962#L92)
 ``` go
 func Difference(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -118,7 +175,8 @@ Difference calculates the absolute difference between the foreground and backgro
 returns the resulting image.
 
 
-## func Divide
+
+## <a name="Divide">func</a> [Divide](/src/target/blend.go?s=3335:3390#L107)
 ``` go
 func Divide(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -126,14 +184,16 @@ Divide combines the foreground and background images by diving the values from t
 by the foreground and returns the resulting image.
 
 
-## func EdgeDetection
+
+## <a name="EdgeDetection">func</a> [EdgeDetection](/src/target/effects.go?s=783:846#L31)
 ``` go
 func EdgeDetection(src image.Image, radius float64) *image.RGBA
 ```
 EdgeDetection returns a copy of the image with it's edges highlighted.
 
 
-## func Emboss
+
+## <a name="Emboss">func</a> [Emboss](/src/target/effects.go?s=1372:1412#L54)
 ``` go
 func Emboss(src image.Image) *image.RGBA
 ```
@@ -141,7 +201,8 @@ Emboss returns a copy of the image in which each pixel has been
 replaced either by a highlight or a shadow representation.
 
 
-## func Encode
+
+## <a name="Encode">func</a> [Encode](/src/target/util.go?s=898:960#L41)
 ``` go
 func Encode(w io.Writer, img image.Image, format Format) error
 ```
@@ -155,7 +216,8 @@ Usage example:
 	err := Encode(outFile, img, bild.PNG)
 
 
-## func Exclusion
+
+## <a name="Exclusion">func</a> [Exclusion](/src/target/blend.go?s=4300:4358#L150)
 ``` go
 func Exclusion(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -163,21 +225,24 @@ Exclusion combines the foreground and background images applying the Exclusion b
 returns the resulting image.
 
 
-## func FlipH
+
+## <a name="FlipH">func</a> [FlipH](/src/target/transform.go?s=92:131#L1)
 ``` go
 func FlipH(img image.Image) *image.RGBA
 ```
 FlipH returns a horizontally flipped version of the image.
 
 
-## func FlipV
+
+## <a name="FlipV">func</a> [FlipV](/src/target/transform.go?s=737:776#L22)
 ``` go
 func FlipV(img image.Image) *image.RGBA
 ```
 FlipV returns a vertically flipped version of the image.
 
 
-## func GaussianBlur
+
+## <a name="GaussianBlur">func</a> [GaussianBlur](/src/target/blur.go?s=636:698#L19)
 ``` go
 func GaussianBlur(src image.Image, radius float64) *image.RGBA
 ```
@@ -185,7 +250,8 @@ GaussianBlur returns a smoothly blurred version of the image using
 a Gaussian function. Radius must be larger than 0.
 
 
-## func Grayscale
+
+## <a name="Grayscale">func</a> [Grayscale](/src/target/effects.go?s=401:444#L12)
 ``` go
 func Grayscale(src image.Image) *image.RGBA
 ```
@@ -193,14 +259,16 @@ Grayscale returns a copy of the image in Grayscale using the weights
 0.3R + 0.6G + 0.1B as a heuristic.
 
 
-## func Invert
+
+## <a name="Invert">func</a> [Invert](/src/target/effects.go?s=108:148#L1)
 ``` go
 func Invert(src image.Image) *image.RGBA
 ```
 Invert returns a negated version of the image.
 
 
-## func Lighten
+
+## <a name="Lighten">func</a> [Lighten](/src/target/blend.go?s=7538:7594#L271)
 ``` go
 func Lighten(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -208,7 +276,8 @@ Lighten combines the foreground and background images by picking the brightest v
 for each pixel. The result is then returned.
 
 
-## func LinearBurn
+
+## <a name="LinearBurn">func</a> [LinearBurn](/src/target/blend.go?s=5185:5244#L181)
 ``` go
 func LinearBurn(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -216,7 +285,8 @@ LinearBurn combines the foreground and background images by adding them and
 then subtracting 255 (1.0 in normalized scale). The resulting image is then returned.
 
 
-## func LinearLight
+
+## <a name="LinearLight">func</a> [LinearLight](/src/target/blend.go?s=5604:5664#L196)
 ``` go
 func LinearLight(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -224,7 +294,8 @@ LinearLight combines the foreground and background images by a mix of a Linear D
 Linear Burn operation. The resulting image is then returned.
 
 
-## func Median
+
+## <a name="Median">func</a> [Median](/src/target/effects.go?s=2553:2603#L98)
 ``` go
 func Median(img image.Image, size int) *image.RGBA
 ```
@@ -232,7 +303,8 @@ Median returns a new image in which each pixel is the median of it's neighbors.
 Size sets the amount of neighbors to be searched.
 
 
-## func Multiply
+
+## <a name="Multiply">func</a> [Multiply](/src/target/blend.go?s=976:1033#L20)
 ``` go
 func Multiply(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -240,7 +312,8 @@ Multiply combines the foreground and background images by multiplying their
 normalized values and returns the resulting image.
 
 
-## func Opacity
+
+## <a name="Opacity">func</a> [Opacity](/src/target/blend.go?s=6604:6677#L239)
 ``` go
 func Opacity(bg image.Image, fg image.Image, percent float64) *image.RGBA
 ```
@@ -248,7 +321,8 @@ Opacity returns an image which blends the two input images by the percentage pro
 Percent must be of range 0 <= percent <= 1.0
 
 
-## func Open
+
+## <a name="Open">func</a> [Open](/src/target/util.go?s=457:504#L19)
 ``` go
 func Open(filename string) (image.Image, error)
 ```
@@ -262,7 +336,8 @@ Usage example:
 	img, err := Open("exampleName")
 
 
-## func Overlay
+
+## <a name="Overlay">func</a> [Overlay](/src/target/blend.go?s=1388:1444#L35)
 ``` go
 func Overlay(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -270,7 +345,8 @@ Overlay combines the foreground and background images by using Multiply when cha
 or using Screen otherwise and returns the resulting image.
 
 
-## func Save
+
+## <a name="Save">func</a> [Save](/src/target/util.go?s=1358:1422#L61)
 ``` go
 func Save(filename string, img image.Image, format Format) error
 ```
@@ -284,28 +360,33 @@ Usage example:
 	err := Save("exampleName", img, bild.PNG)
 
 
-## func Screen
+
+## <a name="Screen">func</a> [Screen](/src/target/blend.go?s=2496:2551#L77)
 ``` go
 func Screen(bg image.Image, fg image.Image) *image.RGBA
 ```
 Screen combines the foreground and background images by inverting, multiplying and inverting the output.
 The result is a brighter image which is then returned.
 
-## func Sharpen
+
+
+## <a name="Sharpen">func</a> [Sharpen](/src/target/effects.go?s=1680:1721#L65)
 ``` go
 func Sharpen(src image.Image) *image.RGBA
 ```
-Sharpen returns a sharpened copy of the image by detecting it's edges
-and adding it to the original.
+Sharpen returns a sharpened copy of the image by detecting it's edges and adding it to the original.
 
-## func Sobel
+
+
+## <a name="Sobel">func</a> [Sobel](/src/target/effects.go?s=1984:2023#L76)
 ``` go
 func Sobel(src image.Image) *image.RGBA
 ```
 Sobel returns an image emphasising edges using an approximation to the Sobel–Feldman operator.
 
 
-## func SoftLight
+
+## <a name="SoftLight">func</a> [SoftLight](/src/target/blend.go?s=2012:2070#L63)
 ``` go
 func SoftLight(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -313,7 +394,8 @@ SoftLight combines the foreground and background images by using Pegtop's Soft L
 returns the resulting image.
 
 
-## func Subtract
+
+## <a name="Subtract">func</a> [Subtract](/src/target/blend.go?s=6217:6274#L224)
 ``` go
 func Subtract(bg image.Image, fg image.Image) *image.RGBA
 ```
@@ -322,7 +404,8 @@ foreground. The result is then returned.
 
 
 
-## type ConvolutionMatrix
+
+## <a name="ConvolutionMatrix">type</a> [ConvolutionMatrix](/src/target/convolution.go?s=236:344#L3)
 ``` go
 type ConvolutionMatrix interface {
     At(x, y int) float64
@@ -344,8 +427,7 @@ SideLength returns the matrix side length.
 
 
 
-
-## type ConvolutionOptions
+## <a name="ConvolutionOptions">type</a> [ConvolutionOptions](/src/target/convolution.go?s=1751:1839#L65)
 ``` go
 type ConvolutionOptions struct {
     Bias       float64
@@ -367,8 +449,7 @@ CarryAlpha sets if the alpha should be taken from the source image without convo
 
 
 
-
-## type Format
+## <a name="Format">type</a> [Format](/src/target/util.go?s=156:171#L4)
 ``` go
 type Format int
 ```
@@ -383,8 +464,7 @@ Format is used to identify the image encoding type
 
 
 
-
-## type Kernel
+## <a name="Kernel">type</a> [Kernel](/src/target/convolution.go?s=542:594#L15)
 ``` go
 type Kernel struct {
     Matrix []float64
@@ -399,9 +479,7 @@ Kernel to be used as a convolution matrix.
 
 
 
-
-
-### func NewKernel
+### <a name="NewKernel">func</a> [NewKernel](/src/target/convolution.go?s=400:434#L10)
 ``` go
 func NewKernel(length int) *Kernel
 ```
@@ -410,7 +488,8 @@ NewKernel returns a kernel of the provided length.
 
 
 
-### func (\*Kernel) At
+
+### <a name="Kernel.At">func</a> (\*Kernel) [At](/src/target/convolution.go?s=1063:1100#L44)
 ``` go
 func (k *Kernel) At(x, y int) float64
 ```
@@ -418,7 +497,8 @@ At returns the matrix value at position x, y.
 
 
 
-### func (\*Kernel) Normalized
+
+### <a name="Kernel.Normalized">func</a> (\*Kernel) [Normalized](/src/target/convolution.go?s=655:702#L21)
 ``` go
 func (k *Kernel) Normalized() ConvolutionMatrix
 ```
@@ -426,7 +506,8 @@ Normalized returns a new Kernel with normalized values.
 
 
 
-### func (\*Kernel) SideLength
+
+### <a name="Kernel.SideLength">func</a> (\*Kernel) [SideLength](/src/target/convolution.go?s=958:991#L39)
 ``` go
 func (k *Kernel) SideLength() int
 ```
@@ -434,8 +515,42 @@ SideLength returns the matrix side length.
 
 
 
-### func (\*Kernel) String
+
+### <a name="Kernel.String">func</a> (\*Kernel) [String](/src/target/convolution.go?s=1196:1228#L49)
 ``` go
 func (k *Kernel) String() string
 ```
 String returns the string representation of the matrix.
+
+
+
+
+## <a name="RGBAF64">type</a> [RGBAF64](/src/target/color.go?s=110:153#L1)
+``` go
+type RGBAF64 struct {
+    R, G, B, A float64
+}
+```
+RGBAF64 represents an RGBA color using the range 0.0 to 1.0 with a float64 for each channel.
+
+
+
+
+
+
+
+### <a name="NewRGBAF64">func</a> [NewRGBAF64](/src/target/color.go?s=233:274#L1)
+``` go
+func NewRGBAF64(r, g, b, a uint8) RGBAF64
+```
+NewRGBAF64 returns a new RGBAF64 color based on the provided uint8 values.
+
+
+
+
+
+### <a name="RGBAF64.Clamp">func</a> (\*RGBAF64) [Clamp](/src/target/color.go?s=506:531#L9)
+``` go
+func (c *RGBAF64) Clamp()
+```
+Clamp limits the channel values of the RGBAF64 color to the range 0.0 to 1.0.
