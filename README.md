@@ -50,7 +50,7 @@ func main() {
 ## Adjustment
 
 ### Brightness
-    bild.Brightness(img, 0.25)
+    result := bild.Brightness(img, 0.25)
 
 ![example](https://anthonynsimon.github.io/projects/bild/brightness.jpg)  
 
@@ -59,88 +59,88 @@ func main() {
 ## Blend modes
 
 ### Add
-        bild.Add(bg, fg)
+    result := bild.Add(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/add.jpg)  
 
 ### ColorBurn
-        bild.ColorBurn(bg, fg)
+    result := bild.ColorBurn(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/colorburn.jpg)  
 
 ### ColorDodge
-        bild.ColorDodge(bg, fg)
+    result := bild.ColorDodge(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/colordodge.jpg) 
 
 ### Darken
-        bild.Darken(bg, fg)
+    result := bild.Darken(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/darken.jpg)  
 
 ### Difference
-        bild.Difference(bg, fg)
+    result := bild.Difference(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/difference.jpg)  
 
 ### Divide
-        bild.Divide(bg, fg)
+    result := bild.Divide(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/divide.jpg)  
 
 ### Exclusion
-        bild.Exclusion(bg, fg)
+    result := bild.Exclusion(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/exclusion.jpg)  
 
 ### Lighten
-        bild.Lighten(bg, fg)
+    result := bild.Lighten(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/lighten.jpg)  
 
 ### LinearBurn
-        bild.LinearBurn(bg, fg)
+    result := bild.LinearBurn(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/linearburn.jpg)  
 
 
 ### LinearLight
-        bild.LinearLight(bg, fg)
+    result := bild.LinearLight(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/linearlight.jpg)  
 
 ### Multiply
-        bild.Multiply(bg, fg)
+    result := bild.Multiply(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/multiply.jpg)  
 
 ### Normal
-        bild.Normal(bg, fg)
+    result := bild.Normal(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/normal.jpg)  
 
 ### Opacity
-        bild.Opacity(bg, fg, 0.5)
+    result := bild.Opacity(bg, fg, 0.5)
 
 ![example](https://anthonynsimon.github.io/projects/bild/opacity.jpg)  
 
 ### Overlay
-        bild.Overlay(bg, fg)
+    result := bild.Overlay(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/overlay.jpg)  
 
 ### Screen
-        bild.Screen(bg, fg)
+    result := bild.Screen(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/screen.jpg)  
 
 ### SoftLight
-        bild.SoftLight(bg, fg)
+    result := bild.SoftLight(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/softlight.jpg)  
 
 ### Subtract
-        bild.Subtract(bg, fg)
+    result := bild.Subtract(bg, fg)
 
 ![example](https://anthonynsimon.github.io/projects/bild/subtract.jpg)  
 
@@ -149,13 +149,13 @@ func main() {
 ## Blur
 
 ### BoxBlur
-        bild.BoxBlur(img, 3.0)
+    result := bild.BoxBlur(img, 3.0)
 
 ![example](https://anthonynsimon.github.io/projects/bild/boxblur.jpg)  
 
 
 ### GaussianBlur
-        bild.GaussianBlur(img, 3.0)
+    result := bild.GaussianBlur(img, 3.0)
 
 
 ![example](https://anthonynsimon.github.io/projects/bild/gaussianblur.jpg)  
@@ -165,38 +165,38 @@ func main() {
 ## Effects
 
 ### EdgeDetection
-        bild.EdgeDetection(img, 1.0)
+    result := bild.EdgeDetection(img, 1.0)
 
 ![example](https://anthonynsimon.github.io/projects/bild/edgedetection.jpg)  
 
 ### Emboss
-        bild.Emboss(img)
+    result := bild.Emboss(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/emboss.jpg)  
 
 ### Grayscale
-        bild.Grayscale(img)
+    result := bild.Grayscale(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/grayscale.jpg)  
 
 ### Invert
-        bild.Invert(img)
+    result := bild.Invert(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/invert.jpg)  
 
 ### Median
-        bild.Median(img, 10.0)
+    result := bild.Median(img, 10.0)
 
 ![example](https://anthonynsimon.github.io/projects/bild/median.jpg)  
 
 ### Sharpen
-        bild.Sharpen(img)
+    result := bild.Sharpen(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/sharpen.jpg)  
 
 
 ### Sobel
-        bild.Sobel(img)
+    result := bild.Sobel(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/sobel.jpg)  
 
@@ -205,11 +205,11 @@ func main() {
 ## Transform
 
 ### FlipH
-        bild.FlipH(img)
+    result := bild.FlipH(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/fliph.jpg)  
 
 ### FlipV
-        bild.FlipV(img)
+    result := bild.FlipV(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/flipv.jpg)  
