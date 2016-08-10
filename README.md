@@ -54,6 +54,11 @@ func main() {
 
 ![example](https://anthonynsimon.github.io/projects/bild/brightness.jpg)  
 
+### Contrast
+    result := bild.Contrast(img, -0.5)
+
+![example](https://anthonynsimon.github.io/projects/bild/contrast.jpg)  
+
 ### Gamma
     result := bild.Gamma(img, 2.2)
 
