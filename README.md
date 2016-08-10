@@ -54,6 +54,11 @@ func main() {
 
 ![example](https://anthonynsimon.github.io/projects/bild/brightness.jpg)  
 
+### Gamma
+    result := bild.Gamma(img, 2.2)
+
+![example](https://anthonynsimon.github.io/projects/bild/gamma.jpg)  
+
 
 
 ## Blend modes
