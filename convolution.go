@@ -68,7 +68,7 @@ func (k *Kernel) String() string {
 	return result
 }
 
-// ConvolutionOptions are the convolute function parameters.
+// ConvolutionOptions are the Convolve function parameters.
 // Bias is added to each RGB channel after convoluting. Range is -255 to 255.
 // Wrap sets if indices outside of image dimensions should be taken from the opposite side.
 // CarryAlpha sets if the alpha should be taken from the source image without convoluting
@@ -78,8 +78,8 @@ type ConvolutionOptions struct {
 	CarryAlpha bool
 }
 
-// Convolute applies a convolution matrix (kernel) to an image with the supplied options.
-func Convolute(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *image.RGBA {
+// Convolve applies a convolution matrix (kernel) to an image with the supplied options.
+func Convolve(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
 	dst := image.NewRGBA(bounds)

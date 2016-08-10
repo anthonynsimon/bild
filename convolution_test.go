@@ -60,7 +60,7 @@ func TestNewKernel(t *testing.T) {
 	}
 }
 
-func TestConvolute(t *testing.T) {
+func TestConvolve(t *testing.T) {
 	cases := []struct {
 		options  *ConvolutionOptions
 		kernel   *Kernel
@@ -170,9 +170,9 @@ func TestConvolute(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := Convolute(c.value, c.kernel, c.options)
+		actual := Convolve(c.value, c.kernel, c.options)
 		if !rgbaImageEqual(actual, c.expected) {
-			t.Error(testFailMessage("Convolute", c.expected, actual))
+			t.Error(testFailMessage("Convolve", c.expected, actual))
 		}
 	}
 }

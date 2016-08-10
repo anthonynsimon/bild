@@ -56,7 +56,7 @@ func EdgeDetection(src image.Image, radius float64) *image.RGBA {
 
 		}
 	}
-	return Convolute(src, k, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})
+	return Convolve(src, k, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})
 }
 
 // Emboss returns a copy of the image in which each pixel has been
@@ -68,7 +68,7 @@ func Emboss(src image.Image) *image.RGBA {
 		0, 1, 1,
 	}, 3}
 
-	return Convolute(src, &k, &ConvolutionOptions{Bias: 128, Wrap: false, CarryAlpha: true})
+	return Convolve(src, &k, &ConvolutionOptions{Bias: 128, Wrap: false, CarryAlpha: true})
 }
 
 // Sharpen returns a sharpened copy of the image by detecting it's edges and adding it to the original.
@@ -79,7 +79,7 @@ func Sharpen(src image.Image) *image.RGBA {
 		0, -1, 0,
 	}, 3}
 
-	return Convolute(src, &k, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})
+	return Convolve(src, &k, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})
 }
 
 // Sobel returns an image emphasising edges using an approximation to the Sobel–Feldman operator.
@@ -97,8 +97,8 @@ func Sobel(src image.Image) *image.RGBA {
 		-1, 0, 1,
 	}, 3}
 
-	vSobel := Convolute(src, &vk, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})
-	hSobel := Convolute(src, &hk, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})
+	vSobel := Convolve(src, &vk, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})
+	hSobel := Convolve(src, &hk, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})
 
 	return Add(Multiply(vSobel, vSobel), Multiply(hSobel, hSobel))
 }
