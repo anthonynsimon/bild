@@ -493,7 +493,7 @@ Format is used to identify the image encoding type
 ## <a name="Kernel">type</a> Kernel
 ``` go
 type Kernel struct {
-    Matrix float6
+    Matrix float64
     Stride int
 }
 ```
