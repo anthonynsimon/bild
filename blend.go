@@ -116,9 +116,22 @@ func Difference(bg image.Image, fg image.Image) *image.RGBA {
 // by the foreground and returns the resulting image.
 func Divide(bg image.Image, fg image.Image) *image.RGBA {
 	dst := blend(bg, fg, func(c0, c1 RGBAF64) RGBAF64 {
-		r := c0.R / c1.R
-		g := c0.G / c1.G
-		b := c0.B / c1.B
+		var r, g, b float64
+		if c1.R == 0 {
+			r = 1
+		} else {
+			r = c0.R / c1.R
+		}
+		if c1.G == 0 {
+			g = 1
+		} else {
+			g = c0.G / c1.G
+		}
+		if c1.B == 0 {
+			b = 1
+		} else {
+			b = c0.B / c1.B
+		}
 
 		c2 := RGBAF64{r, g, b, c1.A}
 		return alphaComp(c0, c2)
@@ -175,9 +188,22 @@ func Exclusion(bg image.Image, fg image.Image) *image.RGBA {
 // inverted foreground image and returns the result.
 func ColorDodge(bg image.Image, fg image.Image) *image.RGBA {
 	dst := blend(bg, fg, func(c0, c1 RGBAF64) RGBAF64 {
-		r := c0.R / (1 - c1.R)
-		g := c0.G / (1 - c1.G)
-		b := c0.B / (1 - c1.B)
+		var r, g, b float64
+		if c1.R == 1 {
+			r = 1
+		} else {
+			r = c0.R / (1 - c1.R)
+		}
+		if c1.G == 1 {
+			g = 1
+		} else {
+			g = c0.G / (1 - c1.G)
+		}
+		if c1.B == 1 {
+			b = 1
+		} else {
+			b = c0.B / (1 - c1.B)
+		}
 
 		c2 := RGBAF64{r, g, b, c1.A}
 		return alphaComp(c0, c2)
