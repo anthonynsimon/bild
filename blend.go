@@ -329,9 +329,8 @@ func Lighten(bg image.Image, fg image.Image) *image.RGBA {
 
 // blend two images together by applying the provided function for each pixel.
 func blend(bg image.Image, fg image.Image, fn func(RGBAF64, RGBAF64) RGBAF64) *image.RGBA {
-	// Currently only equal size images are supported
 	if bg.Bounds() != fg.Bounds() {
-		panic("blend operation: only equal size images are supported")
+		panic("Currently only equal size images are supported")
 	}
 
 	bounds := bg.Bounds()
