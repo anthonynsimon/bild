@@ -223,3 +223,18 @@ func main() {
     result := bild.FlipV(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/flipv.jpg)  
+
+# License
+
+This project is licensed under the MIT license. Please read the LICENSE file.
+
+# Contribute
+
+Want to hack on the project? Any kind of contribution is welcome!  
+Simply follow the next steps:
+
+- Fork the project.
+- Create a new branch.
+- Make your changes and write tests when practical.
+- Commit your changes to the new branch.
+- Send a pull request, by the way you are awesome.
