@@ -44,7 +44,7 @@ func EdgeDetection(src image.Image, radius float64) *image.RGBA {
 	}
 
 	length := int(math.Ceil(2*radius + 1))
-	k := NewKernel(length)
+	k := NewKernel(length, length)
 
 	for x := 0; x < length; x++ {
 		for y := 0; y < length; y++ {
@@ -66,7 +66,7 @@ func Emboss(src image.Image) *image.RGBA {
 		-1, -1, 0,
 		-1, 0, 1,
 		0, 1, 1,
-	}, 3}
+	}, 3, 3}
 
 	return Convolve(src, &k, &ConvolutionOptions{Bias: 128, Wrap: false, CarryAlpha: true})
 }
@@ -77,7 +77,7 @@ func Sharpen(src image.Image) *image.RGBA {
 		0, -1, 0,
 		-1, 5, -1,
 		0, -1, 0,
-	}, 3}
+	}, 3, 3}
 
 	return Convolve(src, &k, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})
 }
@@ -89,13 +89,13 @@ func Sobel(src image.Image) *image.RGBA {
 		1, 2, 1,
 		0, 0, 0,
 		-1, -2, -1,
-	}, 3}
+	}, 3, 3}
 
 	vk := Kernel{[]float64{
 		-1, 0, 1,
 		-2, 0, 2,
 		-1, 0, 1,
-	}, 3}
+	}, 3, 3}
 
 	vSobel := Convolve(src, &vk, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})
 	hSobel := Convolve(src, &hk, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: true})

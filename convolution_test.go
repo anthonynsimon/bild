@@ -12,20 +12,21 @@ func TestNewKernel(t *testing.T) {
 	}{
 		{
 			size:     0,
-			expected: &Kernel{[]float64{}, 0},
+			expected: &Kernel{[]float64{}, 0, 0},
 		},
 		{
 			size: 1,
 			expected: &Kernel{[]float64{
 				0,
-			}, 1},
+				0,
+			}, 1, 1},
 		},
 		{
 			size: 2,
 			expected: &Kernel{[]float64{
 				0, 0,
 				0, 0,
-			}, 2},
+			}, 2, 2},
 		},
 		{
 			size: 3,
@@ -33,7 +34,7 @@ func TestNewKernel(t *testing.T) {
 				0, 0, 0,
 				0, 0, 0,
 				0, 0, 0,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			size: 10,
@@ -48,12 +49,12 @@ func TestNewKernel(t *testing.T) {
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			}, 10},
+			}, 10, 10},
 		},
 	}
 
 	for _, c := range cases {
-		actual := NewKernel(c.size)
+		actual := NewKernel(c.size, c.size)
 		if !kernelEqual(actual, c.expected) {
 			t.Error(testFailMessage("NewKernel", c.expected, actual))
 		}
@@ -69,7 +70,7 @@ func TestConvolve(t *testing.T) {
 	}{
 		{
 			options: &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: false},
-			kernel:  &Kernel{[]float64{}, 0},
+			kernel:  &Kernel{[]float64{}, 0, 0},
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 3, 3),
 				Stride: 3 * 4,
@@ -95,7 +96,7 @@ func TestConvolve(t *testing.T) {
 				1, 0, 0,
 				0, 0, 0,
 				0, 0, 0,
-			}, 3},
+			}, 3, 3},
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 3, 3),
 				Stride: 3 * 4,
@@ -121,7 +122,7 @@ func TestConvolve(t *testing.T) {
 				0, 0, 0,
 				0.5, 0, 0.5,
 				0, 0, 0,
-			}, 3},
+			}, 3, 3},
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 3, 3),
 				Stride: 3 * 4,
@@ -147,7 +148,7 @@ func TestConvolve(t *testing.T) {
 				0, 0.5, 0,
 				0, 0, 0,
 				0, 0.5, 0,
-			}, 3},
+			}, 3, 3},
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 3, 3),
 				Stride: 3 * 4,
@@ -184,7 +185,7 @@ func TestAbsum(t *testing.T) {
 	}{
 		{
 			expected: 0,
-			kernel:   NewKernel(0),
+			kernel:   NewKernel(0, 0),
 		},
 		{
 			expected: 10,
@@ -192,7 +193,7 @@ func TestAbsum(t *testing.T) {
 				5, 0, 1,
 				0, 2, 0,
 				0, 2, 0,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			expected: 11,
@@ -200,7 +201,7 @@ func TestAbsum(t *testing.T) {
 				4, 0, 1,
 				0, 1, 0,
 				1, 3, 1,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			expected: 34,
@@ -208,7 +209,7 @@ func TestAbsum(t *testing.T) {
 				20, 0, 2,
 				0, -9, 0,
 				-2, 0, -1,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			expected: 11,
@@ -217,7 +218,7 @@ func TestAbsum(t *testing.T) {
 				0, 9, 0, 0,
 				0, 0, 0, -1,
 				0, 0, 0, 0,
-			}, 4},
+			}, 4, 4},
 		},
 	}
 
@@ -243,7 +244,7 @@ func TestKernelAt(t *testing.T) {
 				5, 0, 1,
 				0, 2, 0,
 				0, 2, 0,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			x:        2,
@@ -253,7 +254,7 @@ func TestKernelAt(t *testing.T) {
 				4, -7, 1,
 				-11, 1, -2,
 				1, 3, 1,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			x:        2,
@@ -263,7 +264,7 @@ func TestKernelAt(t *testing.T) {
 				20, 0, 2,
 				0, -9, 0,
 				-2, 0, -1,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			x:        3,
@@ -274,7 +275,7 @@ func TestKernelAt(t *testing.T) {
 				0, 9, 0, 0,
 				0, 0, 0, -1,
 				0, 0, 92, 0,
-			}, 4},
+			}, 4, 4},
 		},
 	}
 
@@ -298,12 +299,12 @@ func TestKernelNormalized(t *testing.T) {
 				0, 0, 0,
 				0, 0, 0,
 				0, 0, 0,
-			}, 3},
+			}, 3, 3},
 			expected: &Kernel{[]float64{
 				0, 0, 0,
 				0, 0, 0,
 				0, 0, 0,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			desc: "one element",
@@ -311,12 +312,12 @@ func TestKernelNormalized(t *testing.T) {
 				0, 0, 0,
 				0, 1, 0,
 				0, 0, 0,
-			}, 3},
+			}, 3, 3},
 			expected: &Kernel{[]float64{
 				0, 0, 0,
 				0, 1, 0,
 				0, 0, 0,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			desc: "sum 3",
@@ -324,12 +325,12 @@ func TestKernelNormalized(t *testing.T) {
 				0, 0, 0,
 				1, 1, 0,
 				0, 0, 1,
-			}, 3},
+			}, 3, 3},
 			expected: &Kernel{[]float64{
 				0, 0, 0,
 				1.0 / 3, 1.0 / 3, 0,
 				0, 0, 1.0 / 3,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			desc: "sum 4",
@@ -337,12 +338,12 @@ func TestKernelNormalized(t *testing.T) {
 				0, 0, 0,
 				1, -2, 0,
 				0, 0, 1,
-			}, 3},
+			}, 3, 3},
 			expected: &Kernel{[]float64{
 				0, 0, 0,
 				1.0 / 4, -2.0 / 4, 0,
 				0, 0, 1.0 / 4,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			desc: "sum 5",
@@ -350,12 +351,12 @@ func TestKernelNormalized(t *testing.T) {
 				0, 0, 0,
 				1, -2, 0,
 				-1, 0, 1,
-			}, 3},
+			}, 3, 3},
 			expected: &Kernel{[]float64{
 				0, 0, 0,
 				1.0 / 5, -2.0 / 5, 0,
 				-1.0 / 5, 0, 1.0 / 5,
-			}, 3},
+			}, 3, 3},
 		},
 		{
 			desc: "single negative element",
@@ -363,12 +364,12 @@ func TestKernelNormalized(t *testing.T) {
 				0, 0, 0,
 				0, -1, 0,
 				0, 0, 0,
-			}, 3},
+			}, 3, 3},
 			expected: &Kernel{[]float64{
 				0, 0, 0,
 				0, -1, 0,
 				0, 0, 0,
-			}, 3},
+			}, 3, 3},
 		},
 	}
 
@@ -390,7 +391,7 @@ func TestKernelString(t *testing.T) {
 				0, 0, 0,
 				0, -1, 0,
 				0, 0, 0,
-			}, 3},
+			}, 3, 3},
 			expected: "\n0.0000  0.0000  0.0000  \n0.0000  -1.0000 0.0000  \n0.0000  0.0000  0.0000  ",
 		},
 		{
@@ -398,7 +399,7 @@ func TestKernelString(t *testing.T) {
 				-2.75, 0, 0,
 				0, -1, 0,
 				0, 0, 92.32579,
-			}, 3},
+			}, 3, 3},
 			expected: "\n-2.7500 0.0000  0.0000  \n0.0000  -1.0000 0.0000  \n0.0000  0.0000  92.3258 ",
 		},
 	}
@@ -416,13 +417,13 @@ func kernelEqual(a, b *Kernel) bool {
 		return true
 	}
 
-	if a.SideLength() != b.SideLength() {
+	if a.MaxX() != b.MaxX() || a.MaxY() != b.MaxY() {
 		return false
 	}
 
-	for x := 0; x < a.SideLength(); x++ {
-		for y := 0; y < a.SideLength(); y++ {
-			if a.Matrix[y*a.Stride+x] != b.Matrix[y*b.Stride+x] {
+	for x := 0; x < a.MaxX(); x++ {
+		for y := 0; y < a.MaxY(); y++ {
+			if a.Matrix[y*a.MaxX()+x] != b.Matrix[y*b.MaxX()+x] {
 				return false
 			}
 		}

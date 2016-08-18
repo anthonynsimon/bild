@@ -107,11 +107,11 @@ func nearestNeighbor(src *image.RGBA, width, height int) *image.RGBA {
 
 // Build the convolution kernel based on the filter selected
 func buildKernel(radius float64, filter ResampleFilter) ConvolutionMatrix {
-	kernelMaxX := int(math.Ceil(radius + 1))
-	kernel := NewKernel(kernelMaxX)
+	kernelLength := int(math.Ceil(radius + 1))
+	kernel := NewKernel(kernelLength, 1)
 
-	for x := 0; x < kernelMaxX; x++ {
-		kernel.Matrix[x] = filter.Fn(float64(x)/float64(kernelMaxX-1), 0)
+	for x := 0; x < kernelLength; x++ {
+		kernel.Matrix[x] = filter.Fn(float64(x)/float64(kernelLength-1), 0)
 	}
 
 	return kernel.Normalized()
@@ -128,7 +128,7 @@ func resampleHorizontal(src *image.RGBA, width int, filter ResampleFilter) *imag
 
 	radius := 100 / float64(100*scaleX>>16)
 	k := buildKernel(radius, filter)
-	kernelLength := k.SideLength()
+	kernelLength := k.MaxX()
 
 	for y := 0; y < srcHeight; y++ {
 		for x := 0; x < width; x++ {
@@ -172,7 +172,7 @@ func resampleVertical(src *image.RGBA, height int, filter ResampleFilter) *image
 
 	radius := 100 / float64(100*scaleY>>16)
 	k := buildKernel(radius, filter)
-	kernelLength := k.SideLength()
+	kernelLength := k.MaxX()
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < srcWidth; x++ {
