@@ -82,7 +82,7 @@ type ConvolutionOptions struct {
 //
 // Usage example:
 //
-//		Convolve(img, kernel, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: false})
+//		result := Convolve(img, kernel, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: false})
 //
 func Convolve(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *image.RGBA {
 	bounds := img.Bounds()
