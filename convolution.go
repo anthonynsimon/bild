@@ -59,9 +59,9 @@ func (k *Kernel) At(x, y int) float64 {
 func (k *Kernel) String() string {
 	result := ""
 	stride := k.Stride
-	for x := 0; x < stride; x++ {
+	for y := 0; y < stride; y++ {
 		result += fmt.Sprintf("\n")
-		for y := 0; y < stride; y++ {
+		for x := 0; x < stride; x++ {
 			result += fmt.Sprintf("%-8.4f", k.At(x, y))
 		}
 	}
