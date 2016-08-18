@@ -130,33 +130,35 @@ func resampleHorizontal(src *image.RGBA, width int, filter ResampleFilter) *imag
 	k := buildKernel(radius, filter)
 	kernelLength := k.MaxX()
 
-	for y := 0; y < srcHeight; y++ {
-		for x := 0; x < width; x++ {
+	parallelize(srcHeight, func(start, end int) {
+		for y := start; y < end; y++ {
+			for x := 0; x < width; x++ {
 
-			var r, g, b, a float64
-			for kx := 0; kx < kernelLength; kx++ {
-				ix := x - kernelLength/2 + kx
+				var r, g, b, a float64
+				for kx := 0; kx < kernelLength; kx++ {
+					ix := x - kernelLength/2 + kx
 
-				if ix < 0 || ix >= width {
-					continue
+					if ix < 0 || ix >= width {
+						continue
+					}
+
+					ipos := y*srcStride + ((ix*scaleX)>>16)*4
+					kvalue := k.At(kx, 0)
+
+					r += float64(src.Pix[ipos+0]) * kvalue
+					g += float64(src.Pix[ipos+1]) * kvalue
+					b += float64(src.Pix[ipos+2]) * kvalue
+					a += float64(src.Pix[ipos+3]) * kvalue
 				}
 
-				ipos := y*srcStride + ((ix*scaleX)>>16)*4
-				kvalue := k.At(kx, 0)
-
-				r += float64(src.Pix[ipos+0]) * kvalue
-				g += float64(src.Pix[ipos+1]) * kvalue
-				b += float64(src.Pix[ipos+2]) * kvalue
-				a += float64(src.Pix[ipos+3]) * kvalue
+				pos := y*dstStride + x*4
+				dst.Pix[pos+0] = uint8(math.Max(math.Min(r, 255), 0))
+				dst.Pix[pos+1] = uint8(math.Max(math.Min(g, 255), 0))
+				dst.Pix[pos+2] = uint8(math.Max(math.Min(b, 255), 0))
+				dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
 			}
-
-			pos := y*dstStride + x*4
-			dst.Pix[pos+0] = uint8(math.Max(math.Min(r, 255), 0))
-			dst.Pix[pos+1] = uint8(math.Max(math.Min(g, 255), 0))
-			dst.Pix[pos+2] = uint8(math.Max(math.Min(b, 255), 0))
-			dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
 		}
-	}
+	})
 
 	return dst
 }
@@ -174,33 +176,35 @@ func resampleVertical(src *image.RGBA, height int, filter ResampleFilter) *image
 	k := buildKernel(radius, filter)
 	kernelLength := k.MaxX()
 
-	for y := 0; y < height; y++ {
-		for x := 0; x < srcWidth; x++ {
+	parallelize(height, func(start, end int) {
+		for y := start; y < end; y++ {
+			for x := 0; x < srcWidth; x++ {
 
-			var r, g, b, a float64
-			for ky := 0; ky < kernelLength; ky++ {
-				iy := y - kernelLength/2 + ky
+				var r, g, b, a float64
+				for ky := 0; ky < kernelLength; ky++ {
+					iy := y - kernelLength/2 + ky
 
-				if iy < 0 || iy >= height {
-					continue
+					if iy < 0 || iy >= height {
+						continue
+					}
+
+					ipos := ((y*scaleY)>>16)*srcStride + x*4
+					kvalue := k.At(ky, 0)
+
+					r += float64(src.Pix[ipos+0]) * kvalue
+					g += float64(src.Pix[ipos+1]) * kvalue
+					b += float64(src.Pix[ipos+2]) * kvalue
+					a += float64(src.Pix[ipos+3]) * kvalue
 				}
 
-				ipos := ((y*scaleY)>>16)*srcStride + x*4
-				kvalue := k.At(ky, 0)
-
-				r += float64(src.Pix[ipos+0]) * kvalue
-				g += float64(src.Pix[ipos+1]) * kvalue
-				b += float64(src.Pix[ipos+2]) * kvalue
-				a += float64(src.Pix[ipos+3]) * kvalue
+				pos := y*dstStride + x*4
+				dst.Pix[pos+0] = uint8(math.Max(math.Min(r, 255), 0))
+				dst.Pix[pos+1] = uint8(math.Max(math.Min(g, 255), 0))
+				dst.Pix[pos+2] = uint8(math.Max(math.Min(b, 255), 0))
+				dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
 			}
-
-			pos := y*dstStride + x*4
-			dst.Pix[pos+0] = uint8(math.Max(math.Min(r, 255), 0))
-			dst.Pix[pos+1] = uint8(math.Max(math.Min(g, 255), 0))
-			dst.Pix[pos+2] = uint8(math.Max(math.Min(b, 255), 0))
-			dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
 		}
-	}
+	})
 
 	return dst
 }
