@@ -1,6 +1,7 @@
 package bild
 
 import (
+	"fmt"
 	"image"
 	"math"
 )
@@ -9,8 +10,9 @@ import (
 // Name is simply an identifier for the filter function.
 // Fn is the resample filter function itself.
 type ResampleFilter struct {
-	Name string
-	Fn   func(x, y float64) float64
+	Name   string
+	Degree float64
+	Fn     func(x, y float64) float64
 }
 
 // NearestNeighbor is a fast, non-convolution resample filter. It produces
@@ -23,25 +25,52 @@ var Box ResampleFilter
 // Linear is a convolution based resample filter that interpolates the values linearly.
 var Linear ResampleFilter
 
+var Quadratic ResampleFilter
+
 // Gaussian is a convolution based resample filter that interpolates the values
 // using a gaussian function.
 var Gaussian ResampleFilter
 
 func init() {
 	NearestNeighbor = ResampleFilter{
-		Name: "NearestNeighbor",
-		Fn:   nil,
+		Name:   "NearestNeighbor",
+		Degree: 0,
+		Fn:     nil,
 	}
 	Box = ResampleFilter{
-		Name: "Box",
+		Name:   "Box",
+		Degree: 1,
 		Fn: func(x, y float64) float64 {
-			return 1
+			if math.Abs(x) < 0.5 {
+				return 1
+			}
+			return 0
 		},
 	}
 	Linear = ResampleFilter{
-		Name: "Linear",
+		Name:   "Linear",
+		Degree: 2,
 		Fn: func(x, y float64) float64 {
-			return (1 - math.Abs(0.5-x)) + (1 - math.Abs(0.5-y))
+			x = math.Abs(x)
+			if x < 1.0 {
+				return 1.0 - x
+			}
+			return 0
+		},
+	}
+	Quadratic = ResampleFilter{
+		Name:   "Quadratic",
+		Degree: 3,
+		Fn: func(x, y float64) float64 {
+			x = math.Abs(x)
+			if -1 < x && x <= 0 {
+				return (x * x * 0.5) + (3 * x / 2) + 1
+			} else if 0 < x && x <= 1 {
+				return -(x * x) + 1
+			} else if 1 < x && x <= 2 {
+				return (x * x * 0.5) - (3 * x / 2) + 1
+			}
+			return 0
 		},
 	}
 	Gaussian = ResampleFilter{
@@ -107,12 +136,15 @@ func nearestNeighbor(src *image.RGBA, width, height int) *image.RGBA {
 
 // Build the convolution kernel based on the filter selected
 func buildKernel(radius float64, filter ResampleFilter) ConvolutionMatrix {
-	kernelLength := int(math.Ceil(radius + 1))
+	kernelLength := int(math.Ceil(2*150 + 1))
 	kernel := NewKernel(kernelLength, 1)
 
+	fmt.Println(filter.Name)
 	for x := 0; x < kernelLength; x++ {
-		kernel.Matrix[x] = filter.Fn(float64(x)/float64(kernelLength-1), 0)
+		kernel.Matrix[x] = filter.Fn(float64(x-kernelLength/2)/300, 0)
+		fmt.Println(float64(x-kernelLength/2) / float64(2))
 	}
+	fmt.Println("")
 
 	return kernel.Normalized()
 }
@@ -126,9 +158,12 @@ func resampleHorizontal(src *image.RGBA, width int, filter ResampleFilter) *imag
 	dst := image.NewRGBA(image.Rect(0, 0, width, srcHeight))
 	dstStride := dst.Stride
 
-	radius := 100 / float64(100*scaleX>>16)
-	k := buildKernel(radius, filter)
+	// radius := float64(1<<16) / float64(scaleX)
+
+	k := buildKernel(2, filter)
 	kernelLength := k.MaxX()
+
+	fmt.Println(k)
 
 	parallelize(srcHeight, func(start, end int) {
 		for y := start; y < end; y++ {
@@ -172,8 +207,8 @@ func resampleVertical(src *image.RGBA, height int, filter ResampleFilter) *image
 	dst := image.NewRGBA(image.Rect(0, 0, srcWidth, height))
 	dstStride := dst.Stride
 
-	radius := 100 / float64(100*scaleY>>16)
-	k := buildKernel(radius, filter)
+	// radius := float64(1<<16) / float64(scaleY)
+	k := buildKernel(2, filter)
 	kernelLength := k.MaxX()
 
 	parallelize(height, func(start, end int) {
