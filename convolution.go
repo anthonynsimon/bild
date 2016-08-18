@@ -79,6 +79,11 @@ type ConvolutionOptions struct {
 }
 
 // Convolve applies a convolution matrix (kernel) to an image with the supplied options.
+//
+// Usage example:
+//
+//		Convolve(img, kernel, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: false})
+//
 func Convolve(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
@@ -97,12 +102,12 @@ func Convolve(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *imag
 	}
 
 	parallelize(h, func(start, end int) {
-		for x := 0; x < w; x++ {
-			for y := start; y < end; y++ {
+		for y := start; y < end; y++ {
+			for x := 0; x < w; x++ {
 
 				var r, g, b, a float64
-				for kx := 0; kx < kernelLength; kx++ {
-					for ky := 0; ky < kernelLength; ky++ {
+				for ky := 0; ky < kernelLength; ky++ {
+					for kx := 0; kx < kernelLength; kx++ {
 
 						var ix, iy int
 						if wrap {
