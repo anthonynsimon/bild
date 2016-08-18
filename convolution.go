@@ -9,59 +9,69 @@ import (
 // ConvolutionMatrix interface.
 // At returns the matrix value at position x, y.
 // Normalized returns a new matrix with normalized values.
-// SideLength returns the matrix side length.
+// MaxX returns the horizontal length.
+// MaxY returns the vertical length.
 type ConvolutionMatrix interface {
 	At(x, y int) float64
 	Normalized() ConvolutionMatrix
-	SideLength() int
+	MaxX() int
+	MaxY() int
 }
 
 // NewKernel returns a kernel of the provided length.
-func NewKernel(length int) *Kernel {
-	return &Kernel{make([]float64, length*length), length}
+func NewKernel(width, height int) *Kernel {
+	return &Kernel{make([]float64, width*height), width, height}
 }
 
 // Kernel to be used as a convolution matrix.
 type Kernel struct {
 	Matrix []float64
-	Stride int
+	Width  int
+	Height int
 }
 
 // Normalized returns a new Kernel with normalized values.
 func (k *Kernel) Normalized() ConvolutionMatrix {
 	sum := absum(k)
-	stride := k.Stride
-	nk := NewKernel(stride)
+	w := k.Width
+	h := k.Height
+	nk := NewKernel(w, h)
 
 	// avoid division by 0
 	if sum == 0 {
 		sum = 1
 	}
 
-	for i := 0; i < stride*stride; i++ {
+	for i := 0; i < w*h; i++ {
 		nk.Matrix[i] = k.Matrix[i] / sum
 	}
 
 	return nk
 }
 
-// SideLength returns the matrix side length.
-func (k *Kernel) SideLength() int {
-	return k.Stride
+// MaxX returns the horizontal length.
+func (k *Kernel) MaxX() int {
+	return k.Width
+}
+
+// MaxY returns the vertical length.
+func (k *Kernel) MaxY() int {
+	return k.Height
 }
 
 // At returns the matrix value at position x, y.
 func (k *Kernel) At(x, y int) float64 {
-	return k.Matrix[y*k.Stride+x]
+	return k.Matrix[y*k.Width+x]
 }
 
 // String returns the string representation of the matrix.
 func (k *Kernel) String() string {
 	result := ""
-	stride := k.Stride
-	for x := 0; x < stride; x++ {
+	stride := k.MaxX()
+	height := k.MaxY()
+	for y := 0; y < height; y++ {
 		result += fmt.Sprintf("\n")
-		for y := 0; y < stride; y++ {
+		for x := 0; x < stride; x++ {
 			result += fmt.Sprintf("%-8.4f", k.At(x, y))
 		}
 	}
@@ -79,18 +89,14 @@ type ConvolutionOptions struct {
 }
 
 // Convolve applies a convolution matrix (kernel) to an image with the supplied options.
-//
-// Usage example:
-//
-//		result := Convolve(img, kernel, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: false})
-//
 func Convolve(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
 	dst := image.NewRGBA(bounds)
 
 	w, h := bounds.Max.X, bounds.Max.Y
-	kernelLength := k.SideLength()
+	kernelLengthX := k.MaxX()
+	kernelLengthY := k.MaxY()
 
 	bias := 0.0
 	wrap := false
@@ -106,16 +112,16 @@ func Convolve(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *imag
 			for x := 0; x < w; x++ {
 
 				var r, g, b, a float64
-				for ky := 0; ky < kernelLength; ky++ {
-					for kx := 0; kx < kernelLength; kx++ {
+				for ky := 0; ky < kernelLengthY; ky++ {
+					for kx := 0; kx < kernelLengthX; kx++ {
 
 						var ix, iy int
 						if wrap {
-							ix = (x - kernelLength/2 + kx + w) % w
-							iy = (y - kernelLength/2 + ky + h) % h
+							ix = (x - kernelLengthX/2 + kx + w) % w
+							iy = (y - kernelLengthY/2 + ky + h) % h
 						} else {
-							ix = x - kernelLength/2 + kx
-							iy = y - kernelLength/2 + ky
+							ix = x - kernelLengthX/2 + kx
+							iy = y - kernelLengthY/2 + ky
 
 							if ix < 0 || ix >= w || iy < 0 || iy >= h {
 								continue
