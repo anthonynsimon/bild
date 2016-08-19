@@ -1,7 +1,6 @@
 package bild
 
 import (
-	"fmt"
 	"image"
 	"math"
 )
@@ -58,28 +57,6 @@ func init() {
 			return 0
 		},
 	}
-	Quadratic = ResampleFilter{
-		Name:   "Quadratic",
-		Degree: 2,
-		Fn: func(x, y float64) float64 {
-			x = math.Abs(x)
-			if -1 < x && x <= 0 {
-				return (x * x * 0.5) + (3 * x / 2) + 1
-			} else if 0 < x && x <= 1 {
-				return -(x * x) + 1
-			} else if 1 < x && x <= 2 {
-				return (x * x * 0.5) - (3 * x / 2) + 1
-			}
-			return 0
-		},
-	}
-	Gaussian = ResampleFilter{
-		Name:   "Gaussian",
-		Degree: 2,
-		Fn: func(x, y float64) float64 {
-			return math.Exp(-(x*x/1.0 + y*y/1.0))
-		},
-	}
 }
 
 // Resize returns a new image with its size adjusted to the new width and height. The filter
@@ -106,10 +83,12 @@ func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RG
 		srcW, srcH := src.Bounds().Max.X, src.Bounds().Max.Y
 		scaleX, scaleY := 1<<16/((srcW<<16)/width), 1<<16/((srcH<<16)/height)
 
-		fmt.Println(((srcW << 16) / width) / (1 << 16))
-		dst = quantify(src, width, height, scaleX, scaleY)
+		dst = sample(src, width, height, scaleX, scaleY)
 		dst = resampleHorizontal(dst, float64(scaleX), filter)
 		dst = resampleVertical(dst, float64(scaleY), filter)
+
+		crop := dst.SubImage(image.Rect(scaleX/2, scaleY/2, width+scaleX/2, height+scaleY/2))
+		dst = CloneAsRGBA(crop)
 	}
 
 	return dst
@@ -126,7 +105,6 @@ func nearestNeighbor(src *image.RGBA, width, height int) *image.RGBA {
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-
 			pos := y*dstStride + x*4
 			ipos := ((y*scaleY)>>16)*srcStride + ((x*scaleX)>>16)*4
 
@@ -140,23 +118,22 @@ func nearestNeighbor(src *image.RGBA, width, height int) *image.RGBA {
 	return dst
 }
 
-func quantify(src *image.RGBA, width, height, scaleX, scaleY int) *image.RGBA {
+func sample(src *image.RGBA, width, height, scaleX, scaleY int) *image.RGBA {
 	srcW, srcH := src.Bounds().Max.X, src.Bounds().Max.Y
 	srcStride := src.Stride
 
-	dst := image.NewRGBA(image.Rect(0, 0, width, height))
+	dst := image.NewRGBA(image.Rect(0, 0, width+scaleX+1, height+scaleY+1))
 	dstStride := dst.Stride
 
 	for y := 0; y < srcH; y++ {
 		for x := 0; x < srcW; x++ {
+			srcPos := y*srcStride + x*4
+			dstPos := y*scaleY*dstStride + scaleY*dstStride + x*scaleX*4 + scaleX*4
 
-			pos := y*srcStride + x*4
-			ipos := y*dstStride*scaleY + x*4*scaleX
-
-			dst.Pix[ipos+0] = src.Pix[pos+0]
-			dst.Pix[ipos+1] = src.Pix[pos+1]
-			dst.Pix[ipos+2] = src.Pix[pos+2]
-			dst.Pix[ipos+3] = src.Pix[pos+3]
+			dst.Pix[dstPos+0] = src.Pix[srcPos+0]
+			dst.Pix[dstPos+1] = src.Pix[srcPos+1]
+			dst.Pix[dstPos+2] = src.Pix[srcPos+2]
+			dst.Pix[dstPos+3] = src.Pix[srcPos+3]
 		}
 	}
 
@@ -168,26 +145,23 @@ func buildKernel(radius float64, filter ResampleFilter) ConvolutionMatrix {
 	kernelLength := int(math.Ceil(2*radius*filter.Degree + 1))
 	kernel := NewKernel(kernelLength, 1)
 
-	fmt.Println(filter.Name, kernelLength, radius)
+	// fmt.Println(filter.Name, "kernelLength:", kernelLength)
 	for x := 0; x < kernelLength; x++ {
 		kernel.Matrix[x] = filter.Fn(float64(x-kernelLength/2)/radius, 0)
 	}
-	fmt.Println("")
 
 	return kernel
 }
 
 func resampleHorizontal(src *image.RGBA, radius float64, filter ResampleFilter) *image.RGBA {
 	width, height := src.Bounds().Max.X, src.Bounds().Max.Y
-	srcStride := src.Stride
+	stride := src.Stride
 
 	dst := image.NewRGBA(image.Rect(0, 0, width, height))
-	dstStride := dst.Stride
 
 	k := buildKernel(radius, filter)
 	kernelLength := k.MaxX()
-
-	fmt.Println(k)
+	// fmt.Println(k)
 
 	parallelize(height, func(start, end int) {
 		for y := start; y < end; y++ {
@@ -201,7 +175,7 @@ func resampleHorizontal(src *image.RGBA, radius float64, filter ResampleFilter) 
 						continue
 					}
 
-					ipos := y*srcStride + ix*4
+					ipos := y*stride + ix*4
 					kvalue := k.At(kx, 0)
 
 					r += float64(src.Pix[ipos+0]) * kvalue
@@ -210,7 +184,7 @@ func resampleHorizontal(src *image.RGBA, radius float64, filter ResampleFilter) 
 					a += float64(src.Pix[ipos+3]) * kvalue
 				}
 
-				pos := y*dstStride + x*4
+				pos := y*stride + x*4
 				dst.Pix[pos+0] = uint8(math.Max(math.Min(r, 255), 0))
 				dst.Pix[pos+1] = uint8(math.Max(math.Min(g, 255), 0))
 				dst.Pix[pos+2] = uint8(math.Max(math.Min(b, 255), 0))
