@@ -8,11 +8,14 @@ import (
 
 // ResampleFilter is used to populate the kernel for resampling images.
 // Name is simply an identifier for the filter function.
+// Support is the number of pixels to be used from each side.
+// For example, a support of 1.0 means that the filter will get pixels on
+// "positions" -1 and +1 away from it.
 // Fn is the resample filter function itself.
 type ResampleFilter struct {
-	Name   string
-	Degree float64
-	Fn     func(x, y float64) float64
+	Name    string
+	Support float64
+	Fn      func(x float64) float64
 }
 
 // NearestNeighbor is a fast, non-convolution resample filter. It produces
@@ -25,22 +28,16 @@ var Box ResampleFilter
 // Linear is a convolution based resample filter that interpolates the values linearly.
 var Linear ResampleFilter
 
-var Quadratic ResampleFilter
-
-// Gaussian is a convolution based resample filter that interpolates the values
-// using a gaussian function.
-var Gaussian ResampleFilter
-
 func init() {
 	NearestNeighbor = ResampleFilter{
-		Name:   "NearestNeighbor",
-		Degree: 0,
-		Fn:     nil,
+		Name:    "NearestNeighbor",
+		Support: 0,
+		Fn:      nil,
 	}
 	Box = ResampleFilter{
-		Name:   "Box",
-		Degree: 0.5,
-		Fn: func(x, y float64) float64 {
+		Name:    "Box",
+		Support: 0.5,
+		Fn: func(x float64) float64 {
 			if math.Abs(x) < 0.5 {
 				return 1
 			}
@@ -48,9 +45,9 @@ func init() {
 		},
 	}
 	Linear = ResampleFilter{
-		Name:   "Linear",
-		Degree: 1,
-		Fn: func(x, y float64) float64 {
+		Name:    "Linear",
+		Support: 1,
+		Fn: func(x float64) float64 {
 			x = math.Abs(x)
 			if x < 1.0 {
 				return 1.0 - x
@@ -129,7 +126,7 @@ func sample(src *image.RGBA, width, height int, scaleX, scaleY float64) *image.R
 
 // Build the convolution kernel based on the filter selected
 func buildKernel(radius float64, filter ResampleFilter) ConvolutionMatrix {
-	kernelLength := int(math.Ceil(radius * filter.Degree))
+	kernelLength := int(math.Ceil(radius * filter.Support))
 	if kernelLength%2 == 0 {
 		kernelLength++
 	}
@@ -137,7 +134,7 @@ func buildKernel(radius float64, filter ResampleFilter) ConvolutionMatrix {
 	// fmt.Println(filter.Name, "kernelLength:", kernelLength)
 	for x := 0; x < kernelLength; x++ {
 		fu := (float64(x)/float64(kernelLength))*0.25 - 0.125
-		kernel.Matrix[x] = filter.Fn(fu, 0)
+		kernel.Matrix[x] = filter.Fn(fu)
 	}
 
 	return kernel.Normalized()
