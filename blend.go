@@ -327,33 +327,44 @@ func Lighten(bg image.Image, fg image.Image) *image.RGBA {
 	return dst
 }
 
-// blend two images together by applying the provided function for each pixel.
+// Blend two images together by applying the provided function for each pixel.
+// If images differ in size, the minimum width and height will be picked from each one
+// when creating the resulting image.
 func blend(bg image.Image, fg image.Image, fn func(RGBAF64, RGBAF64) RGBAF64) *image.RGBA {
-	if bg.Bounds() != fg.Bounds() {
-		panic("Currently only equal size images are supported")
+	bgBounds := bg.Bounds()
+	fgBounds := fg.Bounds()
+
+	var w, h int
+	if bgBounds.Dx() < fgBounds.Dx() {
+		w = bgBounds.Dx()
+	} else {
+		w = fgBounds.Dx()
+	}
+	if bgBounds.Dy() < fgBounds.Dy() {
+		h = bgBounds.Dy()
+	} else {
+		h = fgBounds.Dy()
 	}
 
-	bounds := bg.Bounds()
-	srcA := CloneAsRGBA(bg)
-	srcB := CloneAsRGBA(fg)
-
-	dst := image.NewRGBA(bounds)
-
-	w, h := bounds.Max.X, bounds.Max.Y
+	bgSrc := CloneAsRGBA(bg)
+	fgSrc := CloneAsRGBA(fg)
+	dst := image.NewRGBA(image.Rect(0, 0, w, h))
 
 	parallelize(h, func(start, end int) {
-		for x := 0; x < w; x++ {
-			for y := start; y < end; y++ {
-				pos := y*dst.Stride + x*4
+		for y := start; y < end; y++ {
+			for x := 0; x < w; x++ {
+				bgPos := y*bgSrc.Stride + x*4
+				fgPos := y*fgSrc.Stride + x*4
 				result := fn(
-					NewRGBAF64(srcA.Pix[pos+0], srcA.Pix[pos+1], srcA.Pix[pos+2], srcA.Pix[pos+3]),
-					NewRGBAF64(srcB.Pix[pos+0], srcB.Pix[pos+1], srcB.Pix[pos+2], srcB.Pix[pos+3]))
+					NewRGBAF64(bgSrc.Pix[bgPos+0], bgSrc.Pix[bgPos+1], bgSrc.Pix[bgPos+2], bgSrc.Pix[bgPos+3]),
+					NewRGBAF64(fgSrc.Pix[fgPos+0], fgSrc.Pix[fgPos+1], fgSrc.Pix[fgPos+2], fgSrc.Pix[fgPos+3]))
 
 				result.Clamp()
-				dst.Pix[pos+0] = uint8(result.R * 255)
-				dst.Pix[pos+1] = uint8(result.G * 255)
-				dst.Pix[pos+2] = uint8(result.B * 255)
-				dst.Pix[pos+3] = uint8(result.A * 255)
+				dstPos := y*dst.Stride + x*4
+				dst.Pix[dstPos+0] = uint8(result.R * 255)
+				dst.Pix[dstPos+1] = uint8(result.G * 255)
+				dst.Pix[dstPos+2] = uint8(result.B * 255)
+				dst.Pix[dstPos+3] = uint8(result.A * 255)
 			}
 
 		}
