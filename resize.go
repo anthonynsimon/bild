@@ -79,16 +79,16 @@ func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RG
 		dst = nearestNeighbor(src, width, height)
 	} else {
 		srcW, srcH := src.Bounds().Max.X, src.Bounds().Max.Y
-		scaleX, scaleY := 1/(float64(srcW)/float64(width)), 1/(float64(srcH)/float64(height))
+		scaleX, scaleY := (float64(srcW) / float64(width)), (float64(srcH) / float64(height))
 
-		if scaleX < 1.0 {
-			scaleX = 1.0
-		}
-		if scaleY < 1.0 {
-			scaleY = 1.0
-		}
+		// if scaleX < 1.0 {
+		// 	scaleX = 1.0
+		// }
+		// if scaleY < 1.0 {
+		// 	scaleY = 1.0
+		// }
 
-		dst = sample(src, width, height, scaleX, scaleY)
+		dst = nearestNeighbor(src, width, height)
 		dst = resampleHorizontal(dst, scaleX, filter)
 		dst = resampleVertical(dst, scaleY, filter)
 	}
@@ -96,59 +96,41 @@ func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RG
 	return dst
 }
 
-func sample(src *image.RGBA, width, height int, scaleX, scaleY float64) *image.RGBA {
-	srcW, srcH := src.Bounds().Max.X, src.Bounds().Max.Y
-	srcStride := src.Stride
-
-	dst := image.NewRGBA(image.Rect(0, 0, width, height))
-	dstStride := dst.Stride
-
-	dx, dy := int(scaleX), int(scaleY)
-
-	for y := 0; y < srcH; y++ {
-		for x := 0; x < srcW; x++ {
-			srcPos := y*srcStride + x*4
-			dstPos := y*dx*dstStride + x*dy*4
-
-			for ix := 0; ix < dx*4; ix += 4 {
-				for iy := 0; iy < dy*dstStride; iy += dstStride {
-					dst.Pix[dstPos+iy+ix+0] = src.Pix[srcPos+0]
-					dst.Pix[dstPos+iy+ix+1] = src.Pix[srcPos+1]
-					dst.Pix[dstPos+iy+ix+2] = src.Pix[srcPos+2]
-					dst.Pix[dstPos+iy+ix+3] = src.Pix[srcPos+3]
-				}
-			}
-		}
-	}
-
-	return dst
-}
-
 // Build the convolution kernel based on the filter selected
-func buildKernel(radius float64, filter ResampleFilter) ConvolutionMatrix {
-	kernelLength := int(math.Ceil(radius * filter.Support))
+func buildKernel(scale float64, filter ResampleFilter) ConvolutionMatrix {
+	step := 1.0 / scale
+	fmt.Println(step, scale)
+	kernelLength := int(math.Ceil(2 * step * filter.Support))
+	// Kernel must always be odd (equal side weigths and middle weigth)
 	if kernelLength%2 == 0 {
 		kernelLength++
 	}
+
 	kernel := NewKernel(kernelLength, 1)
-	// fmt.Println(filter.Name, "kernelLength:", kernelLength)
-	for x := 0; x < kernelLength; x++ {
-		fu := (float64(x)/float64(kernelLength))*0.25 - 0.125
-		kernel.Matrix[x] = filter.Fn(fu)
+
+	if kernelLength == 1 {
+		kernel.Matrix[0] = 1
+	} else {
+		for x := 0; x < kernelLength; x++ {
+			u := (float64(x)/float64(kernelLength-1))*filter.Support*2 - filter.Support
+			fmt.Println(u)
+			kernel.Matrix[x] = filter.Fn(u)
+		}
 	}
+
+	fmt.Println(kernel)
 
 	return kernel.Normalized()
 }
 
-func resampleHorizontal(src *image.RGBA, radius float64, filter ResampleFilter) *image.RGBA {
+func resampleHorizontal(src *image.RGBA, scale float64, filter ResampleFilter) *image.RGBA {
 	width, height := src.Bounds().Max.X, src.Bounds().Max.Y
 	stride := src.Stride
 
 	dst := image.NewRGBA(image.Rect(0, 0, width, height))
 
-	k := buildKernel(radius, filter)
+	k := buildKernel(scale, filter)
 	kernelLength := k.MaxX()
-	fmt.Println(k)
 
 	parallelize(height, func(start, end int) {
 		for y := start; y < end; y++ {
@@ -185,14 +167,14 @@ func resampleHorizontal(src *image.RGBA, radius float64, filter ResampleFilter) 
 	return dst
 }
 
-func resampleVertical(src *image.RGBA, radius float64, filter ResampleFilter) *image.RGBA {
+func resampleVertical(src *image.RGBA, scale float64, filter ResampleFilter) *image.RGBA {
 	width, height := src.Bounds().Max.X, src.Bounds().Max.Y
 	srcStride := src.Stride
 
 	dst := image.NewRGBA(image.Rect(0, 0, width, height))
 	dstStride := dst.Stride
 
-	k := buildKernel(radius, filter)
+	k := buildKernel(scale, filter)
 	kernelLength := k.MaxX()
 
 	parallelize(height, func(start, end int) {
@@ -237,12 +219,13 @@ func nearestNeighbor(src *image.RGBA, width, height int) *image.RGBA {
 	dst := image.NewRGBA(image.Rect(0, 0, width, height))
 	dstStride := dst.Stride
 
-	scaleX, scaleY := (srcW<<16)/width, (srcH<<16)/height
+	dx := float64(srcW) / float64(width)
+	dy := float64(srcH) / float64(height)
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
 			pos := y*dstStride + x*4
-			ipos := ((y*scaleY)>>16)*srcStride + ((x*scaleX)>>16)*4
+			ipos := int((float64(y)+0.5)*dy)*srcStride + int((float64(x)+0.5)*dx)*4
 
 			dst.Pix[pos+0] = src.Pix[ipos+0]
 			dst.Pix[pos+1] = src.Pix[ipos+1]
