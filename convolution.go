@@ -89,6 +89,11 @@ type ConvolutionOptions struct {
 }
 
 // Convolve applies a convolution matrix (kernel) to an image with the supplied options.
+//
+// Usage example:
+//
+//		result := Convolve(img, kernel, &ConvolutionOptions{Bias: 0, Wrap: false, CarryAlpha: false})
+//
 func Convolve(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
@@ -123,8 +128,17 @@ func Convolve(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *imag
 							ix = x - kernelLengthX/2 + kx
 							iy = y - kernelLengthY/2 + ky
 
-							if ix < 0 || ix >= w || iy < 0 || iy >= h {
-								continue
+							// Default method of sampling outside pixels is by extending
+							if ix < 0 {
+								ix = 0
+							} else if ix >= w {
+								ix = w - 1
+							}
+
+							if iy < 0 {
+								iy = 0
+							} else if iy >= h {
+								iy = h - 1
 							}
 						}
 
