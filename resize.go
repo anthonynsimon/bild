@@ -5,8 +5,8 @@ import (
 	"math"
 )
 
-// ResampleFilter is used to populate the kernel for resampling images.
-// Support is the number of single-side points required by the filter.
+// ResampleFilter is used to evaluate sample points and interpolate between them.
+// Support is the number of points required by the filter per 'side'.
 // For example, a support of 1.0 means that the filter will get pixels on
 // positions -1 and +1 away from it.
 // Fn is the resample filter function to evaluate the samples.
@@ -15,19 +15,15 @@ type ResampleFilter struct {
 	Fn      func(x float64) float64
 }
 
-// NearestNeighbor is a fast, non-convolution resample filter. It produces
-// pixelated results as no interpolation is done when resizing.
+// NearestNeighbor resampling filter assigns to each point the sample point nearest to it.
 var NearestNeighbor ResampleFilter
 
-// Box resample filter, only let pass values in the x < 0.5 range from sample.
+// Box resampling filter, only let pass values in the x < 0.5 range from sample.
+// It produces similar results to the Nearest Neighbor method.
 var Box ResampleFilter
 
-// Linear resample filter interpolates linearly between samples.
+// Linear resampling filter interpolates linearly between the two nearest samples per dimension.
 var Linear ResampleFilter
-
-var Quadratic ResampleFilter
-
-var Gaussian ResampleFilter
 
 func init() {
 	NearestNeighbor = ResampleFilter{
@@ -53,38 +49,15 @@ func init() {
 			return 0
 		},
 	}
-	Quadratic = ResampleFilter{
-		Support: 2.0,
-		Fn: func(x float64) float64 {
-			x = math.Abs(x)
-			if x < 0.5 {
-				return 0.75 - x*x
-			} else if x < 1.5 {
-				return 0.5 * (x - 1.5) * (x - 1.5)
-			}
-			return 0
-		},
-	}
-	Gaussian = ResampleFilter{
-		Support: 2.0,
-		Fn: func(x float64) float64 {
-			x = math.Abs(x)
-			if x < 2.0 {
-				return math.Exp(-2 * x * x)
-			}
-			return 0
-		},
-	}
 }
 
 // Resize returns a new image with its size adjusted to the new width and height. The filter
-// param corresponds to the Resample Filter to be used when interpolating between the pixels.
+// param corresponds to the Resampling Filter to be used when interpolating between the sample points.
 //
-// This package includes the following filters: NearestNeighbor, Box, Linear and Gaussian.
 //
 // Usage example:
 //
-//		result := Resize(img, 800, 600, bild.NearestNeighbor)
+//		result := Resize(img, 800, 600, bild.Linear)
 //
 func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RGBA {
 	if width <= 0 || height <= 0 {
