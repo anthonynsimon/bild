@@ -1,19 +1,16 @@
 package bild
 
 import (
-	"fmt"
 	"image"
 	"math"
 )
 
 // ResampleFilter is used to populate the kernel for resampling images.
-// Name is simply an identifier for the filter function.
-// Support is the number of pixels to be used from each side.
+// Support is the number of single-side points required by the filter.
 // For example, a support of 1.0 means that the filter will get pixels on
-// "positions" -1 and +1 away from it.
-// Fn is the resample filter function itself.
+// positions -1 and +1 away from it.
+// Fn is the resample filter function to evaluate the samples.
 type ResampleFilter struct {
-	Name    string
 	Support float64
 	Fn      func(x float64) float64
 }
@@ -22,22 +19,22 @@ type ResampleFilter struct {
 // pixelated results as no interpolation is done when resizing.
 var NearestNeighbor ResampleFilter
 
-// Box is a convolution based resample filter that interpolates the values by averaging.
+// Box resample filter, only let pass values in the x < 0.5 range from sample.
 var Box ResampleFilter
 
-// Linear is a convolution based resample filter that interpolates the values linearly.
+// Linear resample filter interpolates linearly between samples.
 var Linear ResampleFilter
+
+var Quadratic ResampleFilter
 
 var Gaussian ResampleFilter
 
 func init() {
 	NearestNeighbor = ResampleFilter{
-		Name:    "NearestNeighbor",
 		Support: 0,
 		Fn:      nil,
 	}
 	Box = ResampleFilter{
-		Name:    "Box",
 		Support: 0.5,
 		Fn: func(x float64) float64 {
 			if math.Abs(x) < 0.5 {
@@ -47,7 +44,6 @@ func init() {
 		},
 	}
 	Linear = ResampleFilter{
-		Name:    "Linear",
 		Support: 1.0,
 		Fn: func(x float64) float64 {
 			x = math.Abs(x)
@@ -57,8 +53,19 @@ func init() {
 			return 0
 		},
 	}
+	Quadratic = ResampleFilter{
+		Support: 2.0,
+		Fn: func(x float64) float64 {
+			x = math.Abs(x)
+			if x < 0.5 {
+				return 0.75 - x*x
+			} else if x < 1.5 {
+				return 0.5 * (x - 1.5) * (x - 1.5)
+			}
+			return 0
+		},
+	}
 	Gaussian = ResampleFilter{
-		Name:    "Gaussian",
 		Support: 2.0,
 		Fn: func(x float64) float64 {
 			x = math.Abs(x)
@@ -88,124 +95,64 @@ func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RG
 	var dst *image.RGBA
 
 	// NearestNeighbor is a special case, it's faster to compute without convolution matrix.
-	if filter.Name == NearestNeighbor.Name {
+	if filter.Support <= 0 {
 		dst = nearestNeighbor(src, width, height)
 	} else {
-		srcW, srcH := src.Bounds().Max.X, src.Bounds().Max.Y
-		scaleX, scaleY := (float64(srcW) / float64(width)), (float64(srcH) / float64(height))
-
-		// if scaleX < 1.0 {
-		// 	scaleX = 1.0
-		// }
-		// if scaleY < 1.0 {
-		// 	scaleY = 1.0
-		// }
-
-		// dst = nearestNeighbor(src, width, height)
-		dst = sample(src, width, height, scaleX, scaleY)
-		dst = resampleHorizontal(dst, scaleX, filter)
-		dst = resampleVertical(dst, scaleY, filter)
+		dst = resampleHorizontal(src, width, filter)
+		dst = resampleVertical(dst, height, filter)
 	}
 
 	return dst
 }
 
-// Build the convolution kernel based on the filter selected
-func buildKernel(scale float64, filter ResampleFilter) ConvolutionMatrix {
-	step := 1.0 / scale
-	fmt.Println(step, scale)
-
-	kernelLength := int(step*2*filter.Support + 1 + 0.5)
-	kernel := NewKernel(kernelLength, 1)
-
-	if kernelLength == 1 {
-		kernel.Matrix[0] = 1
-	} else {
-		for x := 0; x < kernelLength; x++ {
-			u := (float64(x)/float64(kernelLength-1))*filter.Support*2 - filter.Support
-			fmt.Println(u)
-			kernel.Matrix[x] = filter.Fn(u)
-		}
-	}
-
-	fmt.Println(kernel)
-
-	return kernel
-}
-
-func sample(src *image.RGBA, width, height int, scaleX, scaleY float64) *image.RGBA {
-	srcW, srcH := src.Bounds().Max.X, src.Bounds().Max.Y
+func resampleHorizontal(src *image.RGBA, width int, filter ResampleFilter) *image.RGBA {
+	srcWidth, srcHeight := src.Bounds().Max.X, src.Bounds().Max.Y
 	srcStride := src.Stride
 
-	dst := image.NewRGBA(image.Rect(0, 0, width, height))
+	delta := float64(srcWidth) / float64(width)
+	// Scale must be at least 1. Special case for image size reduction filter radius.
+	scale := math.Max(delta, 1.0)
+
+	dst := image.NewRGBA(image.Rect(0, 0, width, srcHeight))
 	dstStride := dst.Stride
 
-	dx, dy := int(1/scaleX+0.5), int(1/scaleY+0.5)
+	filterRadius := math.Ceil(scale * filter.Support)
 
-	for y := 0; y < srcH; y++ {
-		for x := 0; x < srcW; x++ {
-			srcPos := y*srcStride + x*4
-			dstPos := y*dx*dstStride + x*dy*4
-			// dstPos := y*dx*dstStride + dstStride*dy/2 + x*dy*4 + 4*dx/2
-
-			// yPos := (float64(y) / float64(srcH-1))
-			// xPos := (float64(x) / float64(srcW-1))
-			// dstPosY := int((yPos*float64(height-1) + 0.5)) * dstStride
-			// dstPosX := int((xPos*float64(width-1) + 0.5)) * 4
-			// dstPos := dstPosX + dstPosY
-
-			dst.Pix[dstPos+0] = src.Pix[srcPos+0]
-			dst.Pix[dstPos+1] = src.Pix[srcPos+1]
-			dst.Pix[dstPos+2] = src.Pix[srcPos+2]
-			dst.Pix[dstPos+3] = src.Pix[srcPos+3]
-		}
-	}
-
-	return dst
-}
-
-func resampleHorizontal(src *image.RGBA, scale float64, filter ResampleFilter) *image.RGBA {
-	width, height := src.Bounds().Max.X, src.Bounds().Max.Y
-	srcStride := src.Stride
-
-	dst := image.NewRGBA(image.Rect(0, 0, width, height))
-	dstStride := dst.Stride
-
-	k := buildKernel(scale, filter)
-	kernelLength := k.MaxX()
-
-	parallelize(height, func(start, end int) {
+	parallelize(srcHeight, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < width; x++ {
+				// value of x from src
+				ix := (float64(x)+0.5)*delta - 0.5
+				istart, iend := int(ix-filterRadius+0.5), int(ix+filterRadius)
 
-				var r, g, b, a float64
-				for kx := 0; kx < kernelLength; kx++ {
-					ix := (x - (kernelLength / 2) + kx)
-
-					if ix < 0 {
-						ix = 0
-					} else if ix >= width {
-						ix = width - 1
-					}
-					// if ix < 0 || ix >= width {
-					// 	continue
-					// }
-
-					ipos := y*srcStride + ix*4
-					kvalue := k.At(kx, 0)
-					// fmt.Println(ipos, kvalue)
-
-					r += float64(src.Pix[ipos+0]) * kvalue
-					g += float64(src.Pix[ipos+1]) * kvalue
-					b += float64(src.Pix[ipos+2]) * kvalue
-					a += float64(src.Pix[ipos+3]) * kvalue
+				if istart < 0 {
+					istart = 0
+				}
+				if iend >= srcWidth {
+					iend = srcWidth - 1
 				}
 
-				pos := y*dstStride + x*4
-				dst.Pix[pos+0] = uint8(math.Max(math.Min(r+0.5, 255), 0))
-				dst.Pix[pos+1] = uint8(math.Max(math.Min(g+0.5, 255), 0))
-				dst.Pix[pos+2] = uint8(math.Max(math.Min(b+0.5, 255), 0))
-				dst.Pix[pos+3] = uint8(math.Max(math.Min(a+0.5, 255), 0))
+				var r, g, b, a float64
+				var sum float64
+				for kx := istart; kx <= iend; kx++ {
+
+					srcPos := y*srcStride + kx*4
+					// normalize the sample position to be evaluated by the filter
+					normPos := (float64(kx) - ix) / scale
+					fValue := filter.Fn(normPos)
+
+					r += float64(src.Pix[srcPos+0]) * fValue
+					g += float64(src.Pix[srcPos+1]) * fValue
+					b += float64(src.Pix[srcPos+2]) * fValue
+					a += float64(src.Pix[srcPos+3]) * fValue
+					sum += fValue
+				}
+
+				dstPos := y*dstStride + x*4
+				dst.Pix[dstPos+0] = uint8(clampFloat64((r/sum)+0.5, 0, 255))
+				dst.Pix[dstPos+1] = uint8(clampFloat64((g/sum)+0.5, 0, 255))
+				dst.Pix[dstPos+2] = uint8(clampFloat64((b/sum)+0.5, 0, 255))
+				dst.Pix[dstPos+3] = uint8(clampFloat64((a/sum)+0.5, 0, 255))
 			}
 		}
 	})
@@ -213,48 +160,53 @@ func resampleHorizontal(src *image.RGBA, scale float64, filter ResampleFilter) *
 	return dst
 }
 
-func resampleVertical(src *image.RGBA, scale float64, filter ResampleFilter) *image.RGBA {
-	width, height := src.Bounds().Max.X, src.Bounds().Max.Y
+func resampleVertical(src *image.RGBA, height int, filter ResampleFilter) *image.RGBA {
+	srcWidth, srcHeight := src.Bounds().Max.X, src.Bounds().Max.Y
 	srcStride := src.Stride
 
-	dst := image.NewRGBA(image.Rect(0, 0, width, height))
+	delta := float64(srcHeight) / float64(height)
+	scale := math.Max(delta, 1.0)
+
+	dst := image.NewRGBA(image.Rect(0, 0, srcWidth, height))
 	dstStride := dst.Stride
 
-	k := buildKernel(scale, filter)
-	kernelLength := k.MaxX()
+	filterRadius := math.Ceil(scale * filter.Support)
 
 	parallelize(height, func(start, end int) {
 		for y := start; y < end; y++ {
-			for x := 0; x < width; x++ {
+			for x := 0; x < srcWidth; x++ {
 
-				var r, g, b, a float64
-				for ky := 0; ky < kernelLength; ky++ {
-					iy := y - (kernelLength / 2) + ky
+				iy := (float64(y)+0.5)*delta - 0.5
 
-					if iy < 0 {
-						iy = 0
-					} else if iy >= height {
-						iy = height - 1
-					}
+				istart, iend := int(iy-filterRadius+0.5), int(iy+filterRadius)
 
-					// if iy < 0 || iy >= height {
-					// 	continue
-					// }
-
-					ipos := iy*srcStride + x*4
-					kvalue := k.At(ky, 0)
-
-					r += float64(src.Pix[ipos+0]) * kvalue
-					g += float64(src.Pix[ipos+1]) * kvalue
-					b += float64(src.Pix[ipos+2]) * kvalue
-					a += float64(src.Pix[ipos+3]) * kvalue
+				if istart < 0 {
+					istart = 0
+				}
+				if iend >= srcHeight {
+					iend = srcHeight - 1
 				}
 
-				pos := y*dstStride + x*4
-				dst.Pix[pos+0] = uint8(math.Max(math.Min(r+0.5, 255), 0))
-				dst.Pix[pos+1] = uint8(math.Max(math.Min(g+0.5, 255), 0))
-				dst.Pix[pos+2] = uint8(math.Max(math.Min(b+0.5, 255), 0))
-				dst.Pix[pos+3] = uint8(math.Max(math.Min(a+0.5, 255), 0))
+				var r, g, b, a float64
+				var sum float64
+				for ky := istart; ky <= iend; ky++ {
+
+					srcPos := ky*srcStride + x*4
+					normPos := (float64(ky) - iy) / scale
+					fValue := filter.Fn(normPos)
+
+					r += float64(src.Pix[srcPos+0]) * fValue
+					g += float64(src.Pix[srcPos+1]) * fValue
+					b += float64(src.Pix[srcPos+2]) * fValue
+					a += float64(src.Pix[srcPos+3]) * fValue
+					sum += fValue
+				}
+
+				dstPos := y*dstStride + x*4
+				dst.Pix[dstPos+0] = uint8(clampFloat64((r/sum)+0.5, 0, 255))
+				dst.Pix[dstPos+1] = uint8(clampFloat64((g/sum)+0.5, 0, 255))
+				dst.Pix[dstPos+2] = uint8(clampFloat64((b/sum)+0.5, 0, 255))
+				dst.Pix[dstPos+3] = uint8(clampFloat64((a/sum)+0.5, 0, 255))
 			}
 		}
 	})
