@@ -404,5 +404,5 @@ func rgbaImageEqual(a, b *image.RGBA) bool {
 }
 
 func testFailMessage(name string, expected, actual interface{}) string {
-	return fmt.Sprintf("Test %s failed.\nExpected: %#v\nActual: %#v\n", name, expected, actual)
+	return fmt.Sprintf("Test %s failed.\nExpected: %v\nActual: %v\n", name, expected, actual)
 }

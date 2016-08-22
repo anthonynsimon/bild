@@ -60,7 +60,7 @@ func init() {
 //		result := Resize(img, 800, 600, bild.Linear)
 //
 func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RGBA {
-	if width <= 0 || height <= 0 {
+	if width <= 0 || height <= 0 || img.Bounds().Empty() {
 		return image.NewRGBA(image.Rect(0, 0, 0, 0))
 	}
 
