@@ -211,6 +211,23 @@ func main() {
 ![example](https://anthonynsimon.github.io/projects/bild/sobel.jpg)  
 
 
+## Resize
+
+### Nearest Neighbor
+    result := bild.Resize(img, newWidth, newHeight, bild.NearestNeighbor)
+
+![example](https://anthonynsimon.github.io/projects/bild/resizenearestneighbor.jpg)
+
+### Box Interpolation
+    result := bild.Resize(img, newWidth, newHeight, bild.Box)
+
+![example](https://anthonynsimon.github.io/projects/bild/resizebox.jpg)  
+
+### Linear Interpolation
+    result := bild.Resize(img, newWidth, newHeight, bild.Linear)
+
+![example](https://anthonynsimon.github.io/projects/bild/resizelinear.jpg)  
+
 
 ## Transform
 
