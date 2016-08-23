@@ -5,6 +5,10 @@ import (
 	"math"
 )
 
+// Rotate returns a rotated image by the provided angle using the pivot as an anchor.
+// Param angle is in degrees and is applied clockwise.
+// Param pivot is a point which will be used as an anchor for the rotation.
+// Coordinates 0, 0 represent the top left corner of the image.
 func Rotate(img image.Image, angle float64, pivot image.Point) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
