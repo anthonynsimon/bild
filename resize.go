@@ -57,7 +57,7 @@ func init() {
 //
 // Usage example:
 //
-//		result := Resize(img, 800, 600, bild.Linear)
+//		result := bild.Resize(img, 800, 600, bild.Linear)
 //
 func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RGBA {
 	if width <= 0 || height <= 0 || img.Bounds().Empty() {
@@ -76,6 +76,19 @@ func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RG
 	}
 
 	return dst
+}
+
+// Crop returns a new image which contains the intersection between the rect and the image provided as params.
+// Only the intersection is returned. If a rect larger than the image is provided, no fill is done to
+// the 'empty' area.
+//
+// Usage example:
+//
+//		result := bild.Crop(img, image.Rect(0,0,512,256))
+//
+func Crop(img image.Image, rect image.Rectangle) *image.RGBA {
+	src := CloneAsRGBA(img)
+	return CloneAsRGBA(src.SubImage(rect))
 }
 
 func resampleHorizontal(src *image.RGBA, width int, filter ResampleFilter) *image.RGBA {
