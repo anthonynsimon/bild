@@ -6,8 +6,8 @@ import (
 )
 
 // RotationOptions are used to config the Rotate function.
-// PreserveBounds will increase the output size image if necessary to avoid
-// cutting the corners when rotating.
+// PreserveBounds will keep the original image bounds, cutting any pixels
+// that go past it when rotating.
 // Pivot is the point of anchor the rotation. If not provided, a default value
 // of image center will be used.
 type RotationOptions struct {
@@ -16,9 +16,7 @@ type RotationOptions struct {
 }
 
 // Rotate returns a rotated image by the provided angle using the pivot as an anchor.
-// Param angle is in degrees and is applied clockwise.
-// Param pivot is a point which will be used as an anchor for the rotation.
-// Coordinates 0, 0 represent the top left corner of the image.
+// Param angle is in degrees and it's applied clockwise.
 func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGBA {
 	src := CloneAsRGBA(img)
 	srcW, srcH := src.Bounds().Dx(), src.Bounds().Dy()
@@ -34,13 +32,15 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 
 	if options != nil {
 		// Reserve larger size in destination image for full image bounds rotation
-		if options.PreserveBounds {
-			// Pythagorean theorem to get Hypotenuse of bounds which are the circle's
-			// diameter which encapsulates it
-			targetScale := math.Sqrt((float64(srcW))*(float64(srcW)) + (float64(srcH))*(float64(srcH)))
-			percent := math.Abs(math.Sin(radians * 2))
-			targetScale = float64(srcW) + ((targetScale - float64(srcW)) * percent)
-			dstW, dstH = int(targetScale+0.5), int(targetScale+0.5)
+		if !options.PreserveBounds {
+			a := math.Abs(float64(srcW) * math.Sin(radians))
+			b := math.Abs(float64(srcW) * math.Cos(radians))
+			c := math.Abs(float64(srcH) * math.Sin(radians))
+			d := math.Abs(float64(srcH) * math.Cos(radians))
+
+			targetW, targetH := c+b, a+d
+
+			dstW, dstH = int(targetW+0.5), int(targetH+0.5)
 		} else if options.Pivot != nil {
 			// A custom pivot only makes sense if PreserveBounds is set to false
 			pivotX, pivotY = float64(options.Pivot.X), float64(options.Pivot.Y)
