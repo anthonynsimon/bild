@@ -115,17 +115,17 @@ func Median(img image.Image, size int) *image.RGBA {
 
 	dst := image.NewRGBA(bounds)
 
-	w, h := bounds.Max.X, bounds.Max.Y
+	w, h := bounds.Dx(), bounds.Dy()
 	neighborsCount := size * size
 
 	parallelize(h, func(start, end int) {
-		for x := 0; x < w; x++ {
-			for y := start; y < end; y++ {
+		for y := start; y < end; y++ {
+			for x := 0; x < w; x++ {
 
 				neighbors := make([]color.RGBA, neighborsCount)
 				i := 0
-				for kx := 0; kx < size; kx++ {
-					for ky := 0; ky < size; ky++ {
+				for ky := 0; ky < size; ky++ {
+					for kx := 0; kx < size; kx++ {
 						ix := (x - size/2 + kx + w) % (w)
 						iy := (y - size/2 + ky + h) % h
 

@@ -99,7 +99,7 @@ func Convolve(img image.Image, k ConvolutionMatrix, o *ConvolutionOptions) *imag
 	src := CloneAsRGBA(img)
 	dst := image.NewRGBA(bounds)
 
-	w, h := bounds.Max.X, bounds.Max.Y
+	w, h := bounds.Dx(), bounds.Dy()
 	kernelLengthX := k.MaxX()
 	kernelLengthY := k.MaxY()
 

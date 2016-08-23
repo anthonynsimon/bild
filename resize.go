@@ -92,7 +92,7 @@ func Crop(img image.Image, rect image.Rectangle) *image.RGBA {
 }
 
 func resampleHorizontal(src *image.RGBA, width int, filter ResampleFilter) *image.RGBA {
-	srcWidth, srcHeight := src.Bounds().Max.X, src.Bounds().Max.Y
+	srcWidth, srcHeight := src.Bounds().Dx(), src.Bounds().Dy()
 	srcStride := src.Stride
 
 	delta := float64(srcWidth) / float64(width)
@@ -147,7 +147,7 @@ func resampleHorizontal(src *image.RGBA, width int, filter ResampleFilter) *imag
 }
 
 func resampleVertical(src *image.RGBA, height int, filter ResampleFilter) *image.RGBA {
-	srcWidth, srcHeight := src.Bounds().Max.X, src.Bounds().Max.Y
+	srcWidth, srcHeight := src.Bounds().Dx(), src.Bounds().Dy()
 	srcStride := src.Stride
 
 	delta := float64(srcHeight) / float64(height)
@@ -201,7 +201,7 @@ func resampleVertical(src *image.RGBA, height int, filter ResampleFilter) *image
 }
 
 func nearestNeighbor(src *image.RGBA, width, height int) *image.RGBA {
-	srcW, srcH := src.Bounds().Max.X, src.Bounds().Max.Y
+	srcW, srcH := src.Bounds().Dx(), src.Bounds().Dy()
 	srcStride := src.Stride
 
 	dst := image.NewRGBA(image.Rect(0, 0, width, height))

@@ -19,12 +19,26 @@ func CloneAsRGBA(src image.Image) *image.RGBA {
 func apply(img image.Image, fn func(color.RGBA) color.RGBA) *image.RGBA {
 	bounds := img.Bounds()
 	dst := CloneAsRGBA(img)
-	w, h := bounds.Max.X, bounds.Max.Y
+	w, h := bounds.Dx(), bounds.Dy()
 
 	parallelize(h, func(start, end int) {
-		for x := 0; x < w; x++ {
-			for y := start; y < end; y++ {
-				dst.Set(x, y, fn(dst.RGBAAt(x, y)))
+		for y := start; y < end; y++ {
+			for x := 0; x < w; x++ {
+				dstPos := y*dst.Stride + x*4
+
+				c := color.RGBA{}
+
+				c.R = dst.Pix[dstPos+0]
+				c.G = dst.Pix[dstPos+1]
+				c.B = dst.Pix[dstPos+2]
+				c.A = dst.Pix[dstPos+3]
+
+				c = fn(c)
+
+				dst.Pix[dstPos+0] = c.R
+				dst.Pix[dstPos+1] = c.G
+				dst.Pix[dstPos+2] = c.B
+				dst.Pix[dstPos+3] = c.A
 			}
 		}
 	})
