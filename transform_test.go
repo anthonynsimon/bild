@@ -5,6 +5,66 @@ import (
 	"testing"
 )
 
+// func TestRotate(t *testing.T) {
+// 	cases := []struct {
+// 		description string
+// 		angle       float64
+// 		pivot       image.Point
+// 		value       image.Image
+// 		expected    *image.RGBA
+// 	}{
+// 		{
+// 			description: "angle 0.0 at center",
+// 			angle:       0.0,
+// 			pivot:       image.Point{1, 1},
+// 			value: &image.RGBA{
+// 				Rect:   image.Rect(0, 0, 2, 2),
+// 				Stride: 8,
+// 				Pix: []uint8{
+// 					0x80, 0x80, 0x80, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+// 					0xFF, 0xFF, 0xFF, 0xFF, 0x80, 0x80, 0x80, 0x80,
+// 				},
+// 			},
+// 			expected: &image.RGBA{
+// 				Rect:   image.Rect(0, 0, 2, 2),
+// 				Stride: 8,
+// 				Pix: []uint8{
+// 					0x80, 0x80, 0x80, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+// 					0xFF, 0xFF, 0xFF, 0xFF, 0x80, 0x80, 0x80, 0x80,
+// 				},
+// 			},
+// 		},
+// 		{
+// 			description: "angle 90.0 at center",
+// 			angle:       90.0,
+// 			pivot:       image.Point{1, 1},
+// 			value: &image.RGBA{
+// 				Rect:   image.Rect(0, 0, 2, 2),
+// 				Stride: 8,
+// 				Pix: []uint8{
+// 					0x80, 0x80, 0x80, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+// 					0xFF, 0xFF, 0xFF, 0xFF, 0x80, 0x80, 0x80, 0x80,
+// 				},
+// 			},
+// 			expected: &image.RGBA{
+// 				Rect:   image.Rect(0, 0, 2, 2),
+// 				Stride: 8,
+// 				Pix: []uint8{
+// 					0xFF, 0xFF, 0xFF, 0xFF, 0x80, 0x80, 0x80, 0xFF,
+// 					0x80, 0x80, 0x80, 0x80, 0xFF, 0xFF, 0xFF, 0xFF,
+// 				},
+// 			},
+// 		},
+// 	}
+
+// 	for _, c := range cases {
+// 		actual := Rotate(c.value, c.angle, c.pivot)
+// 		if !rgbaImageEqual(actual, c.expected) {
+// 			t.Error(testFailMessage("Rotate "+c.description, formatImageString(c.expected), formatImageString(actual)))
+// 		}
+// 	}
+// }
+
 func TestFlipH(t *testing.T) {
 	cases := []struct {
 		value    image.Image
@@ -71,7 +131,7 @@ func TestFlipH(t *testing.T) {
 	for _, c := range cases {
 		actual := FlipH(c.value)
 		if !rgbaImageEqual(actual, c.expected) {
-			t.Error(testFailMessage("FlipH", c.expected, actual))
+			t.Error(testFailMessage("FlipH", formatImageString(c.expected), formatImageString(actual)))
 		}
 	}
 }
@@ -142,7 +202,7 @@ func TestFlipV(t *testing.T) {
 	for _, c := range cases {
 		actual := FlipV(c.value)
 		if !rgbaImageEqual(actual, c.expected) {
-			t.Error(testFailMessage("FlipV", c.expected, actual))
+			t.Error(testFailMessage("FlipV", formatImageString(c.expected), formatImageString(actual)))
 		}
 	}
 }
