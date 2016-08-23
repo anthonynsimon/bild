@@ -11,7 +11,7 @@ func Rotate(img image.Image, angle float64, pivot image.Point) *image.RGBA {
 	dst := image.NewRGBA(bounds)
 	w, h := dst.Bounds().Dx(), dst.Bounds().Dy()
 	pivotX, pivotY := float64(pivot.X), float64(pivot.Y)
-	radians := angle * (math.Pi / 180)
+	radians := -angle * (math.Pi / 180)
 
 	parallelize(h, func(start, end int) {
 		for y := start; y < end; y++ {
