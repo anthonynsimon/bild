@@ -7,7 +7,7 @@ func FlipH(img image.Image) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
 	dst := image.NewRGBA(bounds)
-	w, h := dst.Bounds().Max.X, dst.Bounds().Max.Y
+	w, h := dst.Bounds().Dx(), dst.Bounds().Dy()
 
 	parallelize(h, func(start, end int) {
 		for y := start; y < end; y++ {
@@ -33,7 +33,7 @@ func FlipV(img image.Image) *image.RGBA {
 	bounds := img.Bounds()
 	src := CloneAsRGBA(img)
 	dst := image.NewRGBA(bounds)
-	w, h := dst.Bounds().Max.X, dst.Bounds().Max.Y
+	w, h := dst.Bounds().Dx(), dst.Bounds().Dy()
 
 	parallelize(h, func(start, end int) {
 		for y := start; y < end; y++ {
