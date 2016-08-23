@@ -5,15 +5,21 @@ import (
 	"math"
 )
 
+// RotationOptions are used to config the Rotate function.
+// PreserveBounds will increase the output size image if necessary to avoid
+// cutting the corners when rotating.
+// Pivot is the point of anchor the rotation. If not provided, a default value
+// of image center will be used.
 type RotationOptions struct {
-	PreserveSize bool
+	PreserveBounds bool
+	Pivot          *image.Point
 }
 
 // Rotate returns a rotated image by the provided angle using the pivot as an anchor.
 // Param angle is in degrees and is applied clockwise.
 // Param pivot is a point which will be used as an anchor for the rotation.
 // Coordinates 0, 0 represent the top left corner of the image.
-func Rotate(img image.Image, angle float64, pivot image.Point, options *RotationOptions) *image.RGBA {
+func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGBA {
 	src := CloneAsRGBA(img)
 	srcW, srcH := src.Bounds().Dx(), src.Bounds().Dy()
 
@@ -21,19 +27,23 @@ func Rotate(img image.Image, angle float64, pivot image.Point, options *Rotation
 		return src
 	}
 
+	// Default pivot position is center of image
+	pivotX, pivotY := float64(srcW)/2, float64(srcH)/2
 	radians := -angle * (math.Pi / 180)
-	pivotX, pivotY := float64(pivot.X), float64(pivot.Y)
-
 	dstW, dstH := srcW, srcH
+
 	if options != nil {
-		if options.PreserveSize {
+		// Reserve larger size in destination image for full image bounds rotation
+		if options.PreserveBounds {
 			// Pythagorean theorem to get Hypotenuse of bounds which are the circle's
 			// diameter which encapsulates it
-			pivotX, pivotY = float64(srcW/2), float64(srcH/2)
 			targetScale := math.Sqrt((float64(srcW))*(float64(srcW)) + (float64(srcH))*(float64(srcH)))
 			percent := math.Abs(math.Sin(radians * 2))
 			targetScale = float64(srcW) + ((targetScale - float64(srcW)) * percent)
 			dstW, dstH = int(targetScale+0.5), int(targetScale+0.5)
+		} else if options.Pivot != nil {
+			// A custom pivot only makes sense if PreserveBounds is set to false
+			pivotX, pivotY = float64(options.Pivot.X), float64(options.Pivot.Y)
 		}
 	}
 
@@ -50,13 +60,13 @@ func Rotate(img image.Image, angle float64, pivot image.Point, options *Rotation
 		xStart := -offsetX
 		xEnd := srcW + offsetX
 
-		for y := yStart; y < yEnd; y++ {
-			for x := xStart; x < xEnd; x++ {
-				dx := float64(x) - pivotX
-				dy := float64(y) - pivotY
+		for x := xStart; x < xEnd; x++ {
+			for y := yStart; y < yEnd; y++ {
+				dx := float64(x) - pivotX + 0.5
+				dy := float64(y) - pivotY + 0.5
 
-				ix := int((math.Cos(radians)*dx - math.Sin(radians)*dy + pivotX) - 0.5)
-				iy := int((math.Sin(radians)*dx + math.Cos(radians)*dy + pivotY) - 0.5)
+				ix := int((math.Cos(radians)*dx - math.Sin(radians)*dy + pivotX))
+				iy := int((math.Sin(radians)*dx + math.Cos(radians)*dy + pivotY))
 
 				if ix < 0 || ix >= srcW || iy < 0 || iy >= srcH {
 					continue
