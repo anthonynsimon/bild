@@ -213,20 +213,26 @@ func main() {
 
 ## Resize
 
-### Nearest Neighbor
+### Crop
+    // Source image is 280x280
+    result := bild.Crop(img, image.Rect(70,70,210,210))
+
+![example](https://anthonynsimon.github.io/projects/bild/crop.jpg)
+
+### Resize Nearest Neighbor
     result := bild.Resize(img, newWidth, newHeight, bild.NearestNeighbor)
 
 ![example](https://anthonynsimon.github.io/projects/bild/resizenearestneighbor.jpg)
 
-### Box Interpolation
+### Resize Box Interpolation
     result := bild.Resize(img, newWidth, newHeight, bild.Box)
 
 ![example](https://anthonynsimon.github.io/projects/bild/resizebox.jpg)  
 
-### Linear Interpolation
+### Resize Linear Interpolation
     result := bild.Resize(img, newWidth, newHeight, bild.Linear)
 
-![example](https://anthonynsimon.github.io/projects/bild/resizelinear.jpg)  
+![example](https://anthonynsimon.github.io/projects/bild/resizelinear.jpg)
 
 
 ## Transform
