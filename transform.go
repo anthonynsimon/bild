@@ -5,19 +5,19 @@ import (
 	"math"
 )
 
-// RotationOptions are used to config the Rotate function.
-// PreserveSize will keep the original image bounds, cutting any pixels
-// that go past it when rotating.
-// Pivot is the point of anchor the rotation. If not provided, a default value
-// of image center will be used.
+// RotationOptions are the rotation parameters
+// ResizeBounds set to false will keep the original image bounds, cutting any
+// pixels that go past it when rotating.
+// Pivot is the point of anchor for the rotation. Default of center is used if a nil is passed.
+// If ResizeBounds is set to true, a center pivot will always be used.
 type RotationOptions struct {
-	PreserveSize bool
+	ResizeBounds bool
 	Pivot        *image.Point
 }
 
 // Rotate returns a rotated image by the provided angle using the pivot as an anchor.
-// Param angle is in degrees and it's applied clockwise.
-// RotationOptions are optional, provided defaults are preserve size set to true and pivot at center.
+// Parameters angle is in degrees and it's applied clockwise.
+// Default parameters are used if a nil *RotationOptions is passed.
 //
 // Usage example:
 //
@@ -28,32 +28,51 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 	src := CloneAsRGBA(img)
 	srcW, srcH := src.Bounds().Dx(), src.Bounds().Dy()
 
-	if angle == 0.0 {
+	// Return early if nothing to do
+	absAngle := int(math.Abs(angle) + 0.5)
+	if absAngle%360 == 0 {
 		return src
 	}
 
+	// Config defaults
+	resizeBounds := false
 	// Default pivot position is center of image
-	pivotX, pivotY := float64(srcW)/2, float64(srcH)/2
-	radians := -angle * (math.Pi / 180)
-	dstW, dstH := srcW, srcH
-
+	pivotX, pivotY := float64(srcW/2), float64(srcH/2)
+	// Get options if provided
 	if options != nil {
-		// Reserve larger size in destination image for full image bounds rotation
-		if !options.PreserveSize {
-			a := math.Abs(float64(srcW) * math.Sin(radians))
-			b := math.Abs(float64(srcW) * math.Cos(radians))
-			c := math.Abs(float64(srcH) * math.Sin(radians))
-			d := math.Abs(float64(srcH) * math.Cos(radians))
-
-			dstW, dstH = int(c+b+0.5), int(a+d+0.5)
-		} else if options.Pivot != nil {
-			// A custom pivot only makes sense if PreserveSize is set to true
+		resizeBounds = options.ResizeBounds
+		if options.Pivot != nil {
 			pivotX, pivotY = float64(options.Pivot.X), float64(options.Pivot.Y)
 		}
 	}
 
+	// Supersample, currently hard set to 2x
+	srcW, srcH = srcW*2, srcH*2
+	src = Resize(src, srcW, srcH, NearestNeighbor)
+	pivotX, pivotY = pivotX*2, pivotY*2
+
+	// Convert to radians, positive degree maps to clockwise rotation
+	angleRadians := -angle * (math.Pi / 180)
+
+	var dstW, dstH int
+	if resizeBounds {
+		// Reserve larger size in destination image for full image bounds rotation
+		// If not preserving size, always take image center as pivot
+		pivotX, pivotY = float64(srcW)/2, float64(srcH)/2
+
+		a := math.Abs(float64(srcW) * math.Sin(angleRadians))
+		b := math.Abs(float64(srcW) * math.Cos(angleRadians))
+		c := math.Abs(float64(srcH) * math.Sin(angleRadians))
+		d := math.Abs(float64(srcH) * math.Cos(angleRadians))
+
+		dstW, dstH = int(c+b+0.5), int(a+d+0.5)
+	} else {
+		dstW, dstH = srcW, srcH
+	}
 	dst := image.NewRGBA(image.Rect(0, 0, dstW, dstH))
 
+	// Calculate offsets in case entire image is being displayed
+	// Otherwise areas clipped by rotation won't be available
 	offsetX := (dstW - srcW) / 2
 	offsetY := (dstH - srcH) / 2
 
@@ -70,8 +89,8 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 				dx := float64(x) - pivotX + 0.5
 				dy := float64(y) - pivotY + 0.5
 
-				ix := int((math.Cos(radians)*dx - math.Sin(radians)*dy + pivotX))
-				iy := int((math.Sin(radians)*dx + math.Cos(radians)*dy + pivotY))
+				ix := int((math.Cos(angleRadians)*dx - math.Sin(angleRadians)*dy + pivotX))
+				iy := int((math.Sin(angleRadians)*dx + math.Cos(angleRadians)*dy + pivotY))
 
 				if ix < 0 || ix >= srcW || iy < 0 || iy >= srcH {
 					continue
@@ -87,6 +106,9 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 			}
 		}
 	})
+
+	// Downsample to original bounds as part of the Supersampling
+	dst = Resize(dst, dstW/2, dstH/2, Linear)
 
 	return dst
 }
