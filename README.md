@@ -224,15 +224,30 @@ func main() {
 
 ![example](https://anthonynsimon.github.io/projects/bild/resizenearestneighbor.jpg)
 
-### Resize Box Interpolation
-    result := bild.Resize(img, newWidth, newHeight, bild.Box)
-
-![example](https://anthonynsimon.github.io/projects/bild/resizebox.jpg)  
-
 ### Resize Linear Interpolation
     result := bild.Resize(img, newWidth, newHeight, bild.Linear)
 
 ![example](https://anthonynsimon.github.io/projects/bild/resizelinear.jpg)
+
+### Resize Gaussian Interpolation
+    result := bild.Resize(img, newWidth, newHeight, bild.Gaussian)
+
+![example](https://anthonynsimon.github.io/projects/bild/resizegaussian.jpg)
+
+### Resize Mitchell Netravali Interpolation
+    result := bild.Resize(img, newWidth, newHeight, bild.MitchellNetravali)
+
+![example](https://anthonynsimon.github.io/projects/bild/resizemitchell.jpg)
+
+### Resize Catmull Rom Interpolation
+    result := bild.Resize(img, newWidth, newHeight, bild.CatmullRom)
+
+![example](https://anthonynsimon.github.io/projects/bild/resizecatmullrom.jpg)
+
+### Resize Lanczos Interpolation
+    result := bild.Resize(img, newWidth, newHeight, bild.Lanczos)
+
+![example](https://anthonynsimon.github.io/projects/bild/resizelanczos.jpg)
 
 
 ## Transform
