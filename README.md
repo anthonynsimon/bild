@@ -245,7 +245,25 @@ func main() {
 ### FlipV
     result := bild.FlipV(img)
 
-![example](https://anthonynsimon.github.io/projects/bild/flipv.jpg)  
+![example](https://anthonynsimon.github.io/projects/bild/flipv.jpg) 
+
+### Rotate
+    // Options set to nil will use defaults (ResizeBounds set to false, Pivot at center)
+    result := bild.Rotate(img, -45.0, nil)
+
+![example](https://anthonynsimon.github.io/projects/bild/rotation03.gif)
+
+    // If ResizeBounds is set to true, the full rotation bounding area is used
+    result := bild.Rotate(img, -45.0, &bild.RotationOptions{ResizeBounds: true})
+
+![example](https://anthonynsimon.github.io/projects/bild/rotation01.gif)
+
+    // Pivot coordinates are set from the top-left corner
+    // Notice ResizeBounds being set to default (false)
+    result := bild.Rotate(img, -45.0, &bild.RotationOptions{Pivot: &image.Point{0, 0}})
+
+![example](https://anthonynsimon.github.io/projects/bild/rotation02.gif)
+
 
 ## License
 
