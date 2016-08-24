@@ -67,6 +67,7 @@ func main() {
 
 
 ## Blend modes
+    result := bild.Multiply(bg, fg)
 
 | Add | Color Burn | Color Dodge |
 |---------- | --------- | ------ |
@@ -164,6 +165,7 @@ func main() {
 ![example](https://anthonynsimon.github.io/projects/bild/crop.jpg)
 
 ### Resize Resampling Filters
+    result := bild.Resize(img, 280, 280, bild.Linear)
 
 | Nearest Neighbor | Linear | Gaussian |
 |---------- | --------- | ------ |
