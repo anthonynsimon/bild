@@ -61,3 +61,28 @@ func Contrast(src image.Image, change float64) *image.RGBA {
 
 	return img
 }
+
+func Equalize(img image.Image) *image.RGBA {
+	src := CloneAsRGBA(img)
+	srcW, srcH := src.Bounds().Dx(), src.Bounds().Dy()
+	dst := image.NewRGBA(src.Bounds())
+
+	chist := NewCumulativeRGBAHistogram(img)
+
+	fn := func(h ChannelHistogram, min, value int) int {
+		return (((h.Bins[value] - min) << 16 / ((srcW * srcH) - min)) * 255) >> 16
+	}
+
+	rMin, gMin, bMin := chist.R.Min(), chist.G.Min(), chist.B.Min()
+
+	for x := 0; x < srcW; x++ {
+		for y := 0; y < srcH; y++ {
+			pos := y*src.Stride + x*4
+			dst.Pix[pos+0] = uint8(fn(chist.R, rMin, int(src.Pix[pos+0])))
+			dst.Pix[pos+1] = uint8(fn(chist.G, gMin, int(src.Pix[pos+1])))
+			dst.Pix[pos+2] = uint8(fn(chist.B, bMin, int(src.Pix[pos+2])))
+			dst.Pix[pos+3] = src.Pix[pos+3]
+		}
+	}
+	return dst
+}
