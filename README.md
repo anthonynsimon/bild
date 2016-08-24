@@ -155,6 +155,13 @@ func main() {
 ![example](https://anthonynsimon.github.io/projects/bild/subtract.jpg)  
 
 
+## Channel
+
+### ExtractChannel
+    result := bild.ExtractChannel(img, bild.Alpha)
+
+![example](https://anthonynsimon.github.io/projects/bild/extractchannel.jpg)  
+
 
 ## Blur
 
