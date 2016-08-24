@@ -382,6 +382,27 @@ func rgbaSlicesEqual(a, b []color.RGBA) bool {
 	return true
 }
 
+func grayscaleImageEqual(a, b *image.Gray) bool {
+	if !a.Rect.Eq(b.Rect) {
+		return false
+	}
+
+	if a.Stride != b.Stride {
+		return false
+	}
+
+	if len(a.Pix) != len(b.Pix) {
+		return false
+	}
+
+	for i := 0; i < len(a.Pix); i++ {
+		if a.Pix[i] != b.Pix[i] {
+			return false
+		}
+	}
+	return true
+}
+
 func rgbaImageEqual(a, b *image.RGBA) bool {
 	if !a.Rect.Eq(b.Rect) {
 		return false
