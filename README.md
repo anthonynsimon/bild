@@ -68,91 +68,29 @@ func main() {
 
 ## Blend modes
 
-### Add
-    result := bild.Add(bg, fg)
+| Add | Color Burn | Color Dodge |
+|---------- | --------- | ------ |
+| ![](https://anthonynsimon.github.io/projects/bild/add.jpg) | ![](https://anthonynsimon.github.io/projects/bild/colorburn.jpg) | ![](https://anthonynsimon.github.io/projects/bild/colordodge.jpg) |
 
-![example](https://anthonynsimon.github.io/projects/bild/add.jpg)  
+| Darken | Difference | Divide |
+|---------- | --------- | ------ |
+| ![](https://anthonynsimon.github.io/projects/bild/darken.jpg) | ![](https://anthonynsimon.github.io/projects/bild/difference.jpg) | ![](https://anthonynsimon.github.io/projects/bild/divide.jpg) |
 
-### ColorBurn
-    result := bild.ColorBurn(bg, fg)
+| Exclusion | Lighten | Linear Burn |
+|---------- | --------- | ------ |
+| ![](https://anthonynsimon.github.io/projects/bild/exclusion.jpg) | ![](https://anthonynsimon.github.io/projects/bild/lighten.jpg) | ![](https://anthonynsimon.github.io/projects/bild/linearburn.jpg) |
 
-![example](https://anthonynsimon.github.io/projects/bild/colorburn.jpg)  
+| Linear Light | Multiply | Normal |
+|---------- | --------- | ------ |
+| ![](https://anthonynsimon.github.io/projects/bild/linearlight.jpg) | ![](https://anthonynsimon.github.io/projects/bild/multiply.jpg) | ![](https://anthonynsimon.github.io/projects/bild/normal.jpg) |
 
-### ColorDodge
-    result := bild.ColorDodge(bg, fg)
+| Opacity | Overlay | Screen |
+|---------- | --------- | ------ |
+| ![](https://anthonynsimon.github.io/projects/bild/opacity.jpg) | ![](https://anthonynsimon.github.io/projects/bild/overlay.jpg) | ![](https://anthonynsimon.github.io/projects/bild/screen.jpg) |
 
-![example](https://anthonynsimon.github.io/projects/bild/colordodge.jpg) 
-
-### Darken
-    result := bild.Darken(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/darken.jpg)  
-
-### Difference
-    result := bild.Difference(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/difference.jpg)  
-
-### Divide
-    result := bild.Divide(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/divide.jpg)  
-
-### Exclusion
-    result := bild.Exclusion(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/exclusion.jpg)  
-
-### Lighten
-    result := bild.Lighten(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/lighten.jpg)  
-
-### LinearBurn
-    result := bild.LinearBurn(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/linearburn.jpg)  
-
-
-### LinearLight
-    result := bild.LinearLight(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/linearlight.jpg)  
-
-### Multiply
-    result := bild.Multiply(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/multiply.jpg)  
-
-### Normal
-    result := bild.Normal(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/normal.jpg)  
-
-### Opacity
-    result := bild.Opacity(bg, fg, 0.5)
-
-![example](https://anthonynsimon.github.io/projects/bild/opacity.jpg)  
-
-### Overlay
-    result := bild.Overlay(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/overlay.jpg)  
-
-### Screen
-    result := bild.Screen(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/screen.jpg)  
-
-### SoftLight
-    result := bild.SoftLight(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/softlight.jpg)  
-
-### Subtract
-    result := bild.Subtract(bg, fg)
-
-![example](https://anthonynsimon.github.io/projects/bild/subtract.jpg)  
+| Soft Light | Subtract |
+|---------- | --------- |
+| ![](https://anthonynsimon.github.io/projects/bild/softlight.jpg) | ![](https://anthonynsimon.github.io/projects/bild/subtract.jpg) |
 
 
 ## Blur
@@ -225,35 +163,15 @@ func main() {
 
 ![example](https://anthonynsimon.github.io/projects/bild/crop.jpg)
 
-### Resize Nearest Neighbor
-    result := bild.Resize(img, newWidth, newHeight, bild.NearestNeighbor)
+### Resize Resampling Filters
 
-![example](https://anthonynsimon.github.io/projects/bild/resizenearestneighbor.jpg)
+| Nearest Neighbor | Linear | Gaussian |
+|---------- | --------- | ------ |
+| ![](https://anthonynsimon.github.io/projects/bild/resizenearestneighbor.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizelinear.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizegaussian.jpg) |
 
-### Resize Linear Interpolation
-    result := bild.Resize(img, newWidth, newHeight, bild.Linear)
-
-![example](https://anthonynsimon.github.io/projects/bild/resizelinear.jpg)
-
-### Resize Gaussian Interpolation
-    result := bild.Resize(img, newWidth, newHeight, bild.Gaussian)
-
-![example](https://anthonynsimon.github.io/projects/bild/resizegaussian.jpg)
-
-### Resize Mitchell Netravali Interpolation
-    result := bild.Resize(img, newWidth, newHeight, bild.MitchellNetravali)
-
-![example](https://anthonynsimon.github.io/projects/bild/resizemitchell.jpg)
-
-### Resize Catmull Rom Interpolation
-    result := bild.Resize(img, newWidth, newHeight, bild.CatmullRom)
-
-![example](https://anthonynsimon.github.io/projects/bild/resizecatmullrom.jpg)
-
-### Resize Lanczos Interpolation
-    result := bild.Resize(img, newWidth, newHeight, bild.Lanczos)
-
-![example](https://anthonynsimon.github.io/projects/bild/resizelanczos.jpg)
+| Mitchell Netravali | Catmull Rom | Lanczos |
+|---------- | --------- | ------ |
+| ![](https://anthonynsimon.github.io/projects/bild/resizemitchell.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizecatmullrom.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizelanczos.jpg) |
 
 
 ## Transform
