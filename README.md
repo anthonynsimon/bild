@@ -70,27 +70,17 @@ func main() {
     result := bild.Multiply(bg, fg)
 
 | Add | Color Burn | Color Dodge |
-|---------- | --------- | ------ |
+| :----------: | :---------: | :------: |
 | ![](https://anthonynsimon.github.io/projects/bild/add.jpg) | ![](https://anthonynsimon.github.io/projects/bild/colorburn.jpg) | ![](https://anthonynsimon.github.io/projects/bild/colordodge.jpg) |
-
-| Darken | Difference | Divide |
-|---------- | --------- | ------ |
+| **Darken** | **Difference** | **Divide** |
 | ![](https://anthonynsimon.github.io/projects/bild/darken.jpg) | ![](https://anthonynsimon.github.io/projects/bild/difference.jpg) | ![](https://anthonynsimon.github.io/projects/bild/divide.jpg) |
-
-| Exclusion | Lighten | Linear Burn |
-|---------- | --------- | ------ |
+| **Exclusion** | **Lighten** | **Linear Burn** |
 | ![](https://anthonynsimon.github.io/projects/bild/exclusion.jpg) | ![](https://anthonynsimon.github.io/projects/bild/lighten.jpg) | ![](https://anthonynsimon.github.io/projects/bild/linearburn.jpg) |
-
-| Linear Light | Multiply | Normal |
-|---------- | --------- | ------ |
+| **Linear Light** | **Multiply** | **Normal** |
 | ![](https://anthonynsimon.github.io/projects/bild/linearlight.jpg) | ![](https://anthonynsimon.github.io/projects/bild/multiply.jpg) | ![](https://anthonynsimon.github.io/projects/bild/normal.jpg) |
-
-| Opacity | Overlay | Screen |
-|---------- | --------- | ------ |
+| **Opacity** | **Overlay** | **Screen** |
 | ![](https://anthonynsimon.github.io/projects/bild/opacity.jpg) | ![](https://anthonynsimon.github.io/projects/bild/overlay.jpg) | ![](https://anthonynsimon.github.io/projects/bild/screen.jpg) |
-
-| Soft Light | Subtract |
-|---------- | --------- |
+| **Soft Light** | **Subtract** |
 | ![](https://anthonynsimon.github.io/projects/bild/softlight.jpg) | ![](https://anthonynsimon.github.io/projects/bild/subtract.jpg) |
 
 
@@ -168,11 +158,9 @@ func main() {
     result := bild.Resize(img, 280, 280, bild.Linear)
 
 | Nearest Neighbor | Linear | Gaussian |
-|---------- | --------- | ------ |
+|:----------: | :---------: | :------: |
 | ![](https://anthonynsimon.github.io/projects/bild/resizenearestneighbor.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizelinear.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizegaussian.jpg) |
-
-| Mitchell Netravali | Catmull Rom | Lanczos |
-|---------- | --------- | ------ |
+| **Mitchell Netravali** | **Catmull Rom** | **Lanczos** |
 | ![](https://anthonynsimon.github.io/projects/bild/resizemitchell.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizecatmullrom.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizelanczos.jpg) |
 
 
