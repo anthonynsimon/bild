@@ -6,13 +6,13 @@ import (
 )
 
 // RotationOptions are used to config the Rotate function.
-// PreserveBounds will keep the original image bounds, cutting any pixels
+// PreserveSize will keep the original image bounds, cutting any pixels
 // that go past it when rotating.
 // Pivot is the point of anchor the rotation. If not provided, a default value
 // of image center will be used.
 type RotationOptions struct {
-	PreserveBounds bool
-	Pivot          *image.Point
+	PreserveSize bool
+	Pivot        *image.Point
 }
 
 // Rotate returns a rotated image by the provided angle using the pivot as an anchor.
@@ -32,17 +32,15 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 
 	if options != nil {
 		// Reserve larger size in destination image for full image bounds rotation
-		if !options.PreserveBounds {
+		if !options.PreserveSize {
 			a := math.Abs(float64(srcW) * math.Sin(radians))
 			b := math.Abs(float64(srcW) * math.Cos(radians))
 			c := math.Abs(float64(srcH) * math.Sin(radians))
 			d := math.Abs(float64(srcH) * math.Cos(radians))
 
-			targetW, targetH := c+b, a+d
-
-			dstW, dstH = int(targetW+0.5), int(targetH+0.5)
+			dstW, dstH = int(c+b+0.5), int(a+d+0.5)
 		} else if options.Pivot != nil {
-			// A custom pivot only makes sense if PreserveBounds is set to false
+			// A custom pivot only makes sense if PreserveSize is set to true
 			pivotX, pivotY = float64(options.Pivot.X), float64(options.Pivot.Y)
 		}
 	}
@@ -54,14 +52,14 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 
 	parallelize(srcH, func(start, end int) {
 		// Correct range to include the pixels visible in new bounds
-		// Note that cannot be done in parallelize function, otherwise ranges would overlap
+		// Note that cannot be done in parallelize function input height, otherwise ranges would overlap
 		yStart := int((float64(start)/float64(srcH))*float64(dstH)) - offsetY
 		yEnd := int((float64(end)/float64(srcH))*float64(dstH)) - offsetY
 		xStart := -offsetX
 		xEnd := srcW + offsetX
 
-		for x := xStart; x < xEnd; x++ {
-			for y := yStart; y < yEnd; y++ {
+		for y := yStart; y < yEnd; y++ {
+			for x := xStart; x < xEnd; x++ {
 				dx := float64(x) - pivotX + 0.5
 				dy := float64(y) - pivotY + 0.5
 

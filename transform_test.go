@@ -16,7 +16,7 @@ func TestRotate(t *testing.T) {
 		{
 			description: "angle 0.0 at center",
 			angle:       0.0,
-			options:     &RotationOptions{PreserveBounds: false},
+			options:     &RotationOptions{PreserveSize: false},
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,
@@ -37,7 +37,7 @@ func TestRotate(t *testing.T) {
 		{
 			description: "angle 90.0 at center",
 			angle:       90.0,
-			options:     &RotationOptions{PreserveBounds: true},
+			options:     &RotationOptions{PreserveSize: true},
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,
@@ -58,7 +58,7 @@ func TestRotate(t *testing.T) {
 		{
 			description: "angle 180.0 at center",
 			angle:       180.0,
-			options:     &RotationOptions{PreserveBounds: true},
+			options:     &RotationOptions{PreserveSize: true},
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,
@@ -79,7 +79,7 @@ func TestRotate(t *testing.T) {
 		{
 			description: "angle 360.0 at center",
 			angle:       360.0,
-			options:     &RotationOptions{PreserveBounds: true},
+			options:     &RotationOptions{PreserveSize: true},
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,
@@ -100,7 +100,7 @@ func TestRotate(t *testing.T) {
 		{
 			description: "angle -90.0 at center",
 			angle:       -90.0,
-			options:     &RotationOptions{PreserveBounds: true},
+			options:     &RotationOptions{PreserveSize: true},
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,
@@ -119,9 +119,30 @@ func TestRotate(t *testing.T) {
 			},
 		},
 		{
+			description: "angle -90.0 at middle bottom",
+			angle:       -90.0,
+			options:     &RotationOptions{PreserveSize: true, Pivot: &image.Point{1, 2}},
+			value: &image.RGBA{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 8,
+				Pix: []uint8{
+					0x80, 0x80, 0x80, 0xFF, 0x80, 0x80, 0x80, 0xFF,
+					0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+				},
+			},
+			expected: &image.RGBA{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 8,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00,
+				},
+			},
+		},
+		{
 			description: "angle 45.0 at center, don't preserve bounds",
 			angle:       45.0,
-			options:     &RotationOptions{PreserveBounds: false},
+			options:     &RotationOptions{PreserveSize: false},
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 4, 4),
 				Stride: 4 * 4,
