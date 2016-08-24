@@ -54,7 +54,7 @@ func (hist *ChannelHistogram) Image() *image.Gray {
 	max := hist.Max()
 
 	for x := 0; x < 256; x++ {
-		value := int((float64(hist.Bins[x]) / float64(max)) * float64(dstH))
+		value := ((int(hist.Bins[x]) << 16 / max) * dstH) >> 16
 		// Fill from the bottom up
 		for y := dstH - 1; y > dstH-value-1; y-- {
 			dst.Pix[y*dst.Stride+x] = 0xFF
@@ -72,22 +72,25 @@ func (hist *RGBAHistogram) Image() *image.RGBA {
 	maxB := hist.B.Max()
 
 	for x := 0; x < 256; x++ {
-		valueR := int((float64(hist.R.Bins[x]) / float64(maxR)) * float64(dstH))
-		valueG := int((float64(hist.G.Bins[x]) / float64(maxG)) * float64(dstH))
-		valueB := int((float64(hist.B.Bins[x]) / float64(maxB)) * float64(dstH))
+		valueR := ((int(hist.R.Bins[x]) << 16 / maxR) * dstH) >> 16
+		valueG := ((int(hist.G.Bins[x]) << 16 / maxG) * dstH) >> 16
+		valueB := ((int(hist.B.Bins[x]) << 16 / maxB) * dstH) >> 16
 
 		// Fill from the bottom up
-		for y := dstH - 1; y > dstH-valueR-1; y-- {
-			dst.Pix[y*dst.Stride+x*4+0] = 0xFF
-			dst.Pix[y*dst.Stride+x*4+3] = 0xFF
-		}
-		for y := dstH - 1; y > dstH-valueG-1; y-- {
-			dst.Pix[y*dst.Stride+x*4+1] = 0xFF
-			dst.Pix[y*dst.Stride+x*4+3] = 0xFF
-		}
-		for y := dstH - 1; y > dstH-valueB-1; y-- {
-			dst.Pix[y*dst.Stride+x*4+2] = 0xFF
-			dst.Pix[y*dst.Stride+x*4+3] = 0xFF
+		for y := dstH - 1; y >= 0; y-- {
+			pos := y*dst.Stride + x*4
+			iy := dstH - 1 - y
+
+			if iy <= valueR {
+				dst.Pix[pos+0] = 0xFF
+			}
+			if iy <= valueG {
+				dst.Pix[pos+1] = 0xFF
+			}
+			if iy <= valueB {
+				dst.Pix[pos+2] = 0xFF
+			}
+			dst.Pix[pos+3] = 0xFF
 		}
 	}
 
