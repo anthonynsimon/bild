@@ -59,7 +59,7 @@ func TestInvert(t *testing.T) {
 func TestGrayscale(t *testing.T) {
 	cases := []struct {
 		value    image.Image
-		expected *image.RGBA
+		expected *image.Gray
 	}{
 		{
 			value: &image.RGBA{
@@ -70,12 +70,12 @@ func TestGrayscale(t *testing.T) {
 					0x31, 0xFF, 0x0, 0xFF, 0x0, 0xFF, 0x0, 0xFF,
 				},
 			},
-			expected: &image.RGBA{
+			expected: &image.Gray{
 				Rect:   image.Rect(0, 0, 2, 2),
-				Stride: 8,
+				Stride: 2,
 				Pix: []uint8{
-					0xb9, 0xb9, 0xb9, 0x80, 0x80, 0x80, 0x80, 0xff,
-					0xa8, 0xa8, 0xa8, 0xff, 0x99, 0x99, 0x99, 0xff,
+					0xb8, 0x7f,
+					0xa8, 0x99,
 				},
 			},
 		},
@@ -88,12 +88,12 @@ func TestGrayscale(t *testing.T) {
 					0x71, 0xFF, 0x0, 0xFF, 0x0, 0xFF, 0xFF, 0xFF,
 				},
 			},
-			expected: &image.RGBA{
+			expected: &image.Gray{
 				Rect:   image.Rect(0, 0, 2, 2),
-				Stride: 8,
+				Stride: 2,
 				Pix: []uint8{
-					0xaf, 0xaf, 0xaf, 0x80, 0x7f, 0x7f, 0x7f, 0xff,
-					0xbb, 0xbb, 0xbb, 0xff, 0xb3, 0xb3, 0xb3, 0xff,
+					0xaf, 0x7e,
+					0xbb, 0xb3,
 				},
 			},
 		},
@@ -101,7 +101,7 @@ func TestGrayscale(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Grayscale(c.value)
-		if !rgbaImageEqual(actual, c.expected) {
+		if !grayscaleImageEqual(actual, c.expected) {
 			t.Error(testFailMessage("Grayscale", c.expected, actual))
 		}
 	}

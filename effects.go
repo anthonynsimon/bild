@@ -19,22 +19,34 @@ func Invert(src image.Image) *image.RGBA {
 
 // Grayscale returns a copy of the image in Grayscale using the weights
 // 0.3R + 0.6G + 0.1B as a heuristic.
-func Grayscale(src image.Image) *image.RGBA {
-	fn := func(c color.RGBA) color.RGBA {
+func Grayscale(img image.Image) *image.Gray {
+	src := CloneAsRGBA(img)
+	bounds := src.Bounds()
+	srcW, srcH := bounds.Dx(), bounds.Dy()
 
-		v := 0.3*float64(c.R) + 0.6*float64(c.G) + 0.1*float64(c.B)
-		result := uint8(clampFloat64(math.Ceil(v), 0, 255))
-
-		return color.RGBA{
-			result,
-			result,
-			result,
-			c.A}
+	if bounds.Empty() {
+		return &image.Gray{}
 	}
 
-	img := apply(src, fn)
+	dst := image.NewGray(bounds)
 
-	return img
+	parallelize(srcH, func(start, end int) {
+		for y := start; y < end; y++ {
+			for x := 0; x < srcW; x++ {
+				srcPos := y*src.Stride + x*4
+				dstPos := y*dst.Stride + x
+
+				var c uint8
+				c += uint8(0.3*float64(src.Pix[srcPos+0]) + 0.5)
+				c += uint8(0.6*float64(src.Pix[srcPos+1]) + 0.5)
+				c += uint8(0.1*float64(src.Pix[srcPos+2]) + 0.5)
+
+				dst.Pix[dstPos] = c
+			}
+		}
+	})
+
+	return dst
 }
 
 // EdgeDetection returns a copy of the image with it's edges highlighted.
