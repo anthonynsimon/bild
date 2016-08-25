@@ -13,58 +13,58 @@ type Histogram struct {
 	Bins []int
 }
 
-func (hist *Histogram) Max() int {
+func (h *Histogram) Max() int {
 	var max int
-	if len(hist.Bins) > 0 {
-		max = hist.Bins[0]
-		for i := 1; i < len(hist.Bins); i++ {
-			if hist.Bins[i] > max {
-				max = hist.Bins[i]
+	if len(h.Bins) > 0 {
+		max = h.Bins[0]
+		for i := 1; i < len(h.Bins); i++ {
+			if h.Bins[i] > max {
+				max = h.Bins[i]
 			}
 		}
 	}
 	return max
 }
 
-func (hist *Histogram) Min() int {
+func (h *Histogram) Min() int {
 	var min int
-	if len(hist.Bins) > 0 {
-		min = hist.Bins[0]
-		for i := 1; i < len(hist.Bins); i++ {
-			if hist.Bins[i] < min {
-				min = hist.Bins[i]
+	if len(h.Bins) > 0 {
+		min = h.Bins[0]
+		for i := 1; i < len(h.Bins); i++ {
+			if h.Bins[i] < min {
+				min = h.Bins[i]
 			}
 		}
 	}
 	return min
 }
 
-func (hist *Histogram) Cumulative() *Histogram {
-	binCount := len(hist.Bins)
-	result := Histogram{make([]int, binCount)}
+func (h *Histogram) Cumulative() *Histogram {
+	binCount := len(h.Bins)
+	out := Histogram{make([]int, binCount)}
 
 	if binCount > 0 {
-		result.Bins[0] = hist.Bins[0]
+		out.Bins[0] = h.Bins[0]
 	}
 
 	for i := 1; i < binCount; i++ {
-		result.Bins[i] = result.Bins[i-1] + hist.Bins[i]
+		out.Bins[i] = out.Bins[i-1] + h.Bins[i]
 	}
 
-	return &result
+	return &out
 }
 
-func (hist *Histogram) Image() *image.Gray {
-	dstW, dstH := len(hist.Bins), len(hist.Bins)
+func (h *Histogram) Image() *image.Gray {
+	dstW, dstH := len(h.Bins), len(h.Bins)
 	dst := image.NewGray(image.Rect(0, 0, dstW, dstH))
 
-	max := hist.Max()
+	max := h.Max()
 	if max == 0 {
 		max = 1
 	}
 
 	for x := 0; x < dstW; x++ {
-		value := ((int(hist.Bins[x]) << 16 / max) * dstH) >> 16
+		value := ((int(h.Bins[x]) << 16 / max) * dstH) >> 16
 		// Fill from the bottom up
 		for y := dstH - 1; y > dstH-value-1; y-- {
 			dst.Pix[y*dst.Stride+x] = 0xFF
@@ -77,89 +77,89 @@ func NewRGBAHistogram(img image.Image) *RGBAHistogram {
 	src := CloneAsRGBA(img)
 
 	binCount := 256
-	rHist := Histogram{make([]int, binCount)}
-	gHist := Histogram{make([]int, binCount)}
-	bHist := Histogram{make([]int, binCount)}
-	aHist := Histogram{make([]int, binCount)}
+	r := Histogram{make([]int, binCount)}
+	g := Histogram{make([]int, binCount)}
+	b := Histogram{make([]int, binCount)}
+	a := Histogram{make([]int, binCount)}
 
 	for y := 0; y < src.Bounds().Dy(); y++ {
 		for x := 0; x < src.Bounds().Dx(); x++ {
 			pos := y*src.Stride + x*4
-			rHist.Bins[src.Pix[pos+0]]++
-			gHist.Bins[src.Pix[pos+1]]++
-			bHist.Bins[src.Pix[pos+2]]++
-			aHist.Bins[src.Pix[pos+3]]++
+			r.Bins[src.Pix[pos+0]]++
+			g.Bins[src.Pix[pos+1]]++
+			b.Bins[src.Pix[pos+2]]++
+			a.Bins[src.Pix[pos+3]]++
 		}
 	}
 
-	return &RGBAHistogram{R: rHist, G: gHist, B: bHist, A: aHist}
+	return &RGBAHistogram{R: r, G: g, B: b, A: a}
 }
 
-func (hist *RGBAHistogram) Cumulative() *RGBAHistogram {
-	binCount := len(hist.R.Bins)
+func (h *RGBAHistogram) Cumulative() *RGBAHistogram {
+	binCount := len(h.R.Bins)
 
-	rHist := Histogram{make([]int, binCount)}
-	gHist := Histogram{make([]int, binCount)}
-	bHist := Histogram{make([]int, binCount)}
-	aHist := Histogram{make([]int, binCount)}
+	r := Histogram{make([]int, binCount)}
+	g := Histogram{make([]int, binCount)}
+	b := Histogram{make([]int, binCount)}
+	a := Histogram{make([]int, binCount)}
 
-	result := RGBAHistogram{R: rHist, G: gHist, B: bHist, A: aHist}
+	out := RGBAHistogram{R: r, G: g, B: b, A: a}
 
 	if binCount > 0 {
-		result.R.Bins[0] = hist.R.Bins[0]
-		result.G.Bins[0] = hist.G.Bins[0]
-		result.B.Bins[0] = hist.B.Bins[0]
-		result.A.Bins[0] = hist.A.Bins[0]
+		out.R.Bins[0] = h.R.Bins[0]
+		out.G.Bins[0] = h.G.Bins[0]
+		out.B.Bins[0] = h.B.Bins[0]
+		out.A.Bins[0] = h.A.Bins[0]
 	}
 
 	for i := 1; i < binCount; i++ {
-		result.R.Bins[i] = result.R.Bins[i-1] + hist.R.Bins[i]
-		result.G.Bins[i] = result.G.Bins[i-1] + hist.G.Bins[i]
-		result.B.Bins[i] = result.B.Bins[i-1] + hist.B.Bins[i]
-		result.A.Bins[i] = result.A.Bins[i-1] + hist.A.Bins[i]
+		out.R.Bins[i] = out.R.Bins[i-1] + h.R.Bins[i]
+		out.G.Bins[i] = out.G.Bins[i-1] + h.G.Bins[i]
+		out.B.Bins[i] = out.B.Bins[i-1] + h.B.Bins[i]
+		out.A.Bins[i] = out.A.Bins[i-1] + h.A.Bins[i]
 	}
 
-	return &result
+	return &out
 }
 
-func (hist *RGBAHistogram) Image() *image.RGBA {
-	if len(hist.R.Bins) != 256 || len(hist.G.Bins) != 256 ||
-		len(hist.B.Bins) != 256 || len(hist.A.Bins) != 256 {
+func (h *RGBAHistogram) Image() *image.RGBA {
+	if len(h.R.Bins) != 256 || len(h.G.Bins) != 256 ||
+		len(h.B.Bins) != 256 || len(h.A.Bins) != 256 {
 		panic("RGBAHistogram bins length not equal to 256")
 	}
 
 	dstW, dstH := 256, 256
 	dst := image.NewRGBA(image.Rect(0, 0, dstW, dstH))
 
-	maxR := hist.R.Max()
+	maxR := h.R.Max()
 	if maxR == 0 {
 		maxR = 1
 	}
-	maxG := hist.G.Max()
+	maxG := h.G.Max()
 	if maxG == 0 {
 		maxG = 1
 	}
-	maxB := hist.B.Max()
+	maxB := h.B.Max()
 	if maxB == 0 {
 		maxB = 1
 	}
 
 	for x := 0; x < dstW; x++ {
-		valueR := ((int(hist.R.Bins[x]) << 16 / maxR) * dstH) >> 16
-		valueG := ((int(hist.G.Bins[x]) << 16 / maxG) * dstH) >> 16
-		valueB := ((int(hist.B.Bins[x]) << 16 / maxB) * dstH) >> 16
+		binHeightR := ((int(h.R.Bins[x]) << 16 / maxR) * dstH) >> 16
+		binHeightG := ((int(h.G.Bins[x]) << 16 / maxG) * dstH) >> 16
+		binHeightB := ((int(h.B.Bins[x]) << 16 / maxB) * dstH) >> 16
 		// Fill from the bottom up
 		for y := dstH - 1; y >= 0; y-- {
 			pos := y*dst.Stride + x*4
 			iy := dstH - 1 - y
 
-			if iy < valueR {
+			if iy < binHeightR {
 				dst.Pix[pos+0] = 0xFF
 			}
-			if iy < valueG {
+			if iy < binHeightG {
 				dst.Pix[pos+1] = 0xFF
 			}
-			if iy < valueB {
+			if iy < binHeightB {
 				dst.Pix[pos+2] = 0xFF
 			}
 			dst.Pix[pos+3] = 0xFF
