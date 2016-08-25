@@ -173,6 +173,14 @@ func main() {
 | ![](https://anthonynsimon.github.io/projects/bild/resizemitchell.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizecatmullrom.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizelanczos.jpg) |
 
 
+## Segmentation
+
+### Threshold
+	result := bild.Threshold(img, 128)
+
+![example](https://anthonynsimon.github.io/projects/bild/threshold.jpg)
+
+
 ## Transform
 
 ### FlipH
