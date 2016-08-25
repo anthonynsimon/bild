@@ -416,9 +416,12 @@ func rgbaImageEqual(a, b *image.RGBA) bool {
 		return false
 	}
 
-	for i := 0; i < len(a.Pix); i++ {
-		if a.Pix[i] != b.Pix[i] {
-			return false
+	for y := 0; y < a.Bounds().Dy(); y++ {
+		for x := 0; x < a.Bounds().Dx(); x++ {
+			pos := y*a.Stride + x*4
+			if a.Pix[pos] != b.Pix[pos] {
+				return false
+			}
 		}
 	}
 	return true
