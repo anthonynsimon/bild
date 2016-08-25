@@ -94,7 +94,7 @@ func TestNormalBlend(t *testing.T) {
 	for _, c := range cases {
 		actual := NormalBlend(c.value0, c.value1)
 		if !rgbaImageEqual(actual, c.expected) {
-			t.Error(testFailMessage("CombiNormalBlendne", c.expected, actual))
+			t.Error(testFailMessage("NormalBlend", c.expected, actual))
 		}
 	}
 }
