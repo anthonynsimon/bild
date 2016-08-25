@@ -10,9 +10,9 @@ import (
 	"math"
 )
 
-// Normal combines the foreground and background images by placing the foreground over the
+// NormalBlend combines the foreground and background images by placing the foreground over the
 // background using alpha compositing. The resulting image is then returned.
-func Normal(bg image.Image, fg image.Image) *image.RGBA {
+func NormalBlend(bg image.Image, fg image.Image) *image.RGBA {
 	dst := blend(bg, fg, func(c0, c1 RGBAF64) RGBAF64 {
 		return alphaComp(c0, c1)
 	})

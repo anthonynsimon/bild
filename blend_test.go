@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestNormal(t *testing.T) {
+func TestNormalBlend(t *testing.T) {
 	cases := []struct {
 		value0   image.Image
 		value1   image.Image
@@ -92,9 +92,9 @@ func TestNormal(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := Normal(c.value0, c.value1)
+		actual := NormalBlend(c.value0, c.value1)
 		if !rgbaImageEqual(actual, c.expected) {
-			t.Error(testFailMessage("Normal", c.expected, actual))
+			t.Error(testFailMessage("CombiNormalBlendne", c.expected, actual))
 		}
 	}
 }
