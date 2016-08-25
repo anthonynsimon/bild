@@ -15,9 +15,12 @@ type Histogram struct {
 
 func (hist *Histogram) Max() int {
 	var max int
-	for i := range hist.Bins {
-		if hist.Bins[i] > max {
-			max = hist.Bins[i]
+	if len(hist.Bins) > 0 {
+		max = hist.Bins[0]
+		for i := 1; i < len(hist.Bins); i++ {
+			if hist.Bins[i] > max {
+				max = hist.Bins[i]
+			}
 		}
 	}
 	return max
@@ -25,9 +28,12 @@ func (hist *Histogram) Max() int {
 
 func (hist *Histogram) Min() int {
 	var min int
-	for i := range hist.Bins {
-		if hist.Bins[i] < min {
-			min = hist.Bins[i]
+	if len(hist.Bins) > 0 {
+		min = hist.Bins[0]
+		for i := 1; i < len(hist.Bins); i++ {
+			if hist.Bins[i] < min {
+				min = hist.Bins[i]
+			}
 		}
 	}
 	return min
@@ -37,18 +43,25 @@ func (hist *Histogram) Cumulative() *Histogram {
 	binCount := len(hist.Bins)
 	result := Histogram{make([]int, binCount)}
 
+	if binCount > 0 {
+		result.Bins[0] = hist.Bins[0]
+	}
+
 	for i := 1; i < binCount; i++ {
-		result.Bins[i] = hist.Bins[i] + hist.Bins[i-1]
+		result.Bins[i] = result.Bins[i-1] + hist.Bins[i]
 	}
 
 	return &result
 }
 
 func (hist *Histogram) Image() *image.Gray {
-	dstW, dstH := len(hist.Bins), 128
+	dstW, dstH := len(hist.Bins), len(hist.Bins)
 	dst := image.NewGray(image.Rect(0, 0, dstW, dstH))
 
 	max := hist.Max()
+	if max == 0 {
+		max = 1
+	}
 
 	for x := 0; x < dstW; x++ {
 		value := ((int(hist.Bins[x]) << 16 / max) * dstH) >> 16
@@ -92,41 +105,61 @@ func (hist *RGBAHistogram) Cumulative() *RGBAHistogram {
 
 	result := RGBAHistogram{R: rHist, G: gHist, B: bHist, A: aHist}
 
+	if binCount > 0 {
+		result.R.Bins[0] = hist.R.Bins[0]
+		result.G.Bins[0] = hist.G.Bins[0]
+		result.B.Bins[0] = hist.B.Bins[0]
+		result.A.Bins[0] = hist.A.Bins[0]
+	}
+
 	for i := 1; i < binCount; i++ {
-		result.R.Bins[i] = hist.R.Bins[i] + hist.R.Bins[i-1]
-		result.G.Bins[i] = hist.G.Bins[i] + hist.G.Bins[i-1]
-		result.B.Bins[i] = hist.B.Bins[i] + hist.B.Bins[i-1]
-		result.A.Bins[i] = hist.A.Bins[i] + hist.A.Bins[i-1]
+		result.R.Bins[i] = result.R.Bins[i-1] + hist.R.Bins[i]
+		result.G.Bins[i] = result.G.Bins[i-1] + hist.G.Bins[i]
+		result.B.Bins[i] = result.B.Bins[i-1] + hist.B.Bins[i]
+		result.A.Bins[i] = result.A.Bins[i-1] + hist.A.Bins[i]
 	}
 
 	return &result
 }
 
 func (hist *RGBAHistogram) Image() *image.RGBA {
-	dstW, dstH := 256, 128
+	if len(hist.R.Bins) != 256 || len(hist.G.Bins) != 256 ||
+		len(hist.B.Bins) != 256 || len(hist.A.Bins) != 256 {
+		panic("RGBAHistogram bins length not equal to 256")
+	}
+
+	dstW, dstH := 256, 256
 	dst := image.NewRGBA(image.Rect(0, 0, dstW, dstH))
 
 	maxR := hist.R.Max()
+	if maxR == 0 {
+		maxR = 1
+	}
 	maxG := hist.G.Max()
+	if maxG == 0 {
+		maxG = 1
+	}
 	maxB := hist.B.Max()
+	if maxB == 0 {
+		maxB = 1
+	}
 
-	for x := 0; x < 256; x++ {
+	for x := 0; x < dstW; x++ {
 		valueR := ((int(hist.R.Bins[x]) << 16 / maxR) * dstH) >> 16
 		valueG := ((int(hist.G.Bins[x]) << 16 / maxG) * dstH) >> 16
 		valueB := ((int(hist.B.Bins[x]) << 16 / maxB) * dstH) >> 16
-
 		// Fill from the bottom up
 		for y := dstH - 1; y >= 0; y-- {
 			pos := y*dst.Stride + x*4
 			iy := dstH - 1 - y
 
-			if iy <= valueR {
+			if iy < valueR {
 				dst.Pix[pos+0] = 0xFF
 			}
-			if iy <= valueG {
+			if iy < valueG {
 				dst.Pix[pos+1] = 0xFF
 			}
-			if iy <= valueB {
+			if iy < valueB {
 				dst.Pix[pos+2] = 0xFF
 			}
 			dst.Pix[pos+3] = 0xFF
