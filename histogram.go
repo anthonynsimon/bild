@@ -2,6 +2,8 @@ package bild
 
 import "image"
 
+// RGBAHistogram holds a sub-histogram per RGBA channel.
+// Each channel histogram contains 256 bins (8-bit color depth per channel).
 type RGBAHistogram struct {
 	R Histogram
 	G Histogram
@@ -9,10 +11,12 @@ type RGBAHistogram struct {
 	A Histogram
 }
 
+// Histogram holds a variable length slice of bins, which keeps track of sample counts.
 type Histogram struct {
 	Bins []int
 }
 
+// Max returns the highest count found in the histogram bins.
 func (h *Histogram) Max() int {
 	var max int
 	if len(h.Bins) > 0 {
@@ -26,6 +30,7 @@ func (h *Histogram) Max() int {
 	return max
 }
 
+// Min returns the lowest count found in the histogram bins.
 func (h *Histogram) Min() int {
 	var min int
 	if len(h.Bins) > 0 {
@@ -39,6 +44,8 @@ func (h *Histogram) Min() int {
 	return min
 }
 
+// Cumulative returns a new Histogram in which each bin is the cumulative
+// value of it's previous bins
 func (h *Histogram) Cumulative() *Histogram {
 	binCount := len(h.Bins)
 	out := Histogram{make([]int, binCount)}
@@ -54,6 +61,8 @@ func (h *Histogram) Cumulative() *Histogram {
 	return &out
 }
 
+// Image returns a grayscale image representation of the Histogram.
+// The width and height of the image will be equivalent to the number of Bins in the Histogram.
 func (h *Histogram) Image() *image.Gray {
 	dstW, dstH := len(h.Bins), len(h.Bins)
 	dst := image.NewGray(image.Rect(0, 0, dstW, dstH))
@@ -73,6 +82,8 @@ func (h *Histogram) Image() *image.Gray {
 	return dst
 }
 
+// NewRGBAHistogram constructs a RGBAHistogram out of the provided image.
+// A sub-histogram is created per RGBA channel with 256 bins each.
 func NewRGBAHistogram(img image.Image) *RGBAHistogram {
 	src := CloneAsRGBA(img)
 
@@ -95,6 +106,8 @@ func NewRGBAHistogram(img image.Image) *RGBAHistogram {
 	return &RGBAHistogram{R: r, G: g, B: b, A: a}
 }
 
+// Cumulative returns a new RGBAHistogram in which each bin is the cumulative
+// value of it's previous bins per channel.
 func (h *RGBAHistogram) Cumulative() *RGBAHistogram {
 	binCount := len(h.R.Bins)
 
@@ -122,6 +135,12 @@ func (h *RGBAHistogram) Cumulative() *RGBAHistogram {
 	return &out
 }
 
+// Image returns an RGBA image representation of the RGBAHistogram.
+// An image width of 256 represents the 256 Bins per channel and the
+// image height of 256 represents the max normalized histogram value per channel.
+// Each RGB channel from the histogram is mapped to its corresponding channel in the image,
+// so that for example if the red channel is extracted from the image, it corresponds to the
+// red channel histogram.
 func (h *RGBAHistogram) Image() *image.RGBA {
 	if len(h.R.Bins) != 256 || len(h.G.Bins) != 256 ||
 		len(h.B.Bins) != 256 || len(h.A.Bins) != 256 {
