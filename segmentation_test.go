@@ -1,7 +1,6 @@
 package bild
 
 import (
-	"fmt"
 	"image"
 	"testing"
 )
@@ -93,20 +92,7 @@ func TestThreshold(t *testing.T) {
 	for _, c := range cases {
 		actual := Threshold(c.img, c.level)
 		if !grayscaleImageEqual(actual, c.expected) {
-			t.Error(testFailMessage("Threshold", formatGrayImageString(c.expected), formatGrayImageString(actual)))
+			t.Error(testFailMessage("Threshold", formatImageGrayString(c.expected), formatImageGrayString(actual)))
 		}
 	}
-}
-
-func formatGrayImageString(img *image.Gray) string {
-	var result string
-	for y := 0; y < img.Bounds().Dy(); y++ {
-		result += "\n"
-		for x := 0; x < img.Bounds().Dx(); x++ {
-			pos := y*img.Stride + x
-			result += fmt.Sprintf("%#X, ", img.Pix[pos])
-		}
-	}
-	result += "\n"
-	return result
 }
