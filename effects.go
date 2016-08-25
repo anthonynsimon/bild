@@ -138,8 +138,20 @@ func Median(img image.Image, size int) *image.RGBA {
 				i := 0
 				for ky := 0; ky < size; ky++ {
 					for kx := 0; kx < size; kx++ {
-						ix := (x - size/2 + kx + w) % (w)
-						iy := (y - size/2 + ky + h) % h
+						ix := x - size/2 + kx
+						iy := y - size/2 + ky
+
+						if ix < 0 {
+							ix = 0
+						} else if ix >= w {
+							ix = w - 1
+						}
+
+						if iy < 0 {
+							iy = 0
+						} else if iy >= h {
+							iy = h - 1
+						}
 
 						ipos := iy*dst.Stride + ix*4
 						neighbors[i] = color.RGBA{
