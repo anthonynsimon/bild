@@ -15,6 +15,8 @@ Package bild provides a collection of common image processing functions. The inp
 
 The aim of this project is simplicity in use and development over high performance, but most algorithms are designed to be efficient and make use of parallelism when available. It is based on standard Go packages to reduce dependency use and development abstractions.
 
+**Notice:** This package is under heavy development and the API might change at any time until a 1.0 version is reached.
+
 ## Install
 
 bild requires Go version 1.4 or greater.
