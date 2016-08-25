@@ -146,6 +146,15 @@ func main() {
 ![example](https://anthonynsimon.github.io/projects/bild/sobel.jpg)  
 
 
+## Histogram
+
+### RGBA Histogram
+	hist := bild.NewRGBAHistogram(img)
+    result := hist.Image()
+
+![example](https://anthonynsimon.github.io/projects/bild/histogram.png)  
+
+
 ## Resize
 
 ### Crop
