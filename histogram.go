@@ -3,23 +3,71 @@ package bild
 import "image"
 
 type RGBAHistogram struct {
-	R ChannelHistogram
-	G ChannelHistogram
-	B ChannelHistogram
-	A ChannelHistogram
+	R Histogram
+	G Histogram
+	B Histogram
+	A Histogram
 }
 
-type ChannelHistogram struct {
+type Histogram struct {
 	Bins []int
+}
+
+func (hist *Histogram) Max() int {
+	var max int
+	for i := range hist.Bins {
+		if hist.Bins[i] > max {
+			max = hist.Bins[i]
+		}
+	}
+	return max
+}
+
+func (hist *Histogram) Min() int {
+	var min int
+	for i := range hist.Bins {
+		if hist.Bins[i] < min {
+			min = hist.Bins[i]
+		}
+	}
+	return min
+}
+
+func (hist *Histogram) Cumulative() *Histogram {
+	binCount := len(hist.Bins)
+	result := Histogram{make([]int, binCount)}
+
+	for i := 1; i < binCount; i++ {
+		result.Bins[i] = hist.Bins[i] + hist.Bins[i-1]
+	}
+
+	return &result
+}
+
+func (hist *Histogram) Image() *image.Gray {
+	dstW, dstH := len(hist.Bins), 128
+	dst := image.NewGray(image.Rect(0, 0, dstW, dstH))
+
+	max := hist.Max()
+
+	for x := 0; x < dstW; x++ {
+		value := ((int(hist.Bins[x]) << 16 / max) * dstH) >> 16
+		// Fill from the bottom up
+		for y := dstH - 1; y > dstH-value-1; y-- {
+			dst.Pix[y*dst.Stride+x] = 0xFF
+		}
+	}
+	return dst
 }
 
 func NewRGBAHistogram(img image.Image) *RGBAHistogram {
 	src := CloneAsRGBA(img)
 
-	rHist := ChannelHistogram{make([]int, 256)}
-	gHist := ChannelHistogram{make([]int, 256)}
-	bHist := ChannelHistogram{make([]int, 256)}
-	aHist := ChannelHistogram{make([]int, 256)}
+	binCount := 256
+	rHist := Histogram{make([]int, binCount)}
+	gHist := Histogram{make([]int, binCount)}
+	bHist := Histogram{make([]int, binCount)}
+	aHist := Histogram{make([]int, binCount)}
 
 	for y := 0; y < src.Bounds().Dy(); y++ {
 		for x := 0; x < src.Bounds().Dx(); x++ {
@@ -34,33 +82,24 @@ func NewRGBAHistogram(img image.Image) *RGBAHistogram {
 	return &RGBAHistogram{R: rHist, G: gHist, B: bHist, A: aHist}
 }
 
-func NewCumulativeRGBAHistogram(img image.Image) *RGBAHistogram {
-	hist := NewRGBAHistogram(img)
+func (hist *RGBAHistogram) Cumulative() *RGBAHistogram {
+	binCount := len(hist.R.Bins)
 
-	for i := 1; i < 256; i++ {
-		hist.R.Bins[i] += hist.R.Bins[i-1]
-		hist.G.Bins[i] += hist.G.Bins[i-1]
-		hist.B.Bins[i] += hist.B.Bins[i-1]
-		hist.A.Bins[i] += hist.A.Bins[i-1]
+	rHist := Histogram{make([]int, binCount)}
+	gHist := Histogram{make([]int, binCount)}
+	bHist := Histogram{make([]int, binCount)}
+	aHist := Histogram{make([]int, binCount)}
+
+	result := RGBAHistogram{R: rHist, G: gHist, B: bHist, A: aHist}
+
+	for i := 1; i < binCount; i++ {
+		result.R.Bins[i] = hist.R.Bins[i] + hist.R.Bins[i-1]
+		result.G.Bins[i] = hist.G.Bins[i] + hist.G.Bins[i-1]
+		result.B.Bins[i] = hist.B.Bins[i] + hist.B.Bins[i-1]
+		result.A.Bins[i] = hist.A.Bins[i] + hist.A.Bins[i-1]
 	}
 
-	return hist
-}
-
-func (hist *ChannelHistogram) Image() *image.Gray {
-	dstW, dstH := 256, 128
-	dst := image.NewGray(image.Rect(0, 0, dstW, dstH))
-
-	max := hist.Max()
-
-	for x := 0; x < 256; x++ {
-		value := ((int(hist.Bins[x]) << 16 / max) * dstH) >> 16
-		// Fill from the bottom up
-		for y := dstH - 1; y > dstH-value-1; y-- {
-			dst.Pix[y*dst.Stride+x] = 0xFF
-		}
-	}
-	return dst
+	return &result
 }
 
 func (hist *RGBAHistogram) Image() *image.RGBA {
@@ -95,24 +134,4 @@ func (hist *RGBAHistogram) Image() *image.RGBA {
 	}
 
 	return dst
-}
-
-func (hist *ChannelHistogram) Max() int {
-	var max int
-	for i := range hist.Bins {
-		if hist.Bins[i] > max {
-			max = hist.Bins[i]
-		}
-	}
-	return max
-}
-
-func (hist *ChannelHistogram) Min() int {
-	var min int
-	for i := range hist.Bins {
-		if hist.Bins[i] < min {
-			min = hist.Bins[i]
-		}
-	}
-	return min
 }
