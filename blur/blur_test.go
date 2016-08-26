@@ -79,7 +79,7 @@ func TestBoxBlur(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := BoxBlur(c.value, c.radius)
+		actual := Box(c.value, c.radius)
 		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "BoxBlur", c.expected, actual)
 		}
@@ -158,7 +158,7 @@ func TestGaussianBlur(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := GaussianBlur(c.value, c.radius)
+		actual := Gaussian(c.value, c.radius)
 		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "GaussianBlur", c.expected, actual)
 		}

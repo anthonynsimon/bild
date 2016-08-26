@@ -9,9 +9,9 @@ import (
 	"github.com/anthonynsimon/bild/convolution"
 )
 
-// BoxBlur returns a blurred (average) version of the image.
+// Box returns a blurred (average) version of the image.
 // Radius must be larger than 0.
-func BoxBlur(src image.Image, radius float64) *image.RGBA {
+func Box(src image.Image, radius float64) *image.RGBA {
 	if radius <= 0 {
 		return clone.AsRGBA(src)
 	}
@@ -28,9 +28,9 @@ func BoxBlur(src image.Image, radius float64) *image.RGBA {
 	return convolution.Convolve(src, k.Normalized(), &convolution.Options{Bias: 0, Wrap: false, CarryAlpha: false})
 }
 
-// GaussianBlur returns a smoothly blurred version of the image using
+// Gaussian returns a smoothly blurred version of the image using
 // a Gaussian function. Radius must be larger than 0.
-func GaussianBlur(src image.Image, radius float64) *image.RGBA {
+func Gaussian(src image.Image, radius float64) *image.RGBA {
 	if radius <= 0 {
 		return clone.AsRGBA(src)
 	}
