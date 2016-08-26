@@ -81,28 +81,28 @@ func TestRGBASlicesEqual(t *testing.T) {
 			expected: true,
 		},
 		{
-			a:        []color.RGBA{color.RGBA{}},
-			b:        []color.RGBA{color.RGBA{}},
+			a:        []color.RGBA{{}},
+			b:        []color.RGBA{{}},
 			expected: true,
 		},
 		{
-			a:        []color.RGBA{color.RGBA{255, 140, 10, 0}},
-			b:        []color.RGBA{color.RGBA{255, 140, 10, 0}},
+			a:        []color.RGBA{{255, 140, 10, 0}},
+			b:        []color.RGBA{{255, 140, 10, 0}},
 			expected: true,
 		},
 		{
-			a:        []color.RGBA{color.RGBA{255, 128, 10, 0}},
-			b:        []color.RGBA{color.RGBA{255, 140, 10, 0}},
+			a:        []color.RGBA{{255, 128, 10, 0}},
+			b:        []color.RGBA{{255, 140, 10, 0}},
 			expected: false,
 		},
 		{
-			a:        []color.RGBA{color.RGBA{}},
-			b:        []color.RGBA{color.RGBA{255, 140, 10, 0}},
+			a:        []color.RGBA{{}},
+			b:        []color.RGBA{{255, 140, 10, 0}},
 			expected: false,
 		},
 		{
 			a:        []color.RGBA{},
-			b:        []color.RGBA{color.RGBA{255, 140, 10, 0}},
+			b:        []color.RGBA{{255, 140, 10, 0}},
 			expected: false,
 		},
 	}
