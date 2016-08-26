@@ -4,8 +4,8 @@ import (
 	"image"
 	"math"
 
+	"github.com/anthonynsimon/bild/clone"
 	"github.com/anthonynsimon/bild/convolution"
-	"github.com/anthonynsimon/bild/image/clone"
 )
 
 // BoxBlur returns a blurred (average) version of the image.

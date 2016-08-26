@@ -7,9 +7,9 @@ import (
 
 	"github.com/anthonynsimon/bild/adjust"
 	"github.com/anthonynsimon/bild/blend"
+	"github.com/anthonynsimon/bild/clone"
 	bildColor "github.com/anthonynsimon/bild/color"
 	"github.com/anthonynsimon/bild/convolution"
-	"github.com/anthonynsimon/bild/image/clone"
 	"github.com/anthonynsimon/bild/parallel"
 )
 

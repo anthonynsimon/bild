@@ -4,8 +4,8 @@ import (
 	"image"
 	"image/color"
 
+	"github.com/anthonynsimon/bild/clone"
 	bildColor "github.com/anthonynsimon/bild/color"
-	"github.com/anthonynsimon/bild/image/clone"
 )
 
 // Threshold returns a grayscale image in which values from the param img that are

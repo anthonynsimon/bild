@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"image"
 
-	"github.com/anthonynsimon/bild/image/clone"
+	"github.com/anthonynsimon/bild/clone"
 	"github.com/anthonynsimon/bild/parallel"
 )
 

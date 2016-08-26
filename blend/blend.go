@@ -9,8 +9,8 @@ import (
 	"image"
 	"math"
 
+	"github.com/anthonynsimon/bild/clone"
 	"github.com/anthonynsimon/bild/color/rgbaf64"
-	"github.com/anthonynsimon/bild/image/clone"
 	"github.com/anthonynsimon/bild/math/f64"
 	"github.com/anthonynsimon/bild/parallel"
 )
