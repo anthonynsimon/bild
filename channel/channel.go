@@ -40,7 +40,7 @@ func Extract(img image.Image, c Channel) *image.Gray {
 
 	dst := image.NewGray(bounds)
 
-	parallel.Parallelize(srcH, func(start, end int) {
+	parallel.Line(srcH, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < srcW; x++ {
 				srcPos := y*src.Stride + x*4

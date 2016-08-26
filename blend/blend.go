@@ -355,7 +355,7 @@ func blend(bg image.Image, fg image.Image, fn func(fcolor.RGBAF64, fcolor.RGBAF6
 	fgSrc := clone.AsRGBA(fg)
 	dst := image.NewRGBA(image.Rect(0, 0, w, h))
 
-	parallel.Parallelize(h, func(start, end int) {
+	parallel.Line(h, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < w; x++ {
 				bgPos := y*bgSrc.Stride + x*4

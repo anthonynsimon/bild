@@ -37,7 +37,7 @@ func Grayscale(img image.Image) *image.Gray {
 
 	dst := image.NewGray(bounds)
 
-	parallel.Parallelize(srcH, func(start, end int) {
+	parallel.Line(srcH, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < srcW; x++ {
 				srcPos := y*src.Stride + x*4
@@ -153,7 +153,7 @@ func Median(img image.Image, size int) *image.RGBA {
 	w, h := bounds.Dx(), bounds.Dy()
 	neighborsCount := size * size
 
-	parallel.Parallelize(h, func(start, end int) {
+	parallel.Line(h, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < w; x++ {
 

@@ -9,12 +9,12 @@ func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
-func Parallelize(size int, fn func(start, end int)) {
+func Line(length int, fn func(start, end int)) {
 	procs := runtime.GOMAXPROCS(0)
-	counter := size
-	partSize := size / procs
+	counter := length
+	partSize := length / procs
 	if procs <= 1 || partSize <= procs {
-		fn(0, size)
+		fn(0, length)
 	} else {
 		var wg sync.WaitGroup
 		for counter > 0 {

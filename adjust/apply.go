@@ -14,7 +14,7 @@ func Apply(img image.Image, fn func(color.RGBA) color.RGBA) *image.RGBA {
 	dst := clone.AsRGBA(img)
 	w, h := bounds.Dx(), bounds.Dy()
 
-	parallel.Parallelize(h, func(start, end int) {
+	parallel.Line(h, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < w; x++ {
 				dstPos := y*dst.Stride + x*4

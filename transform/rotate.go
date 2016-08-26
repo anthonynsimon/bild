@@ -79,7 +79,7 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 	offsetX := (dstW - srcW) / 2
 	offsetY := (dstH - srcH) / 2
 
-	parallel.Parallelize(srcH, func(start, end int) {
+	parallel.Line(srcH, func(start, end int) {
 		// Correct range to include the pixels visible in new bounds
 		// Note that cannot be done in parallelize function input height, otherwise ranges would overlap
 		yStart := int((float64(start)/float64(srcH))*float64(dstH)) - offsetY
@@ -123,7 +123,7 @@ func FlipH(img image.Image) *image.RGBA {
 	dst := image.NewRGBA(bounds)
 	w, h := dst.Bounds().Dx(), dst.Bounds().Dy()
 
-	parallel.Parallelize(h, func(start, end int) {
+	parallel.Line(h, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < w; x++ {
 				iy := y * dst.Stride
@@ -149,7 +149,7 @@ func FlipV(img image.Image) *image.RGBA {
 	dst := image.NewRGBA(bounds)
 	w, h := dst.Bounds().Dx(), dst.Bounds().Dy()
 
-	parallel.Parallelize(h, func(start, end int) {
+	parallel.Line(h, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < w; x++ {
 				pos := y*dst.Stride + (x * 4)

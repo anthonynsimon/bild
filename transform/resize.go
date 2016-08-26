@@ -62,7 +62,7 @@ func resampleHorizontal(src *image.RGBA, width int, filter ResampleFilter) *imag
 
 	filterRadius := math.Ceil(scale * filter.Support)
 
-	parallel.Parallelize(srcHeight, func(start, end int) {
+	parallel.Line(srcHeight, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < width; x++ {
 				// value of x from src
@@ -116,7 +116,7 @@ func resampleVertical(src *image.RGBA, height int, filter ResampleFilter) *image
 
 	filterRadius := math.Ceil(scale * filter.Support)
 
-	parallel.Parallelize(height, func(start, end int) {
+	parallel.Line(height, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < srcWidth; x++ {
 

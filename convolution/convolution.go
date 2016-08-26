@@ -42,7 +42,7 @@ func Convolve(img image.Image, k Matrix, o *Options) *image.RGBA {
 		carryAlpha = o.CarryAlpha
 	}
 
-	parallel.Parallelize(h, func(start, end int) {
+	parallel.Line(h, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < w; x++ {
 
