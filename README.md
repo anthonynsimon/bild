@@ -11,37 +11,46 @@
 
 Simple image processing in Go with parallel processing support.
 
-Package bild provides a collection of common image processing functions. The input images must implement the image.Image interface and the functions return an *image.RGBA.
-
 The aim of this project is simplicity in use and development over high performance, but most algorithms are designed to be efficient and make use of parallelism when available. It is based on standard Go packages to reduce dependency use and development abstractions.
 
+Package bild provides a collection of common image processing functions. The input images must implement the image.Image interface and the functions return an *image.RGBA.
+
 **Notice:** This package is under heavy development and the API might change at any time until a 1.0 version is reached.
+
 
 ## Install
 
 bild requires Go version 1.4 or greater.
 
     go get -u github.com/anthonynsimon/bild
-    
+
+ 
 ## Documentation
 
 http://godoc.org/github.com/anthonynsimon/bild
+
 
 ## Basic example:
 ```go
 package main
 
-import "github.com/anthonynsimon/bild"
+import (
+	"github.com/anthonynsimon/bild/effect"
+	"github.com/anthonynsimon/bild/imgio"
+	"github.com/anthonynsimon/bild/transform"
+)
 
 func main() {
-	img, err := bild.Open("filename")
+	img, err := imgio.Open("filename.jpg")
 	if err != nil {
 		panic(err)
 	}
 
-	result := bild.Invert(img)
+	inverted := effect.Invert(img)
+	resized := transform.Resize(inverted, 800, 800, transform.Linear)
+	rotated := transform.Rotate(resized, 45, nil)
 
-	if err := bild.Save("filename", result, bild.PNG); err != nil {
+	if err := imgio.Save("filename", rotated, imgio.PNG); err != nil {
 		panic(err)
 	}
 }
@@ -50,26 +59,29 @@ func main() {
 
 # Output examples
 ## Adjustment
+    import "github.com/anthonynsimon/bild/adjust"
 
 ### Brightness
-    result := bild.Brightness(img, 0.25)
+    result := adjust.Brightness(img, 0.25)
 
 ![example](https://anthonynsimon.github.io/projects/bild/brightness.jpg)  
 
 ### Contrast
-    result := bild.Contrast(img, -0.5)
+    result := adjust.Contrast(img, -0.5)
 
 ![example](https://anthonynsimon.github.io/projects/bild/contrast.jpg)  
 
 ### Gamma
-    result := bild.Gamma(img, 2.2)
+    result := adjust.Gamma(img, 2.2)
 
 ![example](https://anthonynsimon.github.io/projects/bild/gamma.jpg)  
 
 
 
 ## Blend modes
-    result := bild.Multiply(bg, fg)
+    import "github.com/anthonynsimon/bild/blend"
+
+    result := blend.Multiply(bg, fg)
 
 | Add | Color Burn | Color Dodge |
 | :----------: | :---------: | :------: |
@@ -78,7 +90,7 @@ func main() {
 | ![](https://anthonynsimon.github.io/projects/bild/darken.jpg) | ![](https://anthonynsimon.github.io/projects/bild/difference.jpg) | ![](https://anthonynsimon.github.io/projects/bild/divide.jpg) |
 | **Exclusion** | **Lighten** | **Linear Burn** |
 | ![](https://anthonynsimon.github.io/projects/bild/exclusion.jpg) | ![](https://anthonynsimon.github.io/projects/bild/lighten.jpg) | ![](https://anthonynsimon.github.io/projects/bild/linearburn.jpg) |
-| **Linear Light** | **Multiply** | **Normal Blend** |
+| **Linear Light** | **Multiply** | **Normal** |
 | ![](https://anthonynsimon.github.io/projects/bild/linearlight.jpg) | ![](https://anthonynsimon.github.io/projects/bild/multiply.jpg) | ![](https://anthonynsimon.github.io/projects/bild/normal.jpg) |
 | **Opacity** | **Overlay** | **Screen** |
 | ![](https://anthonynsimon.github.io/projects/bild/opacity.jpg) | ![](https://anthonynsimon.github.io/projects/bild/overlay.jpg) | ![](https://anthonynsimon.github.io/projects/bild/screen.jpg) |
@@ -87,92 +99,78 @@ func main() {
 
 
 ## Blur
+    import "github.com/anthonynsimon/bild/blur"
 
-### BoxBlur
-    result := bild.BoxBlur(img, 3.0)
+### Box Blur
+    result := blur.Box(img, 3.0)
 
 ![example](https://anthonynsimon.github.io/projects/bild/boxblur.jpg)  
 
 
-### GaussianBlur
-    result := bild.GaussianBlur(img, 3.0)
+### Gaussian Blur
+    result := blur.Gaussian(img, 3.0)
 
 
 ![example](https://anthonynsimon.github.io/projects/bild/gaussianblur.jpg)  
 
 
 ## Channel
+    import "github.com/anthonynsimon/bild/channel"
 
-### ExtractChannel
-    result := bild.ExtractChannel(img, bild.Alpha)
+### Extract Channel
+    result := channel.Extract(img, bild.Alpha)
 
 ![example](https://anthonynsimon.github.io/projects/bild/extractchannel.jpg)  
 
 
-## Effects
+## Effect
+    import "github.com/anthonynsimon/bild/effect"
 
-### EdgeDetection
-    result := bild.EdgeDetection(img, 1.0)
+### Edge Detection
+    result := effect.EdgeDetection(img, 1.0)
 
 ![example](https://anthonynsimon.github.io/projects/bild/edgedetection.jpg)  
 
 ### Emboss
-    result := bild.Emboss(img)
+    result := effect.Emboss(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/emboss.jpg)  
 
 ### Grayscale
-    result := bild.Grayscale(img)
+    result := effect.Grayscale(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/grayscale.jpg)  
 
 ### Invert
-    result := bild.Invert(img)
+    result := effect.Invert(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/invert.jpg)  
 
 ### Median
-    result := bild.Median(img, 10.0)
+    result := effect.Median(img, 10.0)
 
 ![example](https://anthonynsimon.github.io/projects/bild/median.jpg)  
 
 ### Sharpen
-    result := bild.Sharpen(img)
+    result := effect.Sharpen(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/sharpen.jpg)  
 
 
 ### Sobel
-    result := bild.Sobel(img)
+    result := effect.Sobel(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/sobel.jpg)  
 
 
 ## Histogram
+    import "github.com/anthonynsimon/bild/histogram"
 
 ### RGBA Histogram
-	hist := bild.NewRGBAHistogram(img)
+	hist := histogram.NewRGBAHistogram(img)
     result := hist.Image()
 
 ![example](https://anthonynsimon.github.io/projects/bild/histogram.png)  
-
-
-## Resize
-
-### Crop
-    // Source image is 280x280
-    result := bild.Crop(img, image.Rect(70,70,210,210))
-
-![example](https://anthonynsimon.github.io/projects/bild/crop.jpg)
-
-### Resize Resampling Filters
-    result := bild.Resize(img, 280, 280, bild.Linear)
-
-| Nearest Neighbor | Linear | Gaussian |
-|:----------: | :---------: | :------: |
-| ![](https://anthonynsimon.github.io/projects/bild/resizenearestneighbor.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizelinear.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizegaussian.jpg) |
-| **Mitchell Netravali** | **Catmull Rom** | **Lanczos** |
-| ![](https://anthonynsimon.github.io/projects/bild/resizemitchell.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizecatmullrom.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizelanczos.jpg) |
 
 
 ## Segmentation
@@ -184,31 +182,49 @@ func main() {
 
 
 ## Transform
+    import "github.com/anthonynsimon/bild/transform"
+
+### Crop
+    // Source image is 280x280
+    result := transform.Crop(img, image.Rect(70,70,210,210))
+
+![example](https://anthonynsimon.github.io/projects/bild/crop.jpg)
 
 ### FlipH
-    result := bild.FlipH(img)
+    result := transform.FlipH(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/fliph.jpg)  
 
 ### FlipV
-    result := bild.FlipV(img)
+    result := transform.FlipV(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/flipv.jpg) 
 
+
+### Resize Resampling Filters
+    result := transform.Resize(img, 280, 280, transform.Linear)
+
+| Nearest Neighbor | Linear | Gaussian |
+|:----------: | :---------: | :------: |
+| ![](https://anthonynsimon.github.io/projects/bild/resizenearestneighbor.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizelinear.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizegaussian.jpg) |
+| **Mitchell Netravali** | **Catmull Rom** | **Lanczos** |
+| ![](https://anthonynsimon.github.io/projects/bild/resizemitchell.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizecatmullrom.jpg) | ![](https://anthonynsimon.github.io/projects/bild/resizelanczos.jpg) |
+
+
 ### Rotate
     // Options set to nil will use defaults (ResizeBounds set to false, Pivot at center)
-    result := bild.Rotate(img, -45.0, nil)
+    result := transform.Rotate(img, -45.0, nil)
 
 ![example](https://anthonynsimon.github.io/projects/bild/rotation03.gif)
 
     // If ResizeBounds is set to true, the full rotation bounding area is used
-    result := bild.Rotate(img, -45.0, &bild.RotationOptions{ResizeBounds: true})
+    result := transform.Rotate(img, -45.0, &transform.RotationOptions{ResizeBounds: true})
 
 ![example](https://anthonynsimon.github.io/projects/bild/rotation01.gif)
 
     // Pivot coordinates are set from the top-left corner
     // Notice ResizeBounds being set to default (false)
-    result := bild.Rotate(img, -45.0, &bild.RotationOptions{Pivot: &image.Point{0, 0}})
+    result := transform.Rotate(img, -45.0, &transform.RotationOptions{Pivot: &image.Point{0, 0}})
 
 ![example](https://anthonynsimon.github.io/projects/bild/rotation02.gif)
 
@@ -226,4 +242,4 @@ Simply follow the next steps:
 - Create a new branch.
 - Make your changes and write tests when practical.
 - Commit your changes to the new branch.
-- Send a pull request, by the way you are awesome.
+- Send a pull request.
