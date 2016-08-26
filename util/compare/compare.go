@@ -28,14 +28,6 @@ func GrayImageEqual(a, b *image.Gray) bool {
 		return false
 	}
 
-	if a.Stride != b.Stride {
-		return false
-	}
-
-	if len(a.Pix) != len(b.Pix) {
-		return false
-	}
-
 	for i := 0; i < len(a.Pix); i++ {
 		if a.Pix[i] != b.Pix[i] {
 			return false
@@ -46,14 +38,6 @@ func GrayImageEqual(a, b *image.Gray) bool {
 
 func RGBAImageEqual(a, b *image.RGBA) bool {
 	if !a.Rect.Eq(b.Rect) {
-		return false
-	}
-
-	if a.Stride != b.Stride {
-		return false
-	}
-
-	if len(a.Pix) != len(b.Pix) {
 		return false
 	}
 
