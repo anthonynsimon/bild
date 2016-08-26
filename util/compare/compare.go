@@ -60,7 +60,16 @@ func RGBAImageEqual(a, b *image.RGBA) bool {
 	for y := 0; y < a.Bounds().Dy(); y++ {
 		for x := 0; x < a.Bounds().Dx(); x++ {
 			pos := y*a.Stride + x*4
-			if a.Pix[pos] != b.Pix[pos] {
+			if a.Pix[pos+0] != b.Pix[pos+0] {
+				return false
+			}
+			if a.Pix[pos+1] != b.Pix[pos+1] {
+				return false
+			}
+			if a.Pix[pos+2] != b.Pix[pos+2] {
+				return false
+			}
+			if a.Pix[pos+3] != b.Pix[pos+3] {
 				return false
 			}
 		}
