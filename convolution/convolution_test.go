@@ -4,7 +4,7 @@ import (
 	"image"
 	"testing"
 
-	"github.com/anthonynsimon/bild/util/compare"
+	"github.com/anthonynsimon/bild/util"
 )
 
 func TestConvolve(t *testing.T) {
@@ -118,7 +118,7 @@ func TestConvolve(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Convolve(c.value, c.kernel, c.options)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Convolve", c.expected, actual)
 		}
 	}

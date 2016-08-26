@@ -4,7 +4,7 @@ import (
 	"image"
 	"testing"
 
-	"github.com/anthonynsimon/bild/util/compare"
+	"github.com/anthonynsimon/bild/util"
 )
 
 func TestThreshold(t *testing.T) {
@@ -93,7 +93,7 @@ func TestThreshold(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Threshold(c.img, c.level)
-		if !compare.GrayImageEqual(actual, c.expected) {
+		if !util.GrayImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %v actual: %v", "Threshold", c.expected, actual)
 		}
 	}

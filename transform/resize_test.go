@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/anthonynsimon/bild/util"
-	"github.com/anthonynsimon/bild/util/compare"
 )
 
 func TestResize(t *testing.T) {
@@ -180,12 +179,12 @@ func TestResize(t *testing.T) {
 
 	for _, c := range cases {
 		result := Resize(c.img, c.width, c.height, NearestNeighbor)
-		if !compare.RGBAImageEqual(result, c.expected) {
+		if !util.RGBAImageEqual(result, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Resize no filter "+c.name, c.expected, result)
 		}
 
 		result = Resize(c.img, c.width, c.height, Linear)
-		if !compare.RGBAImageEqual(result, c.expected) {
+		if !util.RGBAImageEqual(result, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Resize with filter "+c.name, c.expected, result)
 		}
 	}
@@ -249,7 +248,7 @@ func TestResizeNearestNeighbor(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Resize(c.img, c.width, c.height, NearestNeighbor)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "ResizeNearestNeighbor "+c.name, util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
@@ -313,7 +312,7 @@ func TestResizeBox(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Resize(c.img, c.width, c.height, Box)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "ResizeNearestNeighbor "+c.name, util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
@@ -377,7 +376,7 @@ func TestResizeLinear(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Resize(c.img, c.width, c.height, Linear)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "ResizeLinear "+c.name, util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
@@ -441,7 +440,7 @@ func TestResizeGaussian(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Resize(c.img, c.width, c.height, Gaussian)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "ResizeGaussian "+c.name, util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
@@ -505,7 +504,7 @@ func TestResizeCatmullRom(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Resize(c.img, c.width, c.height, CatmullRom)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "ResizeCatmullRom "+c.name, util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
@@ -569,7 +568,7 @@ func TestResizeMitchell(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Resize(c.img, c.width, c.height, MitchellNetravali)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "ResizeMitchell "+c.name, util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
@@ -633,7 +632,7 @@ func TestResizeLanczos(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Resize(c.img, c.width, c.height, Lanczos)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "ResizeLanczos "+c.name, util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
@@ -787,7 +786,7 @@ func TestCrop(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Crop(c.img, c.rect)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Crop "+c.name, util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}

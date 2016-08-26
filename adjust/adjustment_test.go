@@ -4,7 +4,7 @@ import (
 	"image"
 	"testing"
 
-	"github.com/anthonynsimon/bild/util/compare"
+	"github.com/anthonynsimon/bild/util"
 )
 
 func TestBrightness(t *testing.T) {
@@ -98,7 +98,7 @@ func TestBrightness(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Brightness(c.value, c.percent)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Brightness "+c.desc, c.expected, actual)
 		}
 	}
@@ -195,7 +195,7 @@ func TestGamma(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Gamma(c.value, c.gamma)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Gamma "+c.desc, c.expected, actual)
 		}
 	}
@@ -312,7 +312,7 @@ func TestContrast(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Contrast(c.value, c.change)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Contrast "+c.desc, c.expected, actual)
 		}
 	}

@@ -1,8 +1,11 @@
 package channel
 
-import "testing"
-import "image"
-import "github.com/anthonynsimon/bild/util/compare"
+import (
+	"image"
+	"testing"
+
+	"github.com/anthonynsimon/bild/util"
+)
 
 func TestExtract(t *testing.T) {
 	cases := []struct {
@@ -99,7 +102,7 @@ func TestExtract(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Extract(c.img, c.channel)
-		if !compare.GrayImageEqual(actual, c.expected) {
+		if !util.GrayImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual %#v", "Extract "+c.description, c.expected, actual)
 		}
 	}

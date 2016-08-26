@@ -4,7 +4,7 @@ import (
 	"image"
 	"testing"
 
-	"github.com/anthonynsimon/bild/util/compare"
+	"github.com/anthonynsimon/bild/util"
 )
 
 func TestBoxBlur(t *testing.T) {
@@ -80,7 +80,7 @@ func TestBoxBlur(t *testing.T) {
 
 	for _, c := range cases {
 		actual := BoxBlur(c.value, c.radius)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "BoxBlur", c.expected, actual)
 		}
 	}
@@ -159,7 +159,7 @@ func TestGaussianBlur(t *testing.T) {
 
 	for _, c := range cases {
 		actual := GaussianBlur(c.value, c.radius)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "GaussianBlur", c.expected, actual)
 		}
 	}

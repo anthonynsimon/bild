@@ -5,7 +5,7 @@ import (
 	"image/color"
 	"testing"
 
-	"github.com/anthonynsimon/bild/util/compare"
+	"github.com/anthonynsimon/bild/util"
 )
 
 func TestCloneAsRGBA(t *testing.T) {
@@ -193,7 +193,7 @@ func TestCloneAsRGBA(t *testing.T) {
 
 	for _, c := range cases {
 		actual := AsRGBA(c.value)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "CloneAsRGBA from "+c.desc, c.expected, actual)
 		}
 	}

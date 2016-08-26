@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/anthonynsimon/bild/math/f64"
-	"github.com/anthonynsimon/bild/util/compare"
+	"github.com/anthonynsimon/bild/util"
 )
 
 func TestApply(t *testing.T) {
@@ -86,7 +86,7 @@ func TestApply(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Apply(c.value, c.fn)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "apply "+c.desc, c.expected, actual)
 		}
 	}

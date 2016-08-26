@@ -5,7 +5,7 @@ import (
 	"image"
 	"testing"
 
-	"github.com/anthonynsimon/bild/util/compare"
+	"github.com/anthonynsimon/bild/util"
 )
 
 func TestHistogramMin(t *testing.T) {
@@ -221,7 +221,7 @@ func TestHistogramImage(t *testing.T) {
 
 	for _, c := range cases {
 		actual := c.hist.Image()
-		if !compare.GrayImageEqual(actual, c.expected) {
+		if !util.GrayImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "HistogramImage", formatImageGrayString(c.expected), formatImageGrayString(actual))
 		}
 	}
@@ -431,7 +431,7 @@ func TestRGBAHistogramImage(t *testing.T) {
 
 	for _, c := range cases {
 		actual := c.hist.Image()
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			// Actual and expected values too large to display in log
 			t.Error("RGBAHistogramImage failed")
 		}

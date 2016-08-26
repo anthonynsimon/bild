@@ -4,7 +4,7 @@ import (
 	"image"
 	"testing"
 
-	"github.com/anthonynsimon/bild/util/compare"
+	"github.com/anthonynsimon/bild/util"
 )
 
 func TestNormal(t *testing.T) {
@@ -95,7 +95,7 @@ func TestNormal(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Normal(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Normal", c.expected, actual)
 		}
 	}
@@ -186,7 +186,7 @@ func TestAdd(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Add(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Add", c.expected, actual)
 		}
 	}
@@ -277,7 +277,7 @@ func TestMultiply(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Multiply(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Multiply", c.expected, actual)
 		}
 	}
@@ -368,7 +368,7 @@ func TestOverlay(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Overlay(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Overlay", c.expected, actual)
 		}
 	}
@@ -459,7 +459,7 @@ func TestSoftLight(t *testing.T) {
 
 	for _, c := range cases {
 		actual := SoftLight(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Softlight", c.expected, actual)
 		}
 	}
@@ -550,7 +550,7 @@ func TestScreen(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Screen(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Screen", c.expected, actual)
 		}
 	}
@@ -641,7 +641,7 @@ func TestDifference(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Difference(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Difference", c.expected, actual)
 		}
 	}
@@ -732,7 +732,7 @@ func TestDivide(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Divide(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Divide", c.expected, actual)
 		}
 	}
@@ -823,7 +823,7 @@ func TestColorBurn(t *testing.T) {
 
 	for _, c := range cases {
 		actual := ColorBurn(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "ColorBurn", c.expected, actual)
 		}
 	}
@@ -914,7 +914,7 @@ func TestExclusion(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Exclusion(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Exclusion", c.expected, actual)
 		}
 	}
@@ -1005,7 +1005,7 @@ func TestColorDodge(t *testing.T) {
 
 	for _, c := range cases {
 		actual := ColorDodge(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "ColorDodge", c.expected, actual)
 		}
 	}
@@ -1096,7 +1096,7 @@ func TestLinearBurn(t *testing.T) {
 
 	for _, c := range cases {
 		actual := LinearBurn(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "LinearBurn", c.expected, actual)
 		}
 	}
@@ -1187,7 +1187,7 @@ func TestLinearLight(t *testing.T) {
 
 	for _, c := range cases {
 		actual := LinearLight(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "LinearLight", c.expected, actual)
 		}
 	}
@@ -1281,7 +1281,7 @@ func TestSubtract(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Subtract(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Subtract", c.expected, actual)
 		}
 	}
@@ -1379,7 +1379,7 @@ func TestOpacity(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Opacity(c.value0, c.value1, c.percent)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Opacity", c.expected, actual)
 		}
 	}
@@ -1473,7 +1473,7 @@ func TestDarken(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Darken(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Darken", c.expected, actual)
 		}
 	}
@@ -1567,7 +1567,7 @@ func TestLighten(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Lighten(c.value0, c.value1)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected %#v, actual: %#v", "Lighten", c.expected, actual)
 		}
 	}

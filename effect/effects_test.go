@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/anthonynsimon/bild/util"
-	"github.com/anthonynsimon/bild/util/compare"
 )
 
 func TestInvert(t *testing.T) {
@@ -53,7 +52,7 @@ func TestInvert(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Invert(c.value)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Invert", c.expected, actual)
 		}
 	}
@@ -104,7 +103,7 @@ func TestGrayscale(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Grayscale(c.value)
-		if !compare.GrayImageEqual(actual, c.expected) {
+		if !util.GrayImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Grayscale", c.expected, actual)
 		}
 	}
@@ -162,7 +161,7 @@ func TestEdgeDetection(t *testing.T) {
 
 	for _, c := range cases {
 		actual := EdgeDetection(c.value, c.radius)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "EdgeDetection", c.expected, actual)
 		}
 	}
@@ -220,7 +219,7 @@ func TestSobel(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Sobel(c.value)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Sobel "+c.desc, c.expected, actual)
 		}
 	}
@@ -275,7 +274,7 @@ func TestEmboss(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Emboss(c.value)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Emboss", c.expected, actual)
 		}
 	}
@@ -354,7 +353,7 @@ func TestMedian(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Median(c.value, c.size)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Sobel", util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
@@ -429,7 +428,7 @@ func TestSharpen(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Sharpen(c.value)
-		if !compare.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Sharpen", c.expected, actual)
 		}
 	}
