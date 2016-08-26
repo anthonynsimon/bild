@@ -1,3 +1,4 @@
+/*Package histogram provides basic histogram types and functions to analyze RGBA images.*/
 package histogram
 
 import (

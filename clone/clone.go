@@ -1,3 +1,4 @@
+/*Package clone provides image cloning function.*/
 package clone
 
 import (

@@ -1,3 +1,4 @@
+/*Package util provides various helper functions for the package bild.*/
 package util
 
 import (
@@ -6,6 +7,9 @@ import (
 	"image/color"
 )
 
+// SortRGBA sorts a slice of RGBA values.
+// Parameter min and max correspond to the start and end slice indicies
+// that determine the range to be sorted.
 func SortRGBA(data []color.RGBA, min, max int) {
 	if min > max {
 		return
@@ -32,11 +36,12 @@ func partitionRGBASlice(data []color.RGBA, min, max int) int {
 	return i
 }
 
-// Rank a color based on a color perception heuristic
+// Rank a color based on a color perception heuristic.
 func Rank(c color.RGBA) float64 {
 	return float64(c.R)*0.3 + float64(c.G)*0.6 + float64(c.B)*0.1
 }
 
+// RGBAToString returns a string representation of the Hex values contained in an image.RGBA.
 func RGBAToString(img *image.RGBA) string {
 	var result string
 	for y := 0; y < img.Bounds().Dy(); y++ {
@@ -53,6 +58,8 @@ func RGBAToString(img *image.RGBA) string {
 	return result
 }
 
+// RGBASlicesEqual returns true if the parameter RGBA color slices a and b match
+// or false if otherwise.
 func RGBASlicesEqual(a, b []color.RGBA) bool {
 	if a == nil && b == nil {
 		return true
@@ -71,6 +78,8 @@ func RGBASlicesEqual(a, b []color.RGBA) bool {
 	return true
 }
 
+// GrayImageEqual returns true if the parameter images a and b match
+// or false if otherwise.
 func GrayImageEqual(a, b *image.Gray) bool {
 	if !a.Rect.Eq(b.Rect) {
 		return false
@@ -84,6 +93,8 @@ func GrayImageEqual(a, b *image.Gray) bool {
 	return true
 }
 
+// RGBAImageEqual returns true if the parameter images a and b match
+// or false if otherwise.
 func RGBAImageEqual(a, b *image.RGBA) bool {
 	if !a.Rect.Eq(b.Rect) {
 		return false

@@ -1,3 +1,4 @@
+/*Package channel provides image channel separation and manipulation functions.*/
 package channel
 
 import (

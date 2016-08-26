@@ -1,3 +1,4 @@
+/*Package adjust provides basic color correction functions.*/
 package adjust
 
 import (

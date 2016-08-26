@@ -1,3 +1,4 @@
+/*Package imgio provides basic image file input/output.*/
 package imgio
 
 import (

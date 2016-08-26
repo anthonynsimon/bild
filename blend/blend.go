@@ -1,8 +1,4 @@
-/*Package bild provides a collection of common image processing functions.
-The input images must implement the image.Image interface and the functions return an *image.RGBA.
-
-The aim of this project is simplicity in use and development over high performance, but most algorithms are designed to be efficient and make use of parallelism when available.
-It is based on standard Go packages to reduce dependecy use and development abstractions.*/
+/*Package blend provides common image blending modes.*/
 package blend
 
 import (

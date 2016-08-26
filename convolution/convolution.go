@@ -1,3 +1,4 @@
+/*Package convolution provides the functionality to create and apply a kernel to an image.*/
 package convolution
 
 import (

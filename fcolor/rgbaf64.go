@@ -1,3 +1,5 @@
+/*Package fcolor provides a basic RGBA color type which stores it's values as
+float64 types in the range from 0.0 to 1.0.*/
 package fcolor
 
 import "github.com/anthonynsimon/bild/math/f64"
@@ -8,6 +10,7 @@ type RGBAF64 struct {
 }
 
 // NewRGBAF64 returns a new RGBAF64 color based on the provided uint8 values.
+// uint8 value 0 maps to 0, 128 to 0.5 and 255 to 1.0.
 func NewRGBAF64(r, g, b, a uint8) RGBAF64 {
 	outR := float64(r) / 255
 	outG := float64(g) / 255

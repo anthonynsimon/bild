@@ -1,3 +1,4 @@
+/*Package effects provides the functionality to manipulate images to achieve various looks.*/
 package effects
 
 import (

@@ -1,3 +1,4 @@
+/*Package segment provides basic image segmentation and clusterring methods.*/
 package segment
 
 import (
