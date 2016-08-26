@@ -41,7 +41,7 @@ import (
 )
 
 func main() {
-	img, err := imgio.Open("in/original.jpg")
+	img, err := imgio.Open("filename.jpg")
 	if err != nil {
 		panic(err)
 	}
@@ -50,7 +50,7 @@ func main() {
 	resized := transform.Resize(inverted, 800, 800, transform.Linear)
 	rotated := transform.Rotate(resized, 45, nil)
 
-	if err := imgio.Save("out/original", rotated, imgio.PNG); err != nil {
+	if err := imgio.Save("filename", rotated, imgio.PNG); err != nil {
 		panic(err)
 	}
 }
