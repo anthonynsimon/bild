@@ -7,8 +7,6 @@
 [![Build Status](https://travis-ci.org/anthonynsimon/bild.svg?branch=master)](https://travis-ci.org/anthonynsimon/bild)
 [![Go Report Card](https://goreportcard.com/badge/github.com/anthonynsimon/bild)](https://goreportcard.com/report/github.com/anthonynsimon/bild)
 
-    import "github.com/anthonynsimon/bild"
-
 Simple image processing in Go with parallel processing support.
 
 Package bild provides a collection of common image processing functions. The input images must implement the image.Image interface and the functions return an *image.RGBA.
