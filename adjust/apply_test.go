@@ -5,8 +5,8 @@ import (
 	"image/color"
 	"testing"
 
-	"github.com/anthonynsimon/bild/image/compare"
 	"github.com/anthonynsimon/bild/math/f64"
+	"github.com/anthonynsimon/bild/util/compare"
 )
 
 func TestApply(t *testing.T) {

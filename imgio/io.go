@@ -1,4 +1,4 @@
-package image
+package imgio
 
 import (
 	"image"

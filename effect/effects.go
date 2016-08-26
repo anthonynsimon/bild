@@ -8,9 +8,9 @@ import (
 	"github.com/anthonynsimon/bild/adjust"
 	"github.com/anthonynsimon/bild/blend"
 	"github.com/anthonynsimon/bild/clone"
-	bildColor "github.com/anthonynsimon/bild/color"
 	"github.com/anthonynsimon/bild/convolution"
 	"github.com/anthonynsimon/bild/parallel"
+	"github.com/anthonynsimon/bild/util"
 )
 
 // Invert returns a negated version of the image.
@@ -187,7 +187,7 @@ func Median(img image.Image, size int) *image.RGBA {
 					}
 				}
 
-				bildColor.SortRGBA(neighbors, 0, neighborsCount-1)
+				util.SortRGBA(neighbors, 0, neighborsCount-1)
 				median := neighbors[neighborsCount/2]
 
 				pos := y*dst.Stride + x*4

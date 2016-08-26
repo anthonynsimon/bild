@@ -5,7 +5,7 @@ import (
 	"image/color"
 
 	"github.com/anthonynsimon/bild/clone"
-	bildColor "github.com/anthonynsimon/bild/color"
+	"github.com/anthonynsimon/bild/util"
 )
 
 // Threshold returns a grayscale image in which values from the param img that are
@@ -24,7 +24,7 @@ func Threshold(img image.Image, level uint8) *image.Gray {
 			dstPos := y*dst.Stride + x
 
 			c := src.Pix[srcPos : srcPos+4]
-			r := bildColor.Rank(color.RGBA{c[0], c[1], c[2], c[3]})
+			r := util.Rank(color.RGBA{c[0], c[1], c[2], c[3]})
 
 			if uint8(r) >= level {
 				dst.Pix[dstPos] = 0xFF

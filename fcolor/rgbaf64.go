@@ -1,4 +1,4 @@
-package rgbaf64
+package fcolor
 
 import "github.com/anthonynsimon/bild/math/f64"
 
@@ -7,8 +7,8 @@ type RGBAF64 struct {
 	R, G, B, A float64
 }
 
-// New returns a new RGBAF64 color based on the provided uint8 values.
-func New(r, g, b, a uint8) RGBAF64 {
+// NewRGBAF64 returns a new RGBAF64 color based on the provided uint8 values.
+func NewRGBAF64(r, g, b, a uint8) RGBAF64 {
 	outR := float64(r) / 255
 	outG := float64(g) / 255
 	outB := float64(b) / 255

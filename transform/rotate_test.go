@@ -4,8 +4,8 @@ import (
 	"image"
 	"testing"
 
-	bildImage "github.com/anthonynsimon/bild/image"
-	"github.com/anthonynsimon/bild/image/compare"
+	"github.com/anthonynsimon/bild/util"
+	"github.com/anthonynsimon/bild/util/compare"
 )
 
 func TestRotate(t *testing.T) {
@@ -173,7 +173,7 @@ func TestRotate(t *testing.T) {
 	for _, c := range cases {
 		actual := Rotate(c.value, c.angle, c.options)
 		if !compare.RGBAImageEqual(actual, c.expected) {
-			t.Errorf("%s: expected: %#v, actual: %#v", "Rotate "+c.description, bildImage.String(c.expected), bildImage.String(actual))
+			t.Errorf("%s: expected: %#v, actual: %#v", "Rotate "+c.description, util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
 }
@@ -244,7 +244,7 @@ func TestFlipH(t *testing.T) {
 	for _, c := range cases {
 		actual := FlipH(c.value)
 		if !compare.RGBAImageEqual(actual, c.expected) {
-			t.Errorf("%s: expected: %#v, actual: %#v", "FlipH", bildImage.String(c.expected), bildImage.String(actual))
+			t.Errorf("%s: expected: %#v, actual: %#v", "FlipH", util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
 }
@@ -315,7 +315,7 @@ func TestFlipV(t *testing.T) {
 	for _, c := range cases {
 		actual := FlipV(c.value)
 		if !compare.RGBAImageEqual(actual, c.expected) {
-			t.Errorf("%s: expected: %#v, actual: %#v", "FlipV", bildImage.String(c.expected), bildImage.String(actual))
+			t.Errorf("%s: expected: %#v, actual: %#v", "FlipV", util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
 }

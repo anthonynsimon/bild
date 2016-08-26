@@ -1,11 +1,11 @@
-package color
+package util
 
 import (
 	"image/color"
 	"math"
 	"testing"
 
-	"github.com/anthonynsimon/bild/image/compare"
+	"github.com/anthonynsimon/bild/util/compare"
 )
 
 func TestQuickSortRGBA(t *testing.T) {

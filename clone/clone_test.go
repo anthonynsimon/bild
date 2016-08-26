@@ -5,7 +5,7 @@ import (
 	"image/color"
 	"testing"
 
-	"github.com/anthonynsimon/bild/image/compare"
+	"github.com/anthonynsimon/bild/util/compare"
 )
 
 func TestCloneAsRGBA(t *testing.T) {

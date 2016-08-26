@@ -5,7 +5,7 @@ import (
 	"image"
 	"testing"
 
-	"github.com/anthonynsimon/bild/image/compare"
+	"github.com/anthonynsimon/bild/util/compare"
 )
 
 func TestHistogramMin(t *testing.T) {

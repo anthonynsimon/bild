@@ -4,7 +4,7 @@ import (
 	"image"
 	"testing"
 
-	"github.com/anthonynsimon/bild/image/compare"
+	"github.com/anthonynsimon/bild/util/compare"
 )
 
 func TestBoxBlur(t *testing.T) {

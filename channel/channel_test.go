@@ -2,7 +2,7 @@ package channel
 
 import "testing"
 import "image"
-import "github.com/anthonynsimon/bild/image/compare"
+import "github.com/anthonynsimon/bild/util/compare"
 
 func TestExtract(t *testing.T) {
 	cases := []struct {

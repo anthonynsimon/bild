@@ -1,11 +1,11 @@
-package rgbaf64
+package fcolor
 
 import (
 	"math"
 	"testing"
 )
 
-func TestNew(t *testing.T) {
+func TestNewRGBA(t *testing.T) {
 	cases := []struct {
 		value    [4]uint8
 		expected RGBAF64
@@ -29,7 +29,7 @@ func TestNew(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := New(c.value[0], c.value[1], c.value[2], c.value[3])
+		actual := NewRGBAF64(c.value[0], c.value[1], c.value[2], c.value[3])
 		if !rgbaf64Equal(actual, c.expected, 0.01) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "NewRGBAF6", c.expected, actual)
 		}

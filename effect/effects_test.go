@@ -4,8 +4,8 @@ import (
 	"image"
 	"testing"
 
-	bildImage "github.com/anthonynsimon/bild/image"
-	"github.com/anthonynsimon/bild/image/compare"
+	"github.com/anthonynsimon/bild/util"
+	"github.com/anthonynsimon/bild/util/compare"
 )
 
 func TestInvert(t *testing.T) {
@@ -355,7 +355,7 @@ func TestMedian(t *testing.T) {
 	for _, c := range cases {
 		actual := Median(c.value, c.size)
 		if !compare.RGBAImageEqual(actual, c.expected) {
-			t.Errorf("%s: expected: %#v, actual: %#v", "Sobel", bildImage.String(c.expected), bildImage.String(actual))
+			t.Errorf("%s: expected: %#v, actual: %#v", "Sobel", util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
 }
