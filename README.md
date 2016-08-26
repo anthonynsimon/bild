@@ -17,34 +17,40 @@ Package bild provides a collection of common image processing functions. The inp
 
 **Notice:** This package is under heavy development and the API might change at any time until a 1.0 version is reached.
 
+
 ## Install
 
 bild requires Go version 1.4 or greater.
 
     go get -u github.com/anthonynsimon/bild
-    
+
+ 
 ## Documentation
 
 http://godoc.org/github.com/anthonynsimon/bild
+
 
 ## Basic example:
 ```go
 package main
 
 import (
-    "github.com/anthonynsimon/bild/imgio"
-    "github.com/anthonynsimon/bild/effect"
+	"github.com/anthonynsimon/bild/effect"
+	"github.com/anthonynsimon/bild/imgio"
+	"github.com/anthonynsimon/bild/transform"
 )
 
 func main() {
-	img, err := imgio.Open("filename")
+	img, err := imgio.Open("in/original.jpg")
 	if err != nil {
 		panic(err)
 	}
 
-	result := effect.Invert(img)
+	inverted := effect.Invert(img)
+	resized := transform.Resize(inverted, 800, 800, transform.Linear)
+	rotated := transform.Rotate(resized, 45, nil)
 
-	if err := imgio.Save("filename", result, imgio.PNG); err != nil {
+	if err := imgio.Save("out/original", rotated, imgio.PNG); err != nil {
 		panic(err)
 	}
 }
@@ -95,14 +101,14 @@ func main() {
 ## Blur
     import "github.com/anthonynsimon/bild/blur"
 
-### BoxBlur
-    result := blur.BoxBlur(img, 3.0)
+### Box Blur
+    result := blur.Box(img, 3.0)
 
 ![example](https://anthonynsimon.github.io/projects/bild/boxblur.jpg)  
 
 
-### GaussianBlur
-    result := blur.GaussianBlur(img, 3.0)
+### Gaussian Blur
+    result := blur.Gaussian(img, 3.0)
 
 
 ![example](https://anthonynsimon.github.io/projects/bild/gaussianblur.jpg)  
@@ -111,7 +117,7 @@ func main() {
 ## Channel
     import "github.com/anthonynsimon/bild/channel"
 
-### ExtractChannel
+### Extract Channel
     result := channel.Extract(img, bild.Alpha)
 
 ![example](https://anthonynsimon.github.io/projects/bild/extractchannel.jpg)  
@@ -120,7 +126,7 @@ func main() {
 ## Effect
     import "github.com/anthonynsimon/bild/effect"
 
-### EdgeDetection
+### Edge Detection
     result := effect.EdgeDetection(img, 1.0)
 
 ![example](https://anthonynsimon.github.io/projects/bild/edgedetection.jpg)  
