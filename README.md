@@ -118,7 +118,7 @@ func main() {
     import "github.com/anthonynsimon/bild/channel"
 
 ### Extract Channel
-    result := channel.Extract(img, bild.Alpha)
+    result := channel.Extract(img, channel.Alpha)
 
 ![example](https://anthonynsimon.github.io/projects/bild/extractchannel.jpg)  
 
