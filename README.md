@@ -15,17 +15,19 @@ Package bild provides a collection of common image processing functions. The inp
 
 **Notice:** This package is under heavy development and the API might change at any time until a 1.0 version is reached.
 
+ 
+## Documentation
+
+http://godoc.org/github.com/anthonynsimon/bild
+
 
 ## Install
 
 bild requires Go version 1.4 or greater.
 
-    go get -u github.com/anthonynsimon/bild
+    go get -u github.com/anthonynsimon/bild/...
 
- 
-## Documentation
-
-http://godoc.org/github.com/anthonynsimon/bild
+Notice the '...' at the end, this is to signify that you want all the packages on the repo. In your code, simply import the specific package that you want to use (see example below).
 
 
 ## Basic example:
