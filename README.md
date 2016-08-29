@@ -179,7 +179,7 @@ func main() {
 ### Uniform colored
 	result := noise.Generate(280, 280, &noise.Options{Monochrome: false, NoiseFn: noise.Uniform})
 
-![example](https://anthonynsimon.github.io/projects/bild/noiseuniformcolored.jpg)  
+![example](https://anthonynsimon.github.io/projects/bild/noiseuniform.jpg)  
 
 
 ### Binary monochrome
