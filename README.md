@@ -173,6 +173,27 @@ func main() {
 ![example](https://anthonynsimon.github.io/projects/bild/histogram.png)  
 
 
+## Noise
+    import "github.com/anthonynsimon/bild/noise"
+
+### Uniform colored
+	result := noise.Generate(280, 280, &noise.Options{Monochrome: false, NoiseFn: noise.Uniform})
+
+![example](https://anthonynsimon.github.io/projects/bild/noiseuniform.jpg)  
+
+
+### Binary monochrome
+	result := noise.Generate(280, 280, &noise.Options{Monochrome: true, NoiseFn: noise.Binary})
+
+![example](https://anthonynsimon.github.io/projects/bild/noisebinary.jpg)  
+
+
+### Gaussian monochrome
+	result := noise.Generate(280, 280, &noise.Options{Monochrome: true, NoiseFn: noise.Gaussian})
+
+![example](https://anthonynsimon.github.io/projects/bild/noisegaussian.jpg)  
+
+
 ## Segmentation
 
 ### Threshold
