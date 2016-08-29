@@ -1,3 +1,4 @@
+/*Package noise provides functions to generate various types of image noise.*/
 package noise
 
 import (
