@@ -1,20 +1,20 @@
-package bild
+package noise
 
 import (
 	"image"
 	"math/rand"
 )
 
-// NoiseFn is a noise function that generates values between 0 and 255.
-type NoiseFn func() uint8
+// Fn is a noise function that generates values between 0 and 255.
+type Fn func() uint8
 
 var (
 	// Uniform distribution noise function.
-	Uniform NoiseFn
+	Uniform Fn
 	// Binary distribution noise function.
-	Binary NoiseFn
+	Binary Fn
 	// Gaussian distribution noise function.
-	Gaussian NoiseFn
+	Gaussian Fn
 )
 
 func init() {
@@ -31,9 +31,9 @@ func init() {
 
 // Options to configure the noise generation.
 type Options struct {
-	// Fn is a noise function that will be called for each pixel
+	// NoiseFn is a noise function that will be called for each pixel
 	// on the image being generated.
-	Fn NoiseFn
+	NoiseFn Fn
 	// Monochrome sets if the resulting image is grayscale or colored,
 	// the latter meaning that each RGB channel was filled with different values.
 	Monochrome bool
@@ -49,8 +49,8 @@ func Generate(width, height int, o *Options) *image.RGBA {
 	noiseFn := Uniform
 	monochrome := false
 	if o != nil {
-		if o.Fn != nil {
-			noiseFn = o.Fn
+		if o.NoiseFn != nil {
+			noiseFn = o.NoiseFn
 		}
 		monochrome = o.Monochrome
 	}
@@ -59,15 +59,16 @@ func Generate(width, height int, o *Options) *image.RGBA {
 		for x := 0; x < width; x++ {
 			pos := y*dst.Stride + x*4
 			if monochrome {
-				dst.Pix[pos+0] = noiseFn()
-				dst.Pix[pos+1] = noiseFn()
-				dst.Pix[pos+2] = noiseFn()
-				dst.Pix[pos+3] = 0xFF
-			} else {
 				v := noiseFn()
 				dst.Pix[pos+0] = v
 				dst.Pix[pos+1] = v
 				dst.Pix[pos+2] = v
+				dst.Pix[pos+3] = 0xFF
+
+			} else {
+				dst.Pix[pos+0] = noiseFn()
+				dst.Pix[pos+1] = noiseFn()
+				dst.Pix[pos+2] = noiseFn()
 				dst.Pix[pos+3] = 0xFF
 			}
 		}
