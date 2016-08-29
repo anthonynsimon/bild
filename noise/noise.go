@@ -4,6 +4,9 @@ package noise
 import (
 	"image"
 	"math/rand"
+	"time"
+
+	"github.com/anthonynsimon/bild/parallel"
 )
 
 // Fn is a noise function that generates values between 0 and 255.
@@ -56,24 +59,28 @@ func Generate(width, height int, o *Options) *image.RGBA {
 		monochrome = o.Monochrome
 	}
 
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
-			pos := y*dst.Stride + x*4
-			if monochrome {
-				v := noiseFn()
-				dst.Pix[pos+0] = v
-				dst.Pix[pos+1] = v
-				dst.Pix[pos+2] = v
-				dst.Pix[pos+3] = 0xFF
+	rand.Seed(time.Now().UTC().UnixNano())
 
-			} else {
-				dst.Pix[pos+0] = noiseFn()
-				dst.Pix[pos+1] = noiseFn()
-				dst.Pix[pos+2] = noiseFn()
-				dst.Pix[pos+3] = 0xFF
+	parallel.Line(height, func(start, end int) {
+		for y := start; y < end; y++ {
+			for x := 0; x < width; x++ {
+				pos := y*dst.Stride + x*4
+				if monochrome {
+					v := noiseFn()
+					dst.Pix[pos+0] = v
+					dst.Pix[pos+1] = v
+					dst.Pix[pos+2] = v
+					dst.Pix[pos+3] = 0xFF
+
+				} else {
+					dst.Pix[pos+0] = noiseFn()
+					dst.Pix[pos+1] = noiseFn()
+					dst.Pix[pos+2] = noiseFn()
+					dst.Pix[pos+3] = 0xFF
+				}
 			}
 		}
-	}
+	})
 
 	return dst
 }
