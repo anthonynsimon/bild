@@ -10,6 +10,7 @@ import (
 	"github.com/anthonynsimon/bild/blend"
 	"github.com/anthonynsimon/bild/clone"
 	"github.com/anthonynsimon/bild/convolution"
+	"github.com/anthonynsimon/bild/math/f64"
 	"github.com/anthonynsimon/bild/parallel"
 	"github.com/anthonynsimon/bild/util"
 )
@@ -50,6 +51,43 @@ func Grayscale(img image.Image) *image.Gray {
 				c += uint8(0.1*float64(src.Pix[srcPos+2]) + 0.5)
 
 				dst.Pix[dstPos] = c
+			}
+		}
+	})
+
+	return dst
+}
+
+// Sepia returns a copy of the image in Sepia tone.
+func Sepia(img image.Image) *image.RGBA {
+	src := clone.AsRGBA(img)
+	bounds := src.Bounds()
+	srcW, srcH := bounds.Dx(), bounds.Dy()
+
+	if bounds.Empty() {
+		return &image.RGBA{}
+	}
+
+	dst := image.NewRGBA(bounds)
+
+	parallel.Line(srcH, func(start, end int) {
+		for y := start; y < end; y++ {
+			for x := 0; x < srcW; x++ {
+				pos := y*src.Stride + x*4
+
+				var c [3]float64
+				c[0] = float64(src.Pix[pos+0])
+				c[1] = float64(src.Pix[pos+1])
+				c[2] = float64(src.Pix[pos+2])
+
+				outRed := c[0]*0.393 + c[1]*0.769 + c[2]*0.189
+				outGreen := c[0]*0.349 + c[1]*0.686 + c[2]*0.168
+				outBlue := c[0]*0.272 + c[1]*0.534 + c[2]*0.131
+
+				dst.Pix[pos+0] = uint8(f64.Clamp(outRed+0.5, 0, 255))
+				dst.Pix[pos+1] = uint8(f64.Clamp(outGreen+0.5, 0, 255))
+				dst.Pix[pos+2] = uint8(f64.Clamp(outBlue+0.5, 0, 255))
+				dst.Pix[pos+3] = src.Pix[pos+3]
 			}
 		}
 	})
