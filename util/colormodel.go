@@ -7,6 +7,46 @@ import (
 	"github.com/anthonynsimon/bild/math/f64"
 )
 
+func RGBToHSL(c color.RGBA) (h, s, l float64) {
+	r, g, b := float64(c.R)/255, float64(c.G)/255, float64(c.B)/255
+
+	max := math.Max(r, math.Max(g, b))
+	min := math.Min(r, math.Min(g, b))
+	delta := max - min
+
+	l = (max + min) / 2
+
+	// Avoid division by zero
+	if max == 0 {
+		h = 0
+		s = 0
+		return
+	}
+
+	s = delta / (1 - math.Abs(2*l-1))
+
+	// // Achromatic
+	// if max == min {
+	// 	h = 0
+	// 	return
+	// }
+
+	if r >= max {
+		h = (g - b) / delta
+	} else if g >= max {
+		h = (b-r)/delta + 2
+	} else {
+		h = (r-g)/delta + 4
+	}
+
+	h *= 60
+	if h < 0 {
+		h += 360
+	}
+
+	return
+}
+
 func RGBToHSV(c color.RGBA) (h, s, v float64) {
 	r, g, b := float64(c.R)/255, float64(c.G)/255, float64(c.B)/255
 
