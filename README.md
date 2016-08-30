@@ -151,6 +151,11 @@ func main() {
 
 ![example](https://anthonynsimon.github.io/projects/bild/median.jpg)  
 
+### Sepia
+    result := effect.Sepia(img)
+
+![example](https://anthonynsimon.github.io/projects/bild/sepia.jpg)  
+
 ### Sharpen
     result := effect.Sharpen(img)
 
