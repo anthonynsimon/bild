@@ -67,11 +67,11 @@ func Contrast(src image.Image, change float64) *image.RGBA {
 }
 
 func Saturation(img image.Image, change float64) *image.RGBA {
-	change = f64.Clamp(change, -1.0, 1.0)
+	change = f64.Clamp(1+change, 0.0, 2.0)
 
 	fn := func(c color.RGBA) color.RGBA {
 		h, s, v := util.RGBToHSV(c)
-		s += change
+		s = f64.Clamp(s*change, 0.0, 1.0)
 		outColor := util.HSVToRGB(h, s, v)
 		outColor.A = c.A
 		return outColor
@@ -81,11 +81,9 @@ func Saturation(img image.Image, change float64) *image.RGBA {
 }
 
 func Hue(img image.Image, change int) *image.RGBA {
-	change = change % 360
-
 	fn := func(c color.RGBA) color.RGBA {
 		h, s, v := util.RGBToHSV(c)
-		h += float64(change)
+		h = float64((int(h) + change) % 360)
 		outColor := util.HSVToRGB(h, s, v)
 		outColor.A = c.A
 		return outColor
