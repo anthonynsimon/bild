@@ -282,12 +282,12 @@ func TestEmboss(t *testing.T) {
 
 func TestMedian(t *testing.T) {
 	cases := []struct {
-		size     int
+		radius   float64
 		value    image.Image
 		expected *image.RGBA
 	}{
 		{
-			size: 0,
+			radius: 0,
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 3, 3),
 				Stride: 3 * 4,
@@ -308,7 +308,7 @@ func TestMedian(t *testing.T) {
 			},
 		},
 		{
-			size: 3,
+			radius: 1,
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 3, 3),
 				Stride: 3 * 4,
@@ -329,7 +329,7 @@ func TestMedian(t *testing.T) {
 			},
 		},
 		{
-			size: 2,
+			radius: 2,
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 3, 3),
 				Stride: 3 * 4,
@@ -345,16 +345,16 @@ func TestMedian(t *testing.T) {
 				Pix: []uint8{
 					0xFF, 0x0, 0x0, 0xFF, 0xFF, 0x0, 0x0, 0xFF, 0xFF, 0x0, 0x0, 0xFF,
 					0xFF, 0x0, 0x0, 0xFF, 0xFF, 0x0, 0x0, 0xFF, 0xFF, 0x0, 0x0, 0xFF,
-					0x0, 0xFF, 0x0, 0xFF, 0xFF, 0x0, 0x0, 0xFF, 0xFF, 0x0, 0x0, 0xFF,
+					0xFF, 0x0, 0x0, 0xFF, 0xFF, 0x0, 0x0, 0xFF, 0xFF, 0x0, 0x0, 0xFF,
 				},
 			},
 		},
 	}
 
 	for _, c := range cases {
-		actual := Median(c.value, c.size)
+		actual := Median(c.value, c.radius)
 		if !util.RGBAImageEqual(actual, c.expected) {
-			t.Errorf("%s: expected: %#v, actual: %#v", "Sobel", util.RGBAToString(c.expected), util.RGBAToString(actual))
+			t.Errorf("%s:\nexpected:%v\nactual:%v\n", "Sobel", util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
 }
