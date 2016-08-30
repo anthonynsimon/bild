@@ -79,3 +79,17 @@ func Saturation(img image.Image, value float64) *image.RGBA {
 
 	return Apply(img, fn)
 }
+
+func Hue(img image.Image, change int) *image.RGBA {
+	change = change % 360
+
+	fn := func(c color.RGBA) color.RGBA {
+		h, s, v := util.RGBToHSV(c)
+		h += float64(change)
+		outColor := util.HSVToRGB(h, s, v)
+		outColor.A = c.A
+		return outColor
+	}
+
+	return Apply(img, fn)
+}
