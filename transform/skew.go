@@ -2,12 +2,17 @@ package transform
 
 import (
 	"image"
+	"math"
 
 	"github.com/anthonynsimon/bild/clone"
 	"github.com/anthonynsimon/bild/parallel"
 )
 
-func Shear(img image.Image, horizontal, vertical float64) *image.RGBA {
+// Shear applies a shear linear transformation along the horizontal and vertical
+// axis, the parameters angleX and angleY refer to the shear angle to be
+// applied in each axis. The transformation will be applied with the center of the
+// image as the pivot.
+func Shear(img image.Image, angleX, angleY float64) *image.RGBA {
 	src := clone.AsRGBA(img)
 	srcW, srcH := src.Bounds().Dx(), src.Bounds().Dy()
 
@@ -20,10 +25,9 @@ func Shear(img image.Image, horizontal, vertical float64) *image.RGBA {
 
 	pivotX, pivotY := float64(dstW)/2, float64(dstH)/2
 
-	// // Calculate pixels as percent of pivot shift
-	// // Scale by 2 for supersampling
-	horizontal = horizontal * 2 / pivotX
-	vertical = vertical * 2 / pivotY
+	// Calculate shear factor
+	kx := math.Tan(-angleX * (math.Pi / 180))
+	ky := math.Tan(-angleY * (math.Pi / 180))
 
 	parallel.Line(dstH, func(start, end int) {
 		for y := start; y < end; y++ {
@@ -33,8 +37,8 @@ func Shear(img image.Image, horizontal, vertical float64) *image.RGBA {
 				iy := y - int(pivotY)
 
 				// Apply linear transformation
-				ix = ix + int(float64(iy)*horizontal)
-				iy = iy + int(float64(ix)*vertical)
+				ix = ix + int(float64(iy)*kx)
+				iy = iy + int(float64(ix)*ky)
 
 				// Move positions back to image coordinates
 				ix += int(pivotX)
