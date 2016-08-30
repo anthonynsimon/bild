@@ -91,3 +91,15 @@ func Hue(img image.Image, change int) *image.RGBA {
 
 	return Apply(img, fn)
 }
+
+func Lightness(img image.Image, change float64) *image.RGBA {
+	fn := func(c color.RGBA) color.RGBA {
+		h, s, v := util.RGBToHSV(c)
+		v = f64.Clamp(v+change, 0.0, 1.0)
+		outColor := util.HSVToRGB(h, s, v)
+		outColor.A = c.A
+		return outColor
+	}
+
+	return Apply(img, fn)
+}
