@@ -249,6 +249,15 @@ func main() {
 
 ![example](https://anthonynsimon.github.io/projects/bild/rotation02.gif)
 
+### Shear Horizontal
+    result := transform.ShearH(img, 30)
+
+![example](https://anthonynsimon.github.io/projects/bild/shearh.jpg)  
+
+### Shear Vertical
+    result := transform.ShearV(img, 30)
+
+![example](https://anthonynsimon.github.io/projects/bild/shearv.jpg) 
 
 ## License
 
