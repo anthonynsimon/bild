@@ -152,6 +152,27 @@ func Median(img image.Image, size int) *image.RGBA {
 	return dst
 }
 
+func Dilate(img image.Image, size int) *image.RGBA {
+	fn := func(neighbors []color.RGBA) color.RGBA {
+		util.SortRGBA(neighbors, 0, len(neighbors)-1)
+		return neighbors[len(neighbors)-1]
+	}
+
+	dst := neighborsOperation(img, size, fn)
+
+	return dst
+}
+func Erode(img image.Image, size int) *image.RGBA {
+	fn := func(neighbors []color.RGBA) color.RGBA {
+		util.SortRGBA(neighbors, 0, len(neighbors)-1)
+		return neighbors[0]
+	}
+
+	dst := neighborsOperation(img, size, fn)
+
+	return dst
+}
+
 func neighborsOperation(img image.Image, kernelSize int, pickerFn func(neighbors []color.RGBA) color.RGBA) *image.RGBA {
 	bounds := img.Bounds()
 	src := clone.AsRGBA(img)
