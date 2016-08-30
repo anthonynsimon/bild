@@ -60,37 +60,28 @@ func Grayscale(img image.Image) *image.Gray {
 
 // Sepia returns a copy of the image in Sepia tone.
 func Sepia(img image.Image) *image.RGBA {
-	src := clone.AsRGBA(img)
-	bounds := src.Bounds()
-	srcW, srcH := bounds.Dx(), bounds.Dy()
+	fn := func(c color.RGBA) color.RGBA {
+		// Cache values as float64
+		var fc [3]float64
+		fc[0] = float64(c.R)
+		fc[1] = float64(c.G)
+		fc[2] = float64(c.B)
 
-	if bounds.Empty() {
-		return &image.RGBA{}
+		// Calculate out color based on heuristic
+		outRed := fc[0]*0.393 + fc[1]*0.769 + fc[2]*0.189
+		outGreen := fc[0]*0.349 + fc[1]*0.686 + fc[2]*0.168
+		outBlue := fc[0]*0.272 + fc[1]*0.534 + fc[2]*0.131
+
+		// Clamp ceiled values before returning
+		return color.RGBA{
+			R: uint8(f64.Clamp(outRed+0.5, 0, 255)),
+			G: uint8(f64.Clamp(outGreen+0.5, 0, 255)),
+			B: uint8(f64.Clamp(outBlue+0.5, 0, 255)),
+			A: c.A,
+		}
 	}
 
-	dst := image.NewRGBA(bounds)
-
-	parallel.Line(srcH, func(start, end int) {
-		for y := start; y < end; y++ {
-			for x := 0; x < srcW; x++ {
-				pos := y*src.Stride + x*4
-
-				var c [3]float64
-				c[0] = float64(src.Pix[pos+0])
-				c[1] = float64(src.Pix[pos+1])
-				c[2] = float64(src.Pix[pos+2])
-
-				outRed := c[0]*0.393 + c[1]*0.769 + c[2]*0.189
-				outGreen := c[0]*0.349 + c[1]*0.686 + c[2]*0.168
-				outBlue := c[0]*0.272 + c[1]*0.534 + c[2]*0.131
-
-				dst.Pix[pos+0] = uint8(f64.Clamp(outRed+0.5, 0, 255))
-				dst.Pix[pos+1] = uint8(f64.Clamp(outGreen+0.5, 0, 255))
-				dst.Pix[pos+2] = uint8(f64.Clamp(outBlue+0.5, 0, 255))
-				dst.Pix[pos+3] = src.Pix[pos+3]
-			}
-		}
-	})
+	dst := adjust.Apply(img, fn)
 
 	return dst
 }
