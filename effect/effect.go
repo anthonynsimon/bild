@@ -147,33 +147,42 @@ func Median(img image.Image, size int) *image.RGBA {
 		return neighbors[len(neighbors)/2]
 	}
 
-	dst := neighborsOperation(img, size, fn)
+	result := spatialFilter(img, size, fn)
 
-	return dst
+	return result
 }
 
+// Dilate picks the local maxima from the neighbors of each pixel and returns the resulting image.
 func Dilate(img image.Image, size int) *image.RGBA {
 	fn := func(neighbors []color.RGBA) color.RGBA {
 		util.SortRGBA(neighbors, 0, len(neighbors)-1)
 		return neighbors[len(neighbors)-1]
 	}
 
-	dst := neighborsOperation(img, size, fn)
+	result := spatialFilter(img, size, fn)
 
-	return dst
+	return result
 }
+
+// Erode picks the local minima from the neighbors of each pixel and returns the resulting image.
 func Erode(img image.Image, size int) *image.RGBA {
 	fn := func(neighbors []color.RGBA) color.RGBA {
 		util.SortRGBA(neighbors, 0, len(neighbors)-1)
 		return neighbors[0]
 	}
 
-	dst := neighborsOperation(img, size, fn)
+	result := spatialFilter(img, size, fn)
 
-	return dst
+	return result
 }
 
-func neighborsOperation(img image.Image, kernelSize int, pickerFn func(neighbors []color.RGBA) color.RGBA) *image.RGBA {
+// spatialFilter goes through each pixel on an image collecting it's neighbors and picking one
+// based on the function provided. The resulting image is then returned.
+// The parameter kernelSize corresponds to the side length of the neighbor area to be searched,
+// for example a kernelSize of 2 will result in a search area of 2x2 around each pixel.
+// The parameter pickerFn is the function that receives the list of neighbors and returns the selected
+// neighbor to be used for the resulting image.
+func spatialFilter(img image.Image, kernelSize int, pickerFn func(neighbors []color.RGBA) color.RGBA) *image.RGBA {
 	bounds := img.Bounds()
 	src := clone.AsRGBA(img)
 
