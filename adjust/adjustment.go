@@ -7,6 +7,7 @@ import (
 	"math"
 
 	"github.com/anthonynsimon/bild/math/f64"
+	"github.com/anthonynsimon/bild/util"
 )
 
 // Brightness returns a copy of the image with the adjusted brightness.
@@ -63,4 +64,18 @@ func Contrast(src image.Image, change float64) *image.RGBA {
 	img := Apply(src, fn)
 
 	return img
+}
+
+func Saturation(img image.Image, value float64) *image.RGBA {
+	value = f64.Clamp(value, -1.0, 1.0)
+
+	fn := func(c color.RGBA) color.RGBA {
+		h, s, v := util.RGBToHSV(c)
+		s += value
+		outColor := util.HSVToRGB(h, s, v)
+		outColor.A = c.A
+		return outColor
+	}
+
+	return Apply(img, fn)
 }
