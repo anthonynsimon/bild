@@ -77,6 +77,17 @@ func main() {
 ![example](https://anthonynsimon.github.io/projects/bild/gamma.jpg)  
 
 
+### Hue
+    result := adjust.Hue(img, -42)
+
+![example](https://anthonynsimon.github.io/projects/bild/hue.jpg)  
+
+### Saturation
+    result := adjust.Saturation(img, 0.5)
+
+![example](https://anthonynsimon.github.io/projects/bild/saturation.jpg)  
+
+
 
 ## Blend modes
     import "github.com/anthonynsimon/bild/blend"
