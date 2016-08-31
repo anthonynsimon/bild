@@ -66,6 +66,9 @@ func Contrast(src image.Image, change float64) *image.RGBA {
 	return img
 }
 
+// Hue adjusts the overall hue of the provided image and returns the result.
+// Parameter change is the amount of change to be applied and is of the range
+// -360 to 360. It corresponds to the hue angle in the HSL color model.
 func Hue(img image.Image, change int) *image.RGBA {
 	fn := func(c color.RGBA) color.RGBA {
 		h, s, l := util.RGBToHSL(c)
@@ -78,22 +81,15 @@ func Hue(img image.Image, change int) *image.RGBA {
 	return Apply(img, fn)
 }
 
+// Saturation adjusts the saturation of the image and returns the result.
+// Parameter change is the amount of change to be applied and is of the range
+// -1.0 to 1.0. It's applied as relative change. For example if the current color
+// saturation is 1.0 and the saturation change is set to -0.5, a change of -50%
+// will be applied so that the resulting saturation is 0.5 in the HSL color model.
 func Saturation(img image.Image, change float64) *image.RGBA {
 	fn := func(c color.RGBA) color.RGBA {
 		h, s, l := util.RGBToHSL(c)
 		s = f64.Clamp(s*(1+change), 0.0, 1.0)
-		outColor := util.HSLToRGB(h, s, l)
-		outColor.A = c.A
-		return outColor
-	}
-
-	return Apply(img, fn)
-}
-
-func Lightness(img image.Image, change float64) *image.RGBA {
-	fn := func(c color.RGBA) color.RGBA {
-		h, s, l := util.RGBToHSL(c)
-		l = f64.Clamp(l*(1+change), 0.0, 1.0)
 		outColor := util.HSLToRGB(h, s, l)
 		outColor.A = c.A
 		return outColor
