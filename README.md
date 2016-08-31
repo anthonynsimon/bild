@@ -126,6 +126,11 @@ func main() {
 ## Effect
     import "github.com/anthonynsimon/bild/effect"
 
+### Dilate
+    result := effect.Dilate(img, 3)
+
+![example](https://anthonynsimon.github.io/projects/bild/dilate.jpg)     
+
 ### Edge Detection
     result := effect.EdgeDetection(img, 1.0)
 
@@ -135,6 +140,11 @@ func main() {
     result := effect.Emboss(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/emboss.jpg)  
+
+### Erode
+    result := effect.Erode(img, 3)
+
+![example](https://anthonynsimon.github.io/projects/bild/erode.jpg)   
 
 ### Grayscale
     result := effect.Grayscale(img)
@@ -155,7 +165,6 @@ func main() {
     result := effect.Sharpen(img)
 
 ![example](https://anthonynsimon.github.io/projects/bild/sharpen.jpg)  
-
 
 ### Sobel
     result := effect.Sobel(img)
