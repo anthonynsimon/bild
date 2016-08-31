@@ -7,6 +7,10 @@ import (
 	"github.com/anthonynsimon/bild/math/f64"
 )
 
+// RGBToHSL converts from  RGB to HSL color model.
+// Parameter c is the RGBA color and must implement the color.RGBA interface.
+// Returned values h, s and l correspond to the hue, saturation and lightness.
+// The hue is of range 0 to 360 and the saturation and lightness are of range 0.0 to 1.0.
 func RGBToHSL(c color.RGBA) (float64, float64, float64) {
 	r, g, b := float64(c.R)/255, float64(c.G)/255, float64(c.B)/255
 	max := math.Max(r, math.Max(g, b))
@@ -44,6 +48,10 @@ func RGBToHSL(c color.RGBA) (float64, float64, float64) {
 	return h, s, l
 }
 
+// HSLToRGB converts from HSL to RGB color model.
+// Parameter h is the hue and its range is from 0 to 360 degrees.
+// Parameter s is the saturation and its range is from 0.0 to 1.0.
+// Parameter l is the lightness and its range is from 0.0 to 1.0.
 func HSLToRGB(h, s, l float64) color.RGBA {
 
 	var r, g, b float64
@@ -94,6 +102,10 @@ func HSLToRGB(h, s, l float64) color.RGBA {
 	return color.RGBA{outR, outG, outB, 0xFF}
 }
 
+// RGBToHSV converts from  RGB to HSV color model.
+// Parameter c is the RGBA color and must implement the color.RGBA interface.
+// Returned values h, s and v correspond to the hue, saturation and value.
+// The hue is of range 0 to 360 and the saturation and value are of range 0.0 to 1.0.
 func RGBToHSV(c color.RGBA) (h, s, v float64) {
 	r, g, b := float64(c.R)/255, float64(c.G)/255, float64(c.B)/255
 
@@ -133,6 +145,10 @@ func RGBToHSV(c color.RGBA) (h, s, v float64) {
 	return
 }
 
+// HSVToRGB converts from HSV to RGB color model.
+// Parameter h is the hue and its range is from 0 to 360 degrees.
+// Parameter s is the saturation and its range is from 0.0 to 1.0.
+// Parameter v is the value and its range is from 0.0 to 1.0.
 func HSVToRGB(h, s, v float64) color.RGBA {
 	var i, f, p, q, t float64
 
