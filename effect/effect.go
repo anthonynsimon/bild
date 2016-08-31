@@ -10,6 +10,7 @@ import (
 	"github.com/anthonynsimon/bild/blend"
 	"github.com/anthonynsimon/bild/clone"
 	"github.com/anthonynsimon/bild/convolution"
+	"github.com/anthonynsimon/bild/math/f64"
 	"github.com/anthonynsimon/bild/parallel"
 	"github.com/anthonynsimon/bild/util"
 )
@@ -53,6 +54,34 @@ func Grayscale(img image.Image) *image.Gray {
 			}
 		}
 	})
+
+	return dst
+}
+
+// Sepia returns a copy of the image in Sepia tone.
+func Sepia(img image.Image) *image.RGBA {
+	fn := func(c color.RGBA) color.RGBA {
+		// Cache values as float64
+		var fc [3]float64
+		fc[0] = float64(c.R)
+		fc[1] = float64(c.G)
+		fc[2] = float64(c.B)
+
+		// Calculate out color based on heuristic
+		outRed := fc[0]*0.393 + fc[1]*0.769 + fc[2]*0.189
+		outGreen := fc[0]*0.349 + fc[1]*0.686 + fc[2]*0.168
+		outBlue := fc[0]*0.272 + fc[1]*0.534 + fc[2]*0.131
+
+		// Clamp ceiled values before returning
+		return color.RGBA{
+			R: uint8(f64.Clamp(outRed+0.5, 0, 255)),
+			G: uint8(f64.Clamp(outGreen+0.5, 0, 255)),
+			B: uint8(f64.Clamp(outBlue+0.5, 0, 255)),
+			A: c.A,
+		}
+	}
+
+	dst := adjust.Apply(img, fn)
 
 	return dst
 }

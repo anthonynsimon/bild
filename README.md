@@ -77,6 +77,17 @@ func main() {
 ![example](https://anthonynsimon.github.io/projects/bild/gamma.jpg)  
 
 
+### Hue
+    result := adjust.Hue(img, -42)
+
+![example](https://anthonynsimon.github.io/projects/bild/hue.jpg)  
+
+### Saturation
+    result := adjust.Saturation(img, 0.5)
+
+![example](https://anthonynsimon.github.io/projects/bild/saturation.jpg)  
+
+
 
 ## Blend modes
     import "github.com/anthonynsimon/bild/blend"
@@ -160,6 +171,11 @@ func main() {
     result := effect.Median(img, 10.0)
 
 ![example](https://anthonynsimon.github.io/projects/bild/median.jpg)  
+
+### Sepia
+    result := effect.Sepia(img)
+
+![example](https://anthonynsimon.github.io/projects/bild/sepia.jpg)  
 
 ### Sharpen
     result := effect.Sharpen(img)
@@ -258,6 +274,15 @@ func main() {
 
 ![example](https://anthonynsimon.github.io/projects/bild/rotation02.gif)
 
+### Shear Horizontal
+    result := transform.ShearH(img, 30)
+
+![example](https://anthonynsimon.github.io/projects/bild/shearh.jpg)  
+
+### Shear Vertical
+    result := transform.ShearV(img, 30)
+
+![example](https://anthonynsimon.github.io/projects/bild/shearv.jpg) 
 
 ## License
 
