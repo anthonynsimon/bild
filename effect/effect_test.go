@@ -7,6 +7,61 @@ import (
 	"github.com/anthonynsimon/bild/util"
 )
 
+func TestSepia(t *testing.T) {
+	cases := []struct {
+		value    image.Image
+		expected *image.RGBA
+	}{
+		{
+			value:    &image.RGBA{},
+			expected: &image.RGBA{},
+		},
+		{
+			value: &image.RGBA{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 8,
+				Pix: []uint8{
+					0x7f, 0x7f, 0x7f, 0x80, 0x7f, 0x7f, 0x7f, 0xFF,
+					0xFF, 0xFF, 0xFF, 0xFF, 0x0, 0x0, 0x0, 0xFF,
+				},
+			},
+			expected: &image.RGBA{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 8,
+				Pix: []uint8{
+					0xAC, 0x99, 0x77, 0x80, 0xAC, 0x99, 0x77, 0xFF,
+					0xFF, 0xFF, 0xEF, 0xFF, 0x0, 0x0, 0x0, 0xFF,
+				},
+			},
+		},
+		{
+			value: &image.RGBA{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 8,
+				Pix: []uint8{
+					0xAA, 0xCA, 0x7B, 0x80, 0x7f, 0x7f, 0x7f, 0xFF,
+					0x31, 0xFF, 0x0, 0xFF, 0x0, 0xFF, 0x0, 0xFF,
+				},
+			},
+			expected: &image.RGBA{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 8,
+				Pix: []uint8{
+					0xF5, 0xDB, 0xAA, 0x80, 0xAC, 0x99, 0x77, 0xFF,
+					0xD7, 0xC0, 0x95, 0xFF, 0xC4, 0xAF, 0x88, 0xFF,
+				},
+			},
+		},
+	}
+
+	for _, c := range cases {
+		actual := Sepia(c.value)
+		if !util.RGBAImageEqual(actual, c.expected) {
+			t.Errorf("%s:\nexpected:\n%v\nactual:\n%v", "Sepia", util.RGBAToString(c.expected), util.RGBAToString(actual))
+		}
+	}
+}
+
 func TestInvert(t *testing.T) {
 	cases := []struct {
 		value    image.Image
