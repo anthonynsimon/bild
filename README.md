@@ -218,9 +218,10 @@ func main() {
 
 
 ## Segmentation
+    import "github.com/anthonynsimon/bild/segment"
 
 ### Threshold
-	result := bild.Threshold(img, 128)
+	result := segment.Threshold(img, 128)
 
 ![example](https://anthonynsimon.github.io/projects/bild/threshold.jpg)
 
