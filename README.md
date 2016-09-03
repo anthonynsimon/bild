@@ -7,6 +7,8 @@
 [![Build Status](https://travis-ci.org/anthonynsimon/bild.svg?branch=master)](https://travis-ci.org/anthonynsimon/bild)
 [![Go Report Card](https://goreportcard.com/badge/github.com/anthonynsimon/bild)](https://goreportcard.com/report/github.com/anthonynsimon/bild)
 
+A collection of parallel image processing algorithms in pure Go.
+
 The aim of this project is simplicity in use and development over high performance, but most algorithms are designed to be efficient and make use of parallelism when available. It is based on standard Go packages to reduce dependency use and development abstractions.
 
 **Notice:** This package is under heavy development and the API might change at any time until a 1.0 version is reached.
