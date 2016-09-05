@@ -50,7 +50,7 @@ func (h *Histogram) Min() int {
 }
 
 // Cumulative returns a new Histogram in which each bin is the cumulative
-// value of it's previous bins
+// value of its previous bins
 func (h *Histogram) Cumulative() *Histogram {
 	binCount := len(h.Bins)
 	out := Histogram{make([]int, binCount)}
@@ -112,7 +112,7 @@ func NewRGBAHistogram(img image.Image) *RGBAHistogram {
 }
 
 // Cumulative returns a new RGBAHistogram in which each bin is the cumulative
-// value of it's previous bins per channel.
+// value of its previous bins per channel.
 func (h *RGBAHistogram) Cumulative() *RGBAHistogram {
 	binCount := len(h.R.Bins)
 

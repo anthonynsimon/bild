@@ -1,4 +1,4 @@
-/*Package fcolor provides a basic RGBA color type which stores it's values as
+/*Package fcolor provides a basic RGBA color type which stores its values as
 float64 types in the range from 0.0 to 1.0.*/
 package fcolor
 

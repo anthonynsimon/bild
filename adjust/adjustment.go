@@ -83,9 +83,7 @@ func Hue(img image.Image, change int) *image.RGBA {
 
 // Saturation adjusts the saturation of the image and returns the result.
 // Parameter change is the amount of change to be applied and is of the range
-// -1.0 to 1.0. It's applied as relative change. For example if the current color
-// saturation is 1.0 and the saturation change is set to -0.5, a change of -50%
-// will be applied so that the resulting saturation is 0.5 in the HSL color model.
+// -1.0 to 1.0 (-1.0 being -100% and 1.0 being 100%).
 func Saturation(img image.Image, change float64) *image.RGBA {
 	fn := func(c color.RGBA) color.RGBA {
 		h, s, l := util.RGBToHSL(c)

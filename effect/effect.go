@@ -86,7 +86,7 @@ func Sepia(img image.Image) *image.RGBA {
 	return dst
 }
 
-// EdgeDetection returns a copy of the image with it's edges highlighted.
+// EdgeDetection returns a copy of the image with its edges highlighted.
 func EdgeDetection(src image.Image, radius float64) *image.RGBA {
 	if radius <= 0 {
 		return clone.AsRGBA(src)
@@ -124,7 +124,7 @@ func Emboss(src image.Image) *image.RGBA {
 	return convolution.Convolve(src, &k, &convolution.Options{Bias: 128, Wrap: false, CarryAlpha: true})
 }
 
-// Sharpen returns a sharpened copy of the image by detecting it's edges and adding it to the original.
+// Sharpen returns a sharpened copy of the image by detecting its edges and adding it to the original.
 func Sharpen(src image.Image) *image.RGBA {
 	k := convolution.Kernel{
 		Matrix: []float64{
@@ -168,7 +168,7 @@ func Sobel(src image.Image) *image.RGBA {
 	return blend.Add(blend.Multiply(vSobel, vSobel), blend.Multiply(hSobel, hSobel))
 }
 
-// Median returns a new image in which each pixel is the median of it's neighbors.
+// Median returns a new image in which each pixel is the median of its neighbors.
 // The parameter radius corresponds to the radius of the neighbor area to be searched,
 // for example a radius of R will result in a search window length of 2R+1 for each dimension.
 func Median(img image.Image, radius float64) *image.RGBA {
@@ -210,7 +210,7 @@ func Erode(img image.Image, radius float64) *image.RGBA {
 	return result
 }
 
-// spatialFilter goes through each pixel on an image collecting it's neighbors and picking one
+// spatialFilter goes through each pixel on an image collecting its neighbors and picking one
 // based on the function provided. The resulting image is then returned.
 // The parameter radius corresponds to the radius of the neighbor area to be searched,
 // for example a radius of R will result in a search window length of 2R+1 for each dimension.
