@@ -791,3 +791,45 @@ func TestCrop(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkResizeTenth(b *testing.B) {
+	benchResize(b, 4096, 4096, 0.1, Linear)
+}
+
+func BenchmarkResizeQuarter(b *testing.B) {
+	benchResize(b, 4096, 4096, 0.25, Linear)
+}
+
+func BenchmarkResizeHalf(b *testing.B) {
+	benchResize(b, 4096, 4096, 0.5, Linear)
+}
+
+func BenchmarkResize1x(b *testing.B) {
+	benchResize(b, 1024, 1024, 1.0, Linear)
+}
+
+func BenchmarkResize2x(b *testing.B) {
+	benchResize(b, 1024, 1024, 2.0, Linear)
+}
+
+func BenchmarkResize4x(b *testing.B) {
+	benchResize(b, 1024, 1024, 4.0, Linear)
+}
+
+func BenchmarkResize8x(b *testing.B) {
+	benchResize(b, 1024, 1024, 8.0, Linear)
+}
+
+func BenchmarkResize16x(b *testing.B) {
+	benchResize(b, 1024, 1024, 16.0, Linear)
+}
+
+func benchResize(b *testing.B, w, h int, scale float64, f ResampleFilter) {
+	newW := int(float64(w) * scale)
+	newH := int(float64(h) * scale)
+	img := image.NewRGBA(image.Rect(0, 0, w, h))
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		Resize(img, newW, newH, f)
+	}
+}
