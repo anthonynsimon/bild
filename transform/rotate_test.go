@@ -339,6 +339,10 @@ func BenchmarkRotation4096(b *testing.B) {
 	benchRotate(4096, 4096, 45.0, b)
 }
 
+func BenchmarkRotation8192(b *testing.B) {
+	benchRotate(8192, 8192, 45.0, b)
+}
+
 func benchRotate(w, h int, rot float64, bench *testing.B) {
 	img := image.NewRGBA(image.Rect(0, 0, w, h))
 	bench.ResetTimer()
