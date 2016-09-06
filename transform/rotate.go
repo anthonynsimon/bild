@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	cacheSize = 512
+	cacheSize = 256
 )
 
 // RotationOptions are the rotation parameters
