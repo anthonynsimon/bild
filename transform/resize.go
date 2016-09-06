@@ -118,19 +118,18 @@ func resampleVertical(src *image.RGBA, height int, filter ResampleFilter) *image
 
 	parallel.Line(height, func(start, end int) {
 		for y := start; y < end; y++ {
+			iy := (float64(y)+0.5)*delta - 0.5
+
+			istart, iend := int(iy-filterRadius+0.5), int(iy+filterRadius)
+
+			if istart < 0 {
+				istart = 0
+			}
+			if iend >= srcHeight {
+				iend = srcHeight - 1
+			}
+
 			for x := 0; x < srcWidth; x++ {
-
-				iy := (float64(y)+0.5)*delta - 0.5
-
-				istart, iend := int(iy-filterRadius+0.5), int(iy+filterRadius)
-
-				if istart < 0 {
-					istart = 0
-				}
-				if iend >= srcHeight {
-					iend = srcHeight - 1
-				}
-
 				var r, g, b, a float64
 				var sum float64
 				for ky := istart; ky <= iend; ky++ {

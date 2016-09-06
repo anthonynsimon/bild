@@ -52,8 +52,8 @@ func TestRotate(t *testing.T) {
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,
 				Pix: []uint8{
-					0xE0, 0xE0, 0xE0, 0xFF, 0x9F, 0x9F, 0x9F, 0xFF,
-					0x9F, 0x9F, 0x9F, 0xFF, 0xE0, 0xE0, 0xE0, 0xFF,
+					0xFF, 0xFF, 0xFF, 0xFF, 0x80, 0x80, 0x80, 0xFF,
+					0x80, 0x80, 0x80, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 				},
 			},
 		},
@@ -73,8 +73,8 @@ func TestRotate(t *testing.T) {
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,
 				Pix: []uint8{
-					0xED, 0xED, 0xED, 0xFF, 0xED, 0xED, 0xED, 0xFF,
-					0x92, 0x92, 0x92, 0xFF, 0x92, 0x92, 0x92, 0xFF,
+					0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+					0x80, 0x80, 0x80, 0xFF, 0x80, 0x80, 0x80, 0xFF,
 				},
 			},
 		},
@@ -115,8 +115,8 @@ func TestRotate(t *testing.T) {
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,
 				Pix: []uint8{
-					0x92, 0x92, 0x92, 0xFF, 0xED, 0xED, 0xED, 0xFF,
-					0x92, 0x92, 0x92, 0xFF, 0xED, 0xED, 0xED, 0xFF,
+					0x80, 0x80, 0x80, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+					0x80, 0x80, 0x80, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
 				},
 			},
 		},
@@ -136,8 +136,8 @@ func TestRotate(t *testing.T) {
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 8,
 				Pix: []uint8{
-					0x1F, 0x1F, 0x1F, 0x1F, 0x5, 0x5, 0x5, 0x5,
-					0xBC, 0xBC, 0xBC, 0xBC, 0x1F, 0x1F, 0x1F, 0x1F,
+					0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+					0xFF, 0xFF, 0xFF, 0xFF, 0x0, 0x0, 0x0, 0x0,
 				},
 			},
 		},
@@ -172,7 +172,7 @@ func TestRotate(t *testing.T) {
 	for _, c := range cases {
 		actual := Rotate(c.value, c.angle, c.options)
 		if !util.RGBAImageEqual(actual, c.expected) {
-			t.Errorf("%s: expected: %#v, actual: %#v", "Rotate "+c.description, util.RGBAToString(c.expected), util.RGBAToString(actual))
+			t.Errorf("%s:\nexpected:%v\nactual:%v", "Rotate "+c.description, util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
 }
@@ -316,5 +316,37 @@ func TestFlipV(t *testing.T) {
 		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "FlipV", util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
+	}
+}
+
+func BenchmarkRotation256(b *testing.B) {
+	benchRotate(256, 256, 90.0, b)
+}
+
+func BenchmarkRotation512(b *testing.B) {
+	benchRotate(512, 512, 90.0, b)
+}
+
+func BenchmarkRotation1024(b *testing.B) {
+	benchRotate(1024, 1024, 90.0, b)
+}
+
+func BenchmarkRotation2048(b *testing.B) {
+	benchRotate(2048, 2048, 90.0, b)
+}
+
+func BenchmarkRotation4096(b *testing.B) {
+	benchRotate(4096, 4096, 90.0, b)
+}
+
+func BenchmarkRotation8192(b *testing.B) {
+	benchRotate(8192, 8192, 90.0, b)
+}
+
+func benchRotate(w, h int, rot float64, bench *testing.B) {
+	img := image.NewRGBA(image.Rect(0, 0, w, h))
+	bench.ResetTimer()
+	for i := 0; i < bench.N; i++ {
+		Rotate(img, rot, nil)
 	}
 }

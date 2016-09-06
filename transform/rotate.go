@@ -31,10 +31,15 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 	src := clone.AsRGBA(img)
 	srcW, srcH := src.Bounds().Dx(), src.Bounds().Dy()
 
-	// Return early if nothing to do
+	supersample := false
 	absAngle := int(math.Abs(angle) + 0.5)
 	if absAngle%360 == 0 {
+		// Return early if nothing to do
 		return src
+	} else if absAngle%90 != 0 {
+		// Supersampling is required for non-special angles
+		// Special angles = 90, 180, 270...
+		supersample = true
 	}
 
 	// Config defaults
@@ -49,10 +54,12 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 		}
 	}
 
-	// Supersample, currently hard set to 2x
-	srcW, srcH = srcW*2, srcH*2
-	src = Resize(src, srcW, srcH, NearestNeighbor)
-	pivotX, pivotY = pivotX*2, pivotY*2
+	if supersample {
+		// Supersample, currently hard set to 2x
+		srcW, srcH = srcW*2, srcH*2
+		src = Resize(src, srcW, srcH, NearestNeighbor)
+		pivotX, pivotY = pivotX*2, pivotY*2
+	}
 
 	// Convert to radians, positive degree maps to clockwise rotation
 	angleRadians := -angle * (math.Pi / 180)
@@ -88,9 +95,9 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 		xEnd := srcW + offsetX
 
 		for y := yStart; y < yEnd; y++ {
+			dy := float64(y) - pivotY + 0.5
 			for x := xStart; x < xEnd; x++ {
 				dx := float64(x) - pivotX + 0.5
-				dy := float64(y) - pivotY + 0.5
 
 				ix := int((math.Cos(angleRadians)*dx - math.Sin(angleRadians)*dy + pivotX))
 				iy := int((math.Sin(angleRadians)*dx + math.Cos(angleRadians)*dy + pivotY))
@@ -101,17 +108,15 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 
 				srcPos := iy*src.Stride + ix*4
 				dstPos := (y+offsetY)*dst.Stride + (x+offsetX)*4
-
-				dst.Pix[dstPos+0] = src.Pix[srcPos+0]
-				dst.Pix[dstPos+1] = src.Pix[srcPos+1]
-				dst.Pix[dstPos+2] = src.Pix[srcPos+2]
-				dst.Pix[dstPos+3] = src.Pix[srcPos+3]
+				copy(dst.Pix[dstPos:dstPos+4], src.Pix[srcPos:srcPos+4])
 			}
 		}
 	})
 
-	// Downsample to original bounds as part of the Supersampling
-	dst = Resize(dst, dstW/2, dstH/2, Linear)
+	if supersample {
+		// Downsample to original bounds as part of the Supersampling
+		dst = Resize(dst, dstW/2, dstH/2, Linear)
+	}
 
 	return dst
 }
