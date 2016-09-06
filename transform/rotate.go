@@ -5,7 +5,12 @@ import (
 	"math"
 
 	"github.com/anthonynsimon/bild/clone"
+	"github.com/anthonynsimon/bild/math/integer"
 	"github.com/anthonynsimon/bild/parallel"
+)
+
+const (
+	cacheSize = 512
 )
 
 // RotationOptions are the rotation parameters
@@ -38,7 +43,7 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 		return src
 	} else if absAngle%90 != 0 {
 		// Supersampling is required for non-special angles
-		// Special angles = 90, 180, 270,...
+		// Special angles = 90, 180, 270...
 		supersample = true
 	}
 
@@ -95,24 +100,34 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 		xEnd := srcW + offsetX
 
 		for y := yStart; y < yEnd; y++ {
-			for x := xStart; x < xEnd; x++ {
-				dx := float64(x) - pivotX + 0.5
-				dy := float64(y) - pivotY + 0.5
+			for cacheStart := xStart; cacheStart < xEnd; cacheStart += cacheSize {
+				srcCache := make([]int, cacheSize)
+				i := 0
+				for x := cacheStart; x < integer.Min(xEnd, cacheStart+cacheSize); x++ {
+					dx := float64(x) - pivotX + 0.5
+					dy := float64(y) - pivotY + 0.5
 
-				ix := int((math.Cos(angleRadians)*dx - math.Sin(angleRadians)*dy + pivotX))
-				iy := int((math.Sin(angleRadians)*dx + math.Cos(angleRadians)*dy + pivotY))
+					ix := int((math.Cos(angleRadians)*dx - math.Sin(angleRadians)*dy + pivotX))
+					iy := int((math.Sin(angleRadians)*dx + math.Cos(angleRadians)*dy + pivotY))
 
-				if ix < 0 || ix >= srcW || iy < 0 || iy >= srcH {
-					continue
+					srcPos := iy*src.Stride + ix*4
+
+					if ix < 0 || ix >= srcW || iy < 0 || iy >= srcH {
+						srcCache[i] = -1
+					} else {
+						srcCache[i] = srcPos
+					}
+
+					i++
 				}
-
-				srcPos := iy*src.Stride + ix*4
-				dstPos := (y+offsetY)*dst.Stride + (x+offsetX)*4
-
-				dst.Pix[dstPos+0] = src.Pix[srcPos+0]
-				dst.Pix[dstPos+1] = src.Pix[srcPos+1]
-				dst.Pix[dstPos+2] = src.Pix[srcPos+2]
-				dst.Pix[dstPos+3] = src.Pix[srcPos+3]
+				i = 0
+				for x := cacheStart; x < integer.Min(xEnd, cacheStart+cacheSize); x++ {
+					if srcCache[i] != -1 {
+						dstPos := (y+offsetY)*dst.Stride + (x+offsetX)*4
+						copy(dst.Pix[dstPos:dstPos+4], src.Pix[srcCache[i]:srcCache[i]+4])
+					}
+					i++
+				}
 			}
 		}
 	})
