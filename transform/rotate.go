@@ -5,7 +5,6 @@ import (
 	"math"
 
 	"github.com/anthonynsimon/bild/clone"
-	"github.com/anthonynsimon/bild/math/integer"
 	"github.com/anthonynsimon/bild/parallel"
 )
 
@@ -100,34 +99,20 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 		xEnd := srcW + offsetX
 
 		for y := yStart; y < yEnd; y++ {
-			for cacheStart := xStart; cacheStart < xEnd; cacheStart += cacheSize {
-				srcCache := make([]int, cacheSize)
-				i := 0
-				for x := cacheStart; x < integer.Min(xEnd, cacheStart+cacheSize); x++ {
-					dx := float64(x) - pivotX + 0.5
-					dy := float64(y) - pivotY + 0.5
+			dy := float64(y) - pivotY + 0.5
+			for x := xStart; x < xEnd; x++ {
+				dx := float64(x) - pivotX + 0.5
 
-					ix := int((math.Cos(angleRadians)*dx - math.Sin(angleRadians)*dy + pivotX))
-					iy := int((math.Sin(angleRadians)*dx + math.Cos(angleRadians)*dy + pivotY))
+				ix := int((math.Cos(angleRadians)*dx - math.Sin(angleRadians)*dy + pivotX))
+				iy := int((math.Sin(angleRadians)*dx + math.Cos(angleRadians)*dy + pivotY))
 
-					srcPos := iy*src.Stride + ix*4
-
-					if ix < 0 || ix >= srcW || iy < 0 || iy >= srcH {
-						srcCache[i] = -1
-					} else {
-						srcCache[i] = srcPos
-					}
-
-					i++
+				if ix < 0 || ix >= srcW || iy < 0 || iy >= srcH {
+					continue
 				}
-				i = 0
-				for x := cacheStart; x < integer.Min(xEnd, cacheStart+cacheSize); x++ {
-					if srcCache[i] != -1 {
-						dstPos := (y+offsetY)*dst.Stride + (x+offsetX)*4
-						copy(dst.Pix[dstPos:dstPos+4], src.Pix[srcCache[i]:srcCache[i]+4])
-					}
-					i++
-				}
+
+				srcPos := iy*src.Stride + ix*4
+				dstPos := (y+offsetY)*dst.Stride + (x+offsetX)*4
+				copy(dst.Pix[dstPos:dstPos+4], src.Pix[srcPos:srcPos+4])
 			}
 		}
 	})
