@@ -8,10 +8,6 @@ import (
 	"github.com/anthonynsimon/bild/parallel"
 )
 
-const (
-	cacheSize = 256
-)
-
 // RotationOptions are the rotation parameters
 // ResizeBounds set to false will keep the original image bounds, cutting any
 // pixels that go past it when rotating.

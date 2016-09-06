@@ -320,27 +320,27 @@ func TestFlipV(t *testing.T) {
 }
 
 func BenchmarkRotation256(b *testing.B) {
-	benchRotate(256, 256, 45.0, b)
+	benchRotate(256, 256, 90.0, b)
 }
 
 func BenchmarkRotation512(b *testing.B) {
-	benchRotate(512, 512, 45.0, b)
+	benchRotate(512, 512, 90.0, b)
 }
 
 func BenchmarkRotation1024(b *testing.B) {
-	benchRotate(1024, 1024, 45.0, b)
+	benchRotate(1024, 1024, 90.0, b)
 }
 
 func BenchmarkRotation2048(b *testing.B) {
-	benchRotate(2048, 2048, 45.0, b)
+	benchRotate(2048, 2048, 90.0, b)
 }
 
 func BenchmarkRotation4096(b *testing.B) {
-	benchRotate(4096, 4096, 45.0, b)
+	benchRotate(4096, 4096, 90.0, b)
 }
 
 func BenchmarkRotation8192(b *testing.B) {
-	benchRotate(8192, 8192, 45.0, b)
+	benchRotate(8192, 8192, 90.0, b)
 }
 
 func benchRotate(w, h int, rot float64, bench *testing.B) {
