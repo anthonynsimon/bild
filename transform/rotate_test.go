@@ -318,3 +318,31 @@ func TestFlipV(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkRotation256(b *testing.B) {
+	benchmark(256, 256, 90.0, b)
+}
+
+func BenchmarkRotation512(b *testing.B) {
+	benchmark(512, 512, 90.0, b)
+}
+
+func BenchmarkRotation1024(b *testing.B) {
+	benchmark(1024, 1024, 90.0, b)
+}
+
+func BenchmarkRotation2048(b *testing.B) {
+	benchmark(2048, 2048, 90.0, b)
+}
+
+func BenchmarkRotation4096(b *testing.B) {
+	benchmark(4096, 4096, 90.0, b)
+}
+
+func benchmark(w, h int, rot float64, bench *testing.B) {
+	img := image.NewRGBA(image.Rect(0, 0, w, h))
+	bench.ResetTimer()
+	for i := 0; i < bench.N; i++ {
+		Rotate(img, rot, nil)
+	}
+}
