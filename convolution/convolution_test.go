@@ -123,3 +123,27 @@ func TestConvolve(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkConvolve3(b *testing.B) {
+	benchConvolve(b, 1024, 1024, NewKernel(3, 3))
+}
+
+func BenchmarkConvolve8(b *testing.B) {
+	benchConvolve(b, 1024, 1024, NewKernel(8, 8))
+}
+
+func BenchmarkConvolve32(b *testing.B) {
+	benchConvolve(b, 1024, 1024, NewKernel(32, 32))
+}
+
+func BenchmarkConvolve64(b *testing.B) {
+	benchConvolve(b, 1024, 1024, NewKernel(64, 64))
+}
+
+func benchConvolve(b *testing.B, w, h int, k *Kernel) {
+	img := image.NewRGBA(image.Rect(0, 0, w, h))
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		Convolve(img, k, nil)
+	}
+}
