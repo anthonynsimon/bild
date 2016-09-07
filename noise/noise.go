@@ -61,26 +61,44 @@ func Generate(width, height int, o *Options) *image.RGBA {
 
 	rand.Seed(time.Now().UTC().UnixNano())
 
+	if monochrome {
+		fillMonochrome(dst, noiseFn)
+	} else {
+		fillColored(dst, noiseFn)
+	}
+
+	return dst
+}
+
+func fillMonochrome(img *image.RGBA, noiseFn Fn) {
+	width, height := img.Bounds().Dx(), img.Bounds().Dy()
 	parallel.Line(height, func(start, end int) {
 		for y := start; y < end; y++ {
 			for x := 0; x < width; x++ {
-				pos := y*dst.Stride + x*4
-				if monochrome {
-					v := noiseFn()
-					dst.Pix[pos+0] = v
-					dst.Pix[pos+1] = v
-					dst.Pix[pos+2] = v
-					dst.Pix[pos+3] = 0xFF
+				pos := y*img.Stride + x*4
+				v := noiseFn()
 
-				} else {
-					dst.Pix[pos+0] = noiseFn()
-					dst.Pix[pos+1] = noiseFn()
-					dst.Pix[pos+2] = noiseFn()
-					dst.Pix[pos+3] = 0xFF
-				}
+				img.Pix[pos+0] = v
+				img.Pix[pos+1] = v
+				img.Pix[pos+2] = v
+				img.Pix[pos+3] = 0xFF
 			}
 		}
 	})
+}
 
-	return dst
+func fillColored(img *image.RGBA, noiseFn Fn) {
+	width, height := img.Bounds().Dx(), img.Bounds().Dy()
+	parallel.Line(height, func(start, end int) {
+		for y := start; y < end; y++ {
+			for x := 0; x < width; x++ {
+				pos := y*img.Stride + x*4
+
+				img.Pix[pos+0] = noiseFn()
+				img.Pix[pos+1] = noiseFn()
+				img.Pix[pos+2] = noiseFn()
+				img.Pix[pos+3] = 0xFF
+			}
+		}
+	})
 }
