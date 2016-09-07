@@ -90,7 +90,7 @@ func execute(img image.Image, k Matrix, bias float64, wrap, keepAlpha bool) *ima
 					dst.Pix[pos+0] = uint8(math.Max(math.Min(r+bias, 255), 0))
 					dst.Pix[pos+1] = uint8(math.Max(math.Min(g+bias, 255), 0))
 					dst.Pix[pos+2] = uint8(math.Max(math.Min(b+bias, 255), 0))
-					dst.Pix[pos+3] = src.Pix[pos+3]
+					dst.Pix[pos+3] = src.Pix[y*src.Stride+x*4+3]
 				}
 			}
 		})
