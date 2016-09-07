@@ -6,6 +6,7 @@ import (
 	"math"
 
 	"github.com/anthonynsimon/bild/clone"
+	"github.com/anthonynsimon/bild/parallel"
 )
 
 // Options are the Convolve function parameters.
@@ -56,51 +57,48 @@ func Convolve(img image.Image, k Matrix, o *Options) *image.RGBA {
 }
 
 func execute(src *image.RGBA, k Matrix, bias float64) *image.RGBA {
-	// src bounds now include padded pixels
+	lenX := k.MaxX()
+	lenY := k.MaxY()
+	radiusX := lenX / 2
+	radiusY := lenY / 2
+
+	// src bounds now includes padded pixels
 	srcBounds := src.Bounds()
 	w, h := srcBounds.Dx(), srcBounds.Dy()
+	dst := image.NewRGBA(srcBounds)
 
-	// dst bounds should nonetheless remain as the original
-	dst := image.NewRGBA(src.Bounds())
-	// TODO(anthonynsimon): write tests for non-zero origin bounds
-	// image.Rect(0, 0, w-int(float64(kernelLengthX)-0.5), h-int(float64(kernelLengthY)-0.5))
+	parallel.Line(h-lenY, func(start, end int) {
+		// Correct range so we don't iterate over the padded pixels on the main loop
+		for y := start + radiusX; y < end+radiusY; y++ {
+			for x := radiusX; x < w-radiusX; x++ {
 
-	radiusX := k.MaxX() / 2
-	radiusY := k.MaxY() / 2
+				var r, g, b, a float64
+				// Kernel has access to the padded pixels
+				for ky := 0; ky < lenY; ky++ {
+					iy := y - radiusY + ky
 
-	// parallel.Line(h, func(start, end int) {
-	// Correct range so we don't iterate over the padded pixels on the main loop
-	for y := radiusY; y < h-radiusY; y++ {
-		for x := radiusX; x < w-radiusX; x++ {
+					for kx := 0; kx < lenX; kx++ {
+						ix := x - radiusX + kx
 
-			var r, g, b, a float64
-			// Kernel has access to the padded pixels
-			for ky := 0; ky < k.MaxY(); ky++ {
-				iy := y - radiusY + ky
-				for kx := 0; kx < k.MaxX(); kx++ {
-					ix := x - radiusX + kx
-
-					ipos := iy*dst.Stride + ix*4
-					kvalue := k.At(kx, ky)
-
-					r += float64(src.Pix[ipos+0]) * kvalue
-					g += float64(src.Pix[ipos+1]) * kvalue
-					b += float64(src.Pix[ipos+2]) * kvalue
-					a += float64(src.Pix[ipos+3]) * kvalue
+						kvalue := k.At(kx, ky)
+						ipos := iy*dst.Stride + ix*4
+						r += float64(src.Pix[ipos+0]) * kvalue
+						g += float64(src.Pix[ipos+1]) * kvalue
+						b += float64(src.Pix[ipos+2]) * kvalue
+						a += float64(src.Pix[ipos+3]) * kvalue
+					}
 				}
+
+				// Map x and y indicies to non-padded range
+				pos := y*dst.Stride + x*4
+
+				dst.Pix[pos+0] = uint8(math.Max(math.Min(r+bias, 255), 0))
+				dst.Pix[pos+1] = uint8(math.Max(math.Min(g+bias, 255), 0))
+				dst.Pix[pos+2] = uint8(math.Max(math.Min(b+bias, 255), 0))
+				dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
 			}
-
-			// Map x and y indicies to non-padded range
-			pos := y*dst.Stride + x*4
-			// pos := dst.PixOffset(x, y)
-
-			dst.Pix[pos+0] = uint8(math.Max(math.Min(r+bias, 255), 0))
-			dst.Pix[pos+1] = uint8(math.Max(math.Min(g+bias, 255), 0))
-			dst.Pix[pos+2] = uint8(math.Max(math.Min(b+bias, 255), 0))
-			dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
 		}
-	}
-	// })
+	})
 
 	return dst
 }
