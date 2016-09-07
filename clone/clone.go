@@ -68,75 +68,102 @@ func noFill(src image.Image, x, y int) *image.RGBA {
 	return img
 }
 
-func extend(src image.Image, padX, padY int) *image.RGBA {
-	bounds := src.Bounds()
-	srcW, srcH := bounds.Dx(), bounds.Dy()
-	dstW, dstH := srcW+2*padX, srcH+2*padY
+func extend(img image.Image, padX, padY int) *image.RGBA {
+	bounds := img.Bounds()
+	paddedW, paddedH := bounds.Dx()+2*padX, bounds.Dy()+2*padY
 
-	img := image.NewRGBA(image.Rect(0, 0, dstW, dstH))
+	bounds.Max.X += padX
+	bounds.Min.X -= padX
+	bounds.Max.Y += padY
+	bounds.Min.Y -= padY
 
-	// Cache division constant for use in loop
-	var k uint32 = 1 << 8
+	dst := image.NewRGBA(bounds)
+	// Pre-fill image with original data
+	draw.Draw(dst, bounds, img, bounds.Min, draw.Src)
 
-	parallel.Line(dstH, func(start, end int) {
+	parallel.Line(paddedH, func(start, end int) {
 		for y := start; y < end; y++ {
-			iy := y - padY
-			if iy < 0 {
-				iy = 0
-			} else if iy >= srcH {
-				iy = srcH - 1
+			iy := y
+			if iy < padY {
+				iy = padY
+			} else if iy >= paddedH-padY {
+				iy = paddedH - padY - 1
 			}
 
-			for x := 0; x < dstW; x++ {
-				ix := x - padX
-				if ix < 0 {
-					ix = 0
-				} else if ix >= srcW {
-					ix = srcW - 1
+			for x := 0; x < paddedW; x++ {
+				ix := x
+				if ix < padX {
+					ix = padX
+				} else if x >= paddedW-padX {
+					ix = paddedW - padX - 1
+				} else if iy == y {
+					// This only enters if we are not in a y-padded area or
+					// x-padded area, so nothing to extend here.
+					// So simply jump to the next padded-x index.
+					x = paddedW - padX - 1
+					continue
 				}
 
-				pos := y*img.Stride + x*4
-				r, g, b, a := src.At(ix, iy).RGBA()
+				dstPos := y*dst.Stride + x*4
+				edgePos := iy*dst.Stride + ix*4
 
-				img.Pix[pos+0] = uint8(r / k)
-				img.Pix[pos+1] = uint8(g / k)
-				img.Pix[pos+2] = uint8(b / k)
-				img.Pix[pos+3] = uint8(a / k)
+				dst.Pix[dstPos+0] = dst.Pix[edgePos+0]
+				dst.Pix[dstPos+1] = dst.Pix[edgePos+1]
+				dst.Pix[dstPos+2] = dst.Pix[edgePos+2]
+				dst.Pix[dstPos+3] = dst.Pix[edgePos+3]
 			}
 		}
 	})
 
-	return img
+	return dst
 }
 
-func wrap(src image.Image, padX, padY int) *image.RGBA {
-	bounds := src.Bounds()
-	srcW, srcH := bounds.Dx(), bounds.Dy()
-	dstW, dstH := srcW+2*padX, srcH+2*padY
+func wrap(img image.Image, padX, padY int) *image.RGBA {
+	bounds := img.Bounds()
+	paddedW, paddedH := bounds.Dx()+2*padX, bounds.Dy()+2*padY
 
-	img := image.NewRGBA(image.Rect(0, 0, dstW, dstH))
+	bounds.Max.X += padX
+	bounds.Min.X -= padX
+	bounds.Max.Y += padY
+	bounds.Min.Y -= padY
 
-	// Cache division constant for use in loop
-	var k uint32 = 1 << 8
+	dst := image.NewRGBA(bounds)
+	// Pre-fill image with original data
+	draw.Draw(dst, bounds, img, bounds.Min, draw.Src)
 
-	parallel.Line(dstH, func(start, end int) {
+	parallel.Line(paddedH, func(start, end int) {
 		for y := start; y < end; y++ {
-			// Double mod for edge case when pad is
-			// larger than image dimensions
-			iy := (y - (padY % srcH) + srcH) % srcH
-			for x := 0; x < dstW; x++ {
-				ix := (x - (padX % srcW) + srcW) % srcW
+			iy := y
+			if iy < padY {
+				iy = (paddedH - padY) - ((padY - y) % (paddedH - padY*2)) - 1
+			} else if iy >= paddedH-padY {
+				iy = padY - ((padY - y) % (paddedH - padY*2))
+			}
 
-				pos := y*img.Stride + x*4
-				r, g, b, a := src.At(ix, iy).RGBA()
+			for x := 0; x < paddedW; x++ {
+				ix := x
+				if ix < padX {
+					ix = (paddedW - padX) - ((padX - x) % (paddedW - padX*2)) - 1
+				} else if ix >= paddedW-padX {
+					ix = padX - ((padX - x) % (paddedW - padX*2))
+				} else if iy == y {
+					// This only enters if we are not in a y-padded area or
+					// x-padded area, so nothing to extend here.
+					// So simply jump to the next padded-x index.
+					x = paddedW - padX - 1
+					continue
+				}
 
-				img.Pix[pos+0] = uint8(r / k)
-				img.Pix[pos+1] = uint8(g / k)
-				img.Pix[pos+2] = uint8(b / k)
-				img.Pix[pos+3] = uint8(a / k)
+				dstPos := y*dst.Stride + x*4
+				edgePos := iy*dst.Stride + ix*4
+
+				dst.Pix[dstPos+0] = dst.Pix[edgePos+0]
+				dst.Pix[dstPos+1] = dst.Pix[edgePos+1]
+				dst.Pix[dstPos+2] = dst.Pix[edgePos+2]
+				dst.Pix[dstPos+3] = dst.Pix[edgePos+3]
 			}
 		}
 	})
 
-	return img
+	return dst
 }
