@@ -1,5 +1,4 @@
-/*Package fcolor provides a basic RGBA color type which stores its values as
-float64 types in the range from 0.0 to 1.0.*/
+/*Package fcolor provides a basic RGBAF64 color type.*/
 package fcolor
 
 import "github.com/anthonynsimon/bild/math/f64"
