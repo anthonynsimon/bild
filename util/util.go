@@ -22,18 +22,19 @@ func SortRGBA(data []color.RGBA, min, max int) {
 func partitionRGBASlice(data []color.RGBA, min, max int) int {
 	pivot := data[max]
 	i := min
+	r := srank(pivot)
 	for j := min; j < max; j++ {
-		if Rank(data[j]) <= Rank(pivot) {
-			temp := data[i]
-			data[i] = data[j]
-			data[j] = temp
+		if srank(data[j]) <= r {
+			data[i], data[j] = data[j], data[i]
 			i++
 		}
 	}
-	temp := data[i]
-	data[i] = data[max]
-	data[max] = temp
+	data[i], data[max] = data[max], data[i]
 	return i
+}
+
+func srank(c color.RGBA) uint {
+	return uint(c.R)<<3 + uint(c.G)<<6 + uint(c.B)<<1
 }
 
 // Rank a color based on a color perception heuristic.
