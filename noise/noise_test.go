@@ -161,6 +161,18 @@ func TestBinaryNoise(t *testing.T) {
 	}
 }
 
+func BenchmarkUniformMonochrome(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		Generate(512, 512, &Options{NoiseFn: Uniform, Monochrome: true})
+	}
+}
+
+func BenchmarkUniformColored(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		Generate(512, 512, &Options{NoiseFn: Uniform, Monochrome: false})
+	}
+}
+
 // checkPixels goes through each pixel in the image, extracting the RGBA channels and passing it through the
 // provided test function. If the result of the function and the expected bool don't match, then fail the test
 // with the provided message. Tolerance is the error count permitted.
