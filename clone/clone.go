@@ -55,31 +55,21 @@ func Pad(src image.Image, padX, padY int, m PadMethod) *image.RGBA {
 	return result
 }
 
-func noFill(src image.Image, x, y int) *image.RGBA {
-	bounds := src.Bounds()
-	bounds.Max.X += x
-	bounds.Min.X -= x
-	bounds.Max.Y += y
-	bounds.Min.Y -= y
+func noFill(img image.Image, padX, padY int) *image.RGBA {
+	srcBounds := img.Bounds()
+	paddedW, paddedH := srcBounds.Dx()+2*padX, srcBounds.Dy()+2*padY
+	newBounds := image.Rect(0, 0, paddedW, paddedH)
+	fillBounds := image.Rect(padX, padY, padX+srcBounds.Dx(), padY+srcBounds.Dy())
 
-	img := image.NewRGBA(bounds)
-	draw.Draw(img, bounds, src, bounds.Min, draw.Src)
+	dst := image.NewRGBA(newBounds)
+	draw.Draw(dst, fillBounds, img, srcBounds.Min, draw.Src)
 
-	return img
+	return dst
 }
 
 func extend(img image.Image, padX, padY int) *image.RGBA {
-	bounds := img.Bounds()
-	paddedW, paddedH := bounds.Dx()+2*padX, bounds.Dy()+2*padY
-
-	bounds.Max.X += padX
-	bounds.Min.X -= padX
-	bounds.Max.Y += padY
-	bounds.Min.Y -= padY
-
-	dst := image.NewRGBA(bounds)
-	// Pre-fill image with original data
-	draw.Draw(dst, bounds, img, bounds.Min, draw.Src)
+	dst := noFill(img, padX, padY)
+	paddedW, paddedH := dst.Bounds().Dx(), dst.Bounds().Dy()
 
 	parallel.Line(paddedH, func(start, end int) {
 		for y := start; y < end; y++ {
@@ -119,23 +109,14 @@ func extend(img image.Image, padX, padY int) *image.RGBA {
 }
 
 func wrap(img image.Image, padX, padY int) *image.RGBA {
-	bounds := img.Bounds()
-	paddedW, paddedH := bounds.Dx()+2*padX, bounds.Dy()+2*padY
-
-	bounds.Max.X += padX
-	bounds.Min.X -= padX
-	bounds.Max.Y += padY
-	bounds.Min.Y -= padY
-
-	dst := image.NewRGBA(bounds)
-	// Pre-fill image with original data
-	draw.Draw(dst, bounds, img, bounds.Min, draw.Src)
+	dst := noFill(img, padX, padY)
+	paddedW, paddedH := dst.Bounds().Dx(), dst.Bounds().Dy()
 
 	parallel.Line(paddedH, func(start, end int) {
 		for y := start; y < end; y++ {
 			iy := y
 			if iy < padY {
-				iy = (paddedH - padY) - ((padY - y) % (paddedH - padY*2)) - 1
+				iy = (paddedH - padY) - ((padY - y) % (paddedH - padY*2))
 			} else if iy >= paddedH-padY {
 				iy = padY - ((padY - y) % (paddedH - padY*2))
 			}
@@ -143,7 +124,7 @@ func wrap(img image.Image, padX, padY int) *image.RGBA {
 			for x := 0; x < paddedW; x++ {
 				ix := x
 				if ix < padX {
-					ix = (paddedW - padX) - ((padX - x) % (paddedW - padX*2)) - 1
+					ix = (paddedW - padX) - ((padX - x) % (paddedW - padX*2))
 				} else if ix >= paddedW-padX {
 					ix = padX - ((padX - x) % (paddedW - padX*2))
 				} else if iy == y {
