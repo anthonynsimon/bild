@@ -15,7 +15,7 @@ func TestConvolve(t *testing.T) {
 		expected *image.RGBA
 	}{
 		{
-			options: &Options{Bias: 0, Wrap: false, CarryAlpha: false},
+			options: &Options{Bias: 0, Wrap: false},
 			kernel:  &Kernel{[]float64{}, 0, 0},
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 3, 3),
@@ -37,7 +37,7 @@ func TestConvolve(t *testing.T) {
 			},
 		},
 		{
-			options: &Options{Bias: 0, Wrap: false, CarryAlpha: false},
+			options: &Options{Bias: 0, Wrap: false},
 			kernel: &Kernel{[]float64{
 				1, 0, 0,
 				0, 0, 0,
@@ -63,7 +63,7 @@ func TestConvolve(t *testing.T) {
 			},
 		},
 		{
-			options: &Options{Bias: 0, Wrap: false, CarryAlpha: false},
+			options: &Options{Bias: 0, Wrap: false},
 			kernel: &Kernel{[]float64{
 				0, 0, 0,
 				0.5, 0, 0.5,
@@ -89,7 +89,7 @@ func TestConvolve(t *testing.T) {
 			},
 		},
 		{
-			options: &Options{Bias: 0, Wrap: false, CarryAlpha: false},
+			options: &Options{Bias: 0, Wrap: false},
 			kernel: &Kernel{[]float64{
 				0, 0.5, 0,
 				0, 0, 0,
@@ -119,7 +119,7 @@ func TestConvolve(t *testing.T) {
 	for _, c := range cases {
 		actual := Convolve(c.value, c.kernel, c.options)
 		if !util.RGBAImageEqual(actual, c.expected) {
-			t.Errorf("%s: expected: %#v, actual: %#v", "Convolve", c.expected, actual)
+			t.Errorf("%s:\nexpected:%v\nactual:%v\n", "Convolve", util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
 }
@@ -144,6 +144,6 @@ func benchConvolve(b *testing.B, w, h int, k *Kernel) {
 	img := image.NewRGBA(image.Rect(0, 0, w, h))
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
-		Convolve(img, k, nil)
+		Convolve(img, k, &Options{Wrap: false})
 	}
 }
