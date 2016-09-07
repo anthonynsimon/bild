@@ -40,6 +40,7 @@ func Convolve(img image.Image, k Matrix, o *Options) *image.RGBA {
 }
 
 func execute(img image.Image, k Matrix, bias float64, wrap, keepAlpha bool) *image.RGBA {
+	// Kernel attributes
 	lenX := k.MaxX()
 	lenY := k.MaxY()
 	radiusX := lenX / 2
@@ -55,17 +56,17 @@ func execute(img image.Image, k Matrix, bias float64, wrap, keepAlpha bool) *ima
 
 	// src bounds now includes padded pixels
 	srcBounds := src.Bounds()
-	w, h := srcBounds.Dx(), srcBounds.Dy()
+	srcW, srcH := srcBounds.Dx(), srcBounds.Dy()
 	dst := image.NewRGBA(img.Bounds())
 
 	// To keep alpha we simply don't convolve it
 	if keepAlpha {
 		// Notice we can't use lenY since it will be larger than the actual padding pixels
 		// as it includes the identity element
-		parallel.Line(h-(radiusY*2), func(start, end int) {
+		parallel.Line(srcH-(radiusY*2), func(start, end int) {
 			// Correct range so we don't iterate over the padded pixels on the main loop
 			for y := start + radiusY; y < end+radiusY; y++ {
-				for x := radiusX; x < w-radiusX; x++ {
+				for x := radiusX; x < srcW-radiusX; x++ {
 
 					var r, g, b float64
 					// Kernel has access to the padded pixels
@@ -94,10 +95,12 @@ func execute(img image.Image, k Matrix, bias float64, wrap, keepAlpha bool) *ima
 			}
 		})
 	} else {
-		parallel.Line(h-(radiusY*2), func(start, end int) {
+		// Notice we can't use lenY since it will be larger than the actual padding pixels
+		// as it includes the identity element
+		parallel.Line(srcH-(radiusY*2), func(start, end int) {
 			// Correct range so we don't iterate over the padded pixels on the main loop
 			for y := start + radiusY; y < end+radiusY; y++ {
-				for x := radiusX; x < w-radiusX; x++ {
+				for x := radiusX; x < srcW-radiusX; x++ {
 
 					var r, g, b, a float64
 					// Kernel has access to the padded pixels
