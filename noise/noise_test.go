@@ -163,13 +163,13 @@ func TestBinaryNoise(t *testing.T) {
 
 func BenchmarkUniformMonochrome(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		Generate(4096, 4096, &Options{NoiseFn: Uniform, Monochrome: true})
+		Generate(512, 512, &Options{NoiseFn: Uniform, Monochrome: true})
 	}
 }
 
 func BenchmarkUniformColored(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		Generate(4096, 4096, &Options{NoiseFn: Uniform, Monochrome: false})
+		Generate(512, 512, &Options{NoiseFn: Uniform, Monochrome: false})
 	}
 }
 
