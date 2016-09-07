@@ -217,44 +217,33 @@ func Erode(img image.Image, radius float64) *image.RGBA {
 // The parameter pickerFn is the function that receives the list of neighbors and returns the selected
 // neighbor to be used for the resulting image.
 func spatialFilter(img image.Image, radius float64, pickerFn func(neighbors []color.RGBA) color.RGBA) *image.RGBA {
-	bounds := img.Bounds()
-	src := clone.AsRGBA(img)
-
 	if radius <= 0 {
-		return src
+		return clone.AsRGBA(img)
 	}
+
+	padding := int(radius + 0.5)
+	src := clone.Pad(img, padding, padding, clone.EdgeExtend)
 
 	kernelSize := int(2*radius + 1 + 0.5)
 
+	bounds := img.Bounds()
 	dst := image.NewRGBA(bounds)
 
 	w, h := bounds.Dx(), bounds.Dy()
 	neighborsCount := kernelSize * kernelSize
 
 	parallel.Line(h, func(start, end int) {
-		for y := start; y < end; y++ {
-			for x := 0; x < w; x++ {
+		for y := start + padding; y < end+padding; y++ {
+			for x := padding; x < w+padding; x++ {
 
 				neighbors := make([]color.RGBA, neighborsCount)
 				i := 0
 				for ky := 0; ky < kernelSize; ky++ {
 					for kx := 0; kx < kernelSize; kx++ {
-						ix := x - kernelSize/2 + kx
-						iy := y - kernelSize/2 + ky
+						ix := x - kernelSize>>1 + kx
+						iy := y - kernelSize>>1 + ky
 
-						if ix < 0 {
-							ix = 0
-						} else if ix >= w {
-							ix = w - 1
-						}
-
-						if iy < 0 {
-							iy = 0
-						} else if iy >= h {
-							iy = h - 1
-						}
-
-						ipos := iy*dst.Stride + ix*4
+						ipos := iy*src.Stride + ix*4
 						neighbors[i] = color.RGBA{
 							R: src.Pix[ipos+0],
 							G: src.Pix[ipos+1],
@@ -267,7 +256,7 @@ func spatialFilter(img image.Image, radius float64, pickerFn func(neighbors []co
 
 				c := pickerFn(neighbors)
 
-				pos := y*dst.Stride + x*4
+				pos := (y-padding)*dst.Stride + (x-padding)*4
 				dst.Pix[pos+0] = c.R
 				dst.Pix[pos+1] = c.G
 				dst.Pix[pos+2] = c.B
