@@ -26,52 +26,45 @@ type Options struct {
 //		result := Convolve(img, kernel, &Options{Bias: 0, Wrap: false, CarryAlpha: false})
 //
 func Convolve(img image.Image, k Matrix, o *Options) *image.RGBA {
-	bounds := img.Bounds()
-	src := clone.AsRGBA(img)
-	dst := image.NewRGBA(bounds)
-
-	w, h := bounds.Dx(), bounds.Dy()
-	kernelLengthX := k.MaxX()
-	kernelLengthY := k.MaxY()
-
-	bias := 0.0
+	// bias := 0.0
+	// carryAlpha := true
 	wrap := false
-	carryAlpha := true
 	if o != nil {
-		bias = o.Bias
 		wrap = o.Wrap
-		carryAlpha = o.CarryAlpha
+		// bias = o.Bias
+		// carryAlpha = o.CarryAlpha
 	}
 
+	radiusX := k.MaxX() / 2
+	radiusY := k.MaxY() / 2
+
+	var src *image.RGBA
+	if wrap {
+		src = clone.Pad(img, radiusX, radiusY, clone.EdgeWrap)
+	} else {
+		src = clone.Pad(img, radiusX, radiusY, clone.EdgeExtend)
+	}
+
+	// src bounds now include padded pixels
+	srcBounds := src.Bounds()
+	w, h := srcBounds.Dx(), srcBounds.Dy()
+
+	// dst bounds should nonetheless remain as the original
+	dst := image.NewRGBA(img.Bounds())
+	// TODO(anthonynsimon): write tests for non-zero origin bounds
+	// image.Rect(0, 0, w-int(float64(kernelLengthX)-0.5), h-int(float64(kernelLengthY)-0.5))
+
 	parallel.Line(h, func(start, end int) {
-		for y := start; y < end; y++ {
-			for x := 0; x < w; x++ {
+		// Correct range so we don't iterate over the padded pixels on the main loop
+		for y := start + radiusY; y < end-radiusY; y++ {
+			for x := radiusX; x < w-radiusX; x++ {
 
 				var r, g, b, a float64
-				for ky := 0; ky < kernelLengthY; ky++ {
-					for kx := 0; kx < kernelLengthX; kx++ {
-
-						var ix, iy int
-						if wrap {
-							ix = (x - kernelLengthX/2 + kx + w) % w
-							iy = (y - kernelLengthY/2 + ky + h) % h
-						} else {
-							ix = x - kernelLengthX/2 + kx
-							iy = y - kernelLengthY/2 + ky
-
-							// Default method of sampling outside pixels is by extending
-							if ix < 0 {
-								ix = 0
-							} else if ix >= w {
-								ix = w - 1
-							}
-
-							if iy < 0 {
-								iy = 0
-							} else if iy >= h {
-								iy = h - 1
-							}
-						}
+				// Kernel has access to the padded pixels
+				for ky := 0; ky < k.MaxY(); ky++ {
+					iy := y - radiusY + ky
+					for kx := 0; kx < k.MaxX(); kx++ {
+						ix := x - radiusX + kx
 
 						ipos := iy*dst.Stride + ix*4
 						kvalue := k.At(kx, ky)
@@ -79,21 +72,17 @@ func Convolve(img image.Image, k Matrix, o *Options) *image.RGBA {
 						r += float64(src.Pix[ipos+0]) * kvalue
 						g += float64(src.Pix[ipos+1]) * kvalue
 						b += float64(src.Pix[ipos+2]) * kvalue
-						if !carryAlpha {
-							a += float64(src.Pix[ipos+3]) * kvalue
-						}
+						a += float64(src.Pix[ipos+3]) * kvalue
 					}
 				}
 
-				pos := y*dst.Stride + x*4
-				dst.Pix[pos+0] = uint8(math.Max(math.Min(r+bias, 255), 0))
-				dst.Pix[pos+1] = uint8(math.Max(math.Min(g+bias, 255), 0))
-				dst.Pix[pos+2] = uint8(math.Max(math.Min(b+bias, 255), 0))
-				if !carryAlpha {
-					dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
-				} else {
-					dst.Pix[pos+3] = src.Pix[pos+3]
-				}
+				// Map x and y indicies to non-padded range
+				pos := (y-radiusY)*dst.Stride + (x-radiusX)*4
+
+				dst.Pix[pos+0] = uint8(math.Max(math.Min(r, 255), 0))
+				dst.Pix[pos+1] = uint8(math.Max(math.Min(g, 255), 0))
+				dst.Pix[pos+2] = uint8(math.Max(math.Min(b, 255), 0))
+				dst.Pix[pos+3] = uint8(math.Max(math.Min(a, 255), 0))
 			}
 		}
 	})
