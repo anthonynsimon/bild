@@ -488,3 +488,24 @@ func TestSharpen(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkMedian1(b *testing.B) {
+	img := image.NewRGBA(image.Rect(0, 0, 256, 256))
+	for n := 0; n < b.N; n++ {
+		Median(img, 1)
+	}
+}
+
+func BenchmarkMedian4(b *testing.B) {
+	img := image.NewRGBA(image.Rect(0, 0, 256, 256))
+	for n := 0; n < b.N; n++ {
+		Median(img, 4)
+	}
+}
+
+func BenchmarkMedian8(b *testing.B) {
+	img := image.NewRGBA(image.Rect(0, 0, 256, 256))
+	for n := 0; n < b.N; n++ {
+		Median(img, 8)
+	}
+}
