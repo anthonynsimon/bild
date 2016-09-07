@@ -44,6 +44,8 @@ func Rank(c color.RGBA) float64 {
 // RGBAToString returns a string representation of the Hex values contained in an image.RGBA.
 func RGBAToString(img *image.RGBA) string {
 	var result string
+	result += fmt.Sprintf("\nBounds: %v", img.Bounds())
+	result += fmt.Sprintf("\nStride: %v", img.Stride)
 	for y := 0; y < img.Bounds().Dy(); y++ {
 		result += "\n"
 		for x := 0; x < img.Bounds().Dx(); x++ {

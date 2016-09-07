@@ -89,7 +89,7 @@ func Sepia(img image.Image) *image.RGBA {
 // EdgeDetection returns a copy of the image with its edges highlighted.
 func EdgeDetection(src image.Image, radius float64) *image.RGBA {
 	if radius <= 0 {
-		return clone.AsRGBA(src)
+		return image.NewRGBA(src.Bounds())
 	}
 
 	length := int(math.Ceil(2*radius + 1))
@@ -105,7 +105,7 @@ func EdgeDetection(src image.Image, radius float64) *image.RGBA {
 
 		}
 	}
-	return convolution.Convolve(src, k, &convolution.Options{Bias: 0, Wrap: false, CarryAlpha: true})
+	return convolution.Convolve(src, k, &convolution.Options{Bias: 0, Wrap: false, KeepAlpha: false})
 }
 
 // Emboss returns a copy of the image in which each pixel has been
@@ -121,7 +121,7 @@ func Emboss(src image.Image) *image.RGBA {
 		Height: 3,
 	}
 
-	return convolution.Convolve(src, &k, &convolution.Options{Bias: 128, Wrap: false, CarryAlpha: true})
+	return convolution.Convolve(src, &k, &convolution.Options{Bias: 128, Wrap: false, KeepAlpha: true})
 }
 
 // Sharpen returns a sharpened copy of the image by detecting its edges and adding it to the original.
@@ -136,7 +136,7 @@ func Sharpen(src image.Image) *image.RGBA {
 		Height: 3,
 	}
 
-	return convolution.Convolve(src, &k, &convolution.Options{Bias: 0, Wrap: false, CarryAlpha: true})
+	return convolution.Convolve(src, &k, &convolution.Options{Bias: 0, Wrap: false})
 }
 
 // Sobel returns an image emphasising edges using an approximation to the Sobel–Feldman operator.
@@ -162,8 +162,8 @@ func Sobel(src image.Image) *image.RGBA {
 		Height: 3,
 	}
 
-	vSobel := convolution.Convolve(src, &vk, &convolution.Options{Bias: 0, Wrap: false, CarryAlpha: true})
-	hSobel := convolution.Convolve(src, &hk, &convolution.Options{Bias: 0, Wrap: false, CarryAlpha: true})
+	vSobel := convolution.Convolve(src, &vk, &convolution.Options{Bias: 0, Wrap: false, KeepAlpha: true})
+	hSobel := convolution.Convolve(src, &hk, &convolution.Options{Bias: 0, Wrap: false, KeepAlpha: true})
 
 	return blend.Add(blend.Multiply(vSobel, vSobel), blend.Multiply(hSobel, hSobel))
 }
