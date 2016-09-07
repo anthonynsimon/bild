@@ -32,8 +32,14 @@ func Convolve(img image.Image, k Matrix, o *Options) *image.RGBA {
 		bias = o.Bias
 	}
 
-	radiusX := k.MaxX() / 2
-	radiusY := k.MaxY() / 2
+	return execute(img, k, bias, wrap)
+}
+
+func execute(img image.Image, k Matrix, bias float64, wrap bool) *image.RGBA {
+	lenX := k.MaxX()
+	lenY := k.MaxY()
+	radiusX := lenX / 2
+	radiusY := lenY / 2
 
 	// Pad the source image, basically pre-computing the pixels outside of image bounds
 	var src *image.RGBA
@@ -43,29 +49,10 @@ func Convolve(img image.Image, k Matrix, o *Options) *image.RGBA {
 		src = clone.Pad(img, radiusX, radiusY, clone.EdgeExtend)
 	}
 
-	// Run the convolution
-	result := execute(src, k, bias)
-
-	// Remove the padding
-	bounds := result.Bounds()
-	bounds.Max.X -= radiusX
-	bounds.Min.X += radiusX
-	bounds.Max.Y -= radiusY
-	bounds.Min.Y += radiusY
-
-	return result.SubImage(bounds).(*image.RGBA)
-}
-
-func execute(src *image.RGBA, k Matrix, bias float64) *image.RGBA {
-	lenX := k.MaxX()
-	lenY := k.MaxY()
-	radiusX := lenX / 2
-	radiusY := lenY / 2
-
 	// src bounds now includes padded pixels
 	srcBounds := src.Bounds()
 	w, h := srcBounds.Dx(), srcBounds.Dy()
-	dst := image.NewRGBA(srcBounds)
+	dst := image.NewRGBA(img.Bounds())
 
 	parallel.Line(h-lenY, func(start, end int) {
 		// Correct range so we don't iterate over the padded pixels on the main loop
@@ -81,7 +68,7 @@ func execute(src *image.RGBA, k Matrix, bias float64) *image.RGBA {
 						ix := x - radiusX + kx
 
 						kvalue := k.At(kx, ky)
-						ipos := iy*dst.Stride + ix*4
+						ipos := iy*src.Stride + ix*4
 						r += float64(src.Pix[ipos+0]) * kvalue
 						g += float64(src.Pix[ipos+1]) * kvalue
 						b += float64(src.Pix[ipos+2]) * kvalue
@@ -90,7 +77,7 @@ func execute(src *image.RGBA, k Matrix, bias float64) *image.RGBA {
 				}
 
 				// Map x and y indicies to non-padded range
-				pos := y*dst.Stride + x*4
+				pos := (y-radiusY)*dst.Stride + (x-radiusX)*4
 
 				dst.Pix[pos+0] = uint8(math.Max(math.Min(r+bias, 255), 0))
 				dst.Pix[pos+1] = uint8(math.Max(math.Min(g+bias, 255), 0))
