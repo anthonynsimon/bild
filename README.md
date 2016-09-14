@@ -283,6 +283,12 @@ func main() {
 
 ![example](https://anthonynsimon.github.io/projects/bild/shearv.jpg) 
 
+### Translate
+	result := transform.Translate(img, 80, 0)
+
+![example](https://anthonynsimon.github.io/projects/bild/translate.jpg) 
+
+
 ## License
 
 This project is licensed under the MIT license. Please read the LICENSE file.
