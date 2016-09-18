@@ -11,12 +11,7 @@ type RGBAF64 struct {
 // NewRGBAF64 returns a new RGBAF64 color based on the provided uint8 values.
 // uint8 value 0 maps to 0, 128 to 0.5 and 255 to 1.0.
 func NewRGBAF64(r, g, b, a uint8) RGBAF64 {
-	outR := float64(r) / 255
-	outG := float64(g) / 255
-	outB := float64(b) / 255
-	outA := float64(a) / 255
-
-	return RGBAF64{outR, outG, outB, outA}
+	return RGBAF64{float64(r) / 255, float64(g) / 255, float64(b) / 255, float64(a) / 255}
 }
 
 // Clamp limits the channel values of the RGBAF64 color to the range 0.0 to 1.0.
