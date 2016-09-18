@@ -292,7 +292,7 @@ func main() {
 ## Paint
     import "github.com/anthonynsimon/bild/paint"
 
-### FloodFill
+### Flood Fill
     // Fuzz is the percentage of maximum color distance that is tolerated
 	result := paint.FloodFill(img, image.Point{240, 0}, color.RGBA{255, 0, 0, 255}, 15)
 
