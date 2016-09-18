@@ -293,8 +293,11 @@ func main() {
     import "github.com/anthonynsimon/bild/paint"
 
 ### FloodFill
-    // Fuzz is a percentage of maximum color distance that is tolerated
-    result, err := paint.FloodFill(img, image.Point{0,0}, color.RGBA{ 255, 0 , 255, 255} , 10)
+    // Fuzz is the percentage of maximum color distance that is tolerated
+	result := paint.FloodFill(img, image.Point{240, 0}, color.RGBA{255, 0, 0, 255}, 15)
+
+![example](https://anthonynsimon.github.io/projects/bild/floodfill.jpg) 
+
 
 ## License
 
