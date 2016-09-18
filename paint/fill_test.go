@@ -1,10 +1,11 @@
 package paint
 
 import (
-	"github.com/anthonynsimon/bild/util"
 	"image"
 	"image/color"
 	"testing"
+
+	"github.com/anthonynsimon/bild/util"
 )
 
 func TestFloodFill(t *testing.T) {
@@ -77,14 +78,5 @@ func BenchmarkFloodFill(b *testing.B) {
 
 	for n := 0; n < b.N; n++ {
 		FloodFill(img, image.Point{0, 0}, color.RGBA{128, 0, 128, 128}, 10)
-	}
-}
-
-func BenchmarkFloodFillNoSkip(b *testing.B) {
-
-	img := image.NewRGBA(image.Rect(0, 0, 500, 500))
-
-	for n := 0; n < b.N; n++ {
-		floodFillNoSkip(img, image.Point{0, 0}, color.RGBA{128, 0, 128, 128}, 10)
 	}
 }
