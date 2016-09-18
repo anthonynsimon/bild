@@ -42,9 +42,9 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, fuzz float64) *im
 	matchColor := color.NRGBAModel.Convert(im.At(sp.X, sp.Y)).(color.NRGBA)
 
 	st.Push(fillPoint{sp.X, sp.Y, true, true, 0, 0})
-	pointsRemaining := st.Len() > 0
 
-	for pointsRemaining {
+	// loop until there are no more points remaining
+	for st.Len() > 0 {
 		point = st.Pop().(fillPoint)
 		pixOffset := im.PixOffset(point.X, point.Y)
 
@@ -133,10 +133,7 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, fuzz float64) *im
 					}
 				}
 			}
-
 		}
-
-		pointsRemaining = st.Len() > 0
 	}
 
 	return im
