@@ -246,6 +246,16 @@ func main() {
 ![example](https://anthonynsimon.github.io/projects/bild/flipv.jpg) 
 
 
+## Paint
+    import "github.com/anthonynsimon/bild/paint"
+
+### Flood Fill
+    // Fuzz is the percentage of maximum color distance that is tolerated
+	result := paint.FloodFill(img, image.Point{240, 0}, color.RGBA{255, 0, 0, 255}, 15)
+
+![example](https://anthonynsimon.github.io/projects/bild/floodfill.jpg) 
+
+
 ### Resize Resampling Filters
     result := transform.Resize(img, 280, 280, transform.Linear)
 
@@ -287,16 +297,6 @@ func main() {
 	result := transform.Translate(img, 80, 0)
 
 ![example](https://anthonynsimon.github.io/projects/bild/translate.jpg) 
-
-
-## Paint
-    import "github.com/anthonynsimon/bild/paint"
-
-### Flood Fill
-    // Fuzz is the percentage of maximum color distance that is tolerated
-	result := paint.FloodFill(img, image.Point{240, 0}, color.RGBA{255, 0, 0, 255}, 15)
-
-![example](https://anthonynsimon.github.io/projects/bild/floodfill.jpg) 
 
 
 ## License
