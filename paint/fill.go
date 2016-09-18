@@ -1,11 +1,12 @@
 package paint
 
 import (
-	"github.com/anthonynsimon/bild/clone"
-	"github.com/anthonynsimon/bild/util"
 	"image"
 	"image/color"
 	"math"
+
+	"github.com/anthonynsimon/bild/clone"
+	"github.com/anthonynsimon/bild/util"
 )
 
 const (
@@ -20,10 +21,10 @@ type fillPoint struct {
 	PreviousFillEdgeRight int
 }
 
-//FloodFill fills a area of the image with a provided color and returns the new image
-//Parameter sp is the starting point of the fill
-//Parameter c is the fill color
-//Parameter fuzz is the percentage of maximum color distance tolerated when flooding the area
+// FloodFill fills a area of the image with a provided color and returns the new image.
+// Parameter sp is the starting point of the fill.
+// Parameter c is the fill color.
+// Parameter fuzz is the percentage of maximum color distance tolerated when flooding the area.
 func FloodFill(img image.Image, sp image.Point, c color.Color, fuzz float64) *image.RGBA {
 
 	var st util.Stack
@@ -52,7 +53,7 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, fuzz float64) *im
 			im.Set(point.X, point.Y, c)
 			visited[pixOffset] = true
 
-			//fill left side
+			// fill left side
 			xpos := point.X
 			for {
 				xpos--
@@ -74,7 +75,7 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, fuzz float64) *im
 				leftFillEdge = 0
 			}
 
-			//fill right side
+			// fill right side
 			xpos = point.X
 			for {
 				xpos++
@@ -95,11 +96,11 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, fuzz float64) *im
 				rightFillEdge = maxX
 			}
 
-			//skip every second check for pixels above and below
+			// skip every second check for pixels above and below
 			skipCheckAbove := false
 			skipCheckBelow := false
 
-			//check pixels above/below the fill line
+			// check pixels above/below the fill line
 			for x := leftFillEdge; x <= rightFillEdge; x++ {
 				outOfPreviousRange := x >= point.PreviousFillEdgeRight || x <= point.PreviousFillEdgeLeft
 
@@ -141,10 +142,10 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, fuzz float64) *im
 	return im
 }
 
-//floodFillNoSkip fills a area of the image with a provided color and returns the new image, without column skip optimization
-//Parameter sp is the starting point of the fill
-//Parameter c is the fill color
-//Parameter fuzz is the percentage of maximum color distance tolerated when flooding the area
+// floodFillNoSkip fills a area of the image with a provided color and returns the new image, without column skip optimization
+// Parameter sp is the starting point of the fill
+// Parameter c is the fill color
+// Parameter fuzz is the percentage of maximum color distance tolerated when flooding the area
 func floodFillNoSkip(img image.Image, sp image.Point, c color.Color, fuzz float64) *image.RGBA {
 
 	var st util.Stack
@@ -216,7 +217,7 @@ func floodFillNoSkip(img image.Image, sp image.Point, c color.Color, fuzz float6
 				rightFillEdge = maxX
 			}
 
-			//check pixels above/below the fill line
+			// check pixels above/below the fill line
 			for x := leftFillEdge; x <= rightFillEdge; x++ {
 				outOfPreviousRange := x >= point.PreviousFillEdgeRight || x <= point.PreviousFillEdgeLeft
 
