@@ -142,9 +142,9 @@ func isColorMatch(im *image.RGBA, pos int, mc color.NRGBA, tSquared float64) boo
 	bDiff := (float64(mc.B) - float64(c.B))
 	aDiff := (float64(mc.A) - float64(c.A))
 
-	distanceR := math.Max(math.Pow(rDiff, 2), math.Pow(rDiff-aDiff, 2))
-	distanceG := math.Max(math.Pow(gDiff, 2), math.Pow(gDiff-aDiff, 2))
-	distanceB := math.Max(math.Pow(bDiff, 2), math.Pow(bDiff-aDiff, 2))
+	distanceR := math.Max(rDiff*rDiff, math.Pow(rDiff-aDiff, 2))
+	distanceG := math.Max(gDiff*gDiff, math.Pow(gDiff-aDiff, 2))
+	distanceB := math.Max(bDiff*bDiff, math.Pow(bDiff-aDiff, 2))
 	distance := distanceR + distanceG + distanceB
 
 	if distance > tSquared {
