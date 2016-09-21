@@ -9,10 +9,6 @@ import (
 	"github.com/anthonynsimon/bild/util"
 )
 
-const (
-	maxDistance = 510.0
-)
-
 type fillPoint struct {
 	X, Y                  int
 	MarkedFromBelow       bool
