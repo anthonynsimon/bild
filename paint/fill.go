@@ -1,3 +1,4 @@
+/*Package paint provides functions to edit group of pixels on an image.*/
 package paint
 
 import (
