@@ -23,7 +23,6 @@ type fillPoint struct {
 // Parameter t is the tolerance and is of the range 0 to 255. It represents the max amount of
 // difference between colors for them to be considered similar.
 func FloodFill(img image.Image, sp image.Point, c color.Color, t uint8) *image.RGBA {
-
 	var st util.Stack
 	var point fillPoint
 	visited := make(map[int]bool)
@@ -46,7 +45,6 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, t uint8) *image.R
 		pixOffset := im.PixOffset(point.X, point.Y)
 
 		if !visited[pixOffset] {
-
 			im.Set(point.X, point.Y, c)
 			visited[pixOffset] = true
 
@@ -107,7 +105,7 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, t uint8) *image.R
 					if point.MarkedFromBelow == true || outOfPreviousRange {
 						if point.Y > 0 {
 							pixOffset = im.PixOffset(x, point.Y-1)
-							if false == visited[pixOffset] && isColorMatch(im, pixOffset, matchColor, tSquared) {
+							if !visited[pixOffset] && isColorMatch(im, pixOffset, matchColor, tSquared) {
 								skipCheckBelow = true
 								st.Push(fillPoint{x, (point.Y - 1), true, false, leftFillEdge, rightFillEdge})
 							}
@@ -122,7 +120,7 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, t uint8) *image.R
 						if point.Y < maxY {
 
 							pixOffset = im.PixOffset(x, point.Y+1)
-							if false == visited[pixOffset] && isColorMatch(im, pixOffset, matchColor, tSquared) {
+							if !visited[pixOffset] && isColorMatch(im, pixOffset, matchColor, tSquared) {
 								skipCheckAbove = true
 								st.Push(fillPoint{x, (point.Y + 1), false, true, leftFillEdge, rightFillEdge})
 							}
