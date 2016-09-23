@@ -8,6 +8,7 @@ import (
 
 	"github.com/anthonynsimon/bild/adjust"
 	"github.com/anthonynsimon/bild/blend"
+	"github.com/anthonynsimon/bild/blur"
 	"github.com/anthonynsimon/bild/clone"
 	"github.com/anthonynsimon/bild/convolution"
 	"github.com/anthonynsimon/bild/math/f64"
@@ -137,6 +138,51 @@ func Sharpen(src image.Image) *image.RGBA {
 	}
 
 	return convolution.Convolve(src, &k, &convolution.Options{Bias: 0, Wrap: false})
+}
+
+// UnsharpMask returns a copy of the image with its high-frecuency components amplified.
+// Parameter radius corresponds to the radius to be samples per pixel.
+// Parameter amount is the normalized strength of the effect. A value of 0.0 will leave
+// the image untouched and a value of 1.0 will fully apply the unsharp mask.
+func UnsharpMask(img image.Image, radius, amount float64) *image.RGBA {
+	amount = f64.Clamp(amount, 0, 10)
+
+	blurred := blur.Gaussian(img, 5*radius) // scale radius by matching factor
+
+	bounds := img.Bounds()
+	src := clone.AsRGBA(img)
+	dst := image.NewRGBA(bounds)
+	w, h := bounds.Dx(), bounds.Dy()
+
+	parallel.Line(h, func(start, end int) {
+		for y := start; y < end; y++ {
+			for x := 0; x < w; x++ {
+				pos := y*dst.Stride + x*4
+
+				r := float64(src.Pix[pos+0])
+				g := float64(src.Pix[pos+1])
+				b := float64(src.Pix[pos+2])
+				a := float64(src.Pix[pos+3])
+
+				rBlur := float64(blurred.Pix[pos+0])
+				gBlur := float64(blurred.Pix[pos+1])
+				bBlur := float64(blurred.Pix[pos+2])
+				aBlur := float64(blurred.Pix[pos+3])
+
+				r = r + (r-rBlur)*amount
+				g = g + (g-gBlur)*amount
+				b = b + (b-bBlur)*amount
+				a = a + (a-aBlur)*amount
+
+				dst.Pix[pos+0] = uint8(f64.Clamp(r, 0, 255))
+				dst.Pix[pos+1] = uint8(f64.Clamp(g, 0, 255))
+				dst.Pix[pos+2] = uint8(f64.Clamp(b, 0, 255))
+				dst.Pix[pos+3] = uint8(f64.Clamp(a, 0, 255))
+			}
+		}
+	})
+
+	return dst
 }
 
 // Sobel returns an image emphasising edges using an approximation to the Sobel–Feldman operator.
