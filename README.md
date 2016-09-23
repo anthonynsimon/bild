@@ -185,6 +185,11 @@ func main() {
 
 ![example](https://anthonynsimon.github.io/projects/bild/sobel.jpg)  
 
+### Unsharp Mask
+	result := effect.UnsharpMask(img, 0.6, 1.2)
+
+![example](https://anthonynsimon.github.io/projects/bild/unsharpmask.jpg)  
+
 
 ## Histogram
     import "github.com/anthonynsimon/bild/histogram"
