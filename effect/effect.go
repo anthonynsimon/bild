@@ -8,6 +8,7 @@ import (
 
 	"github.com/anthonynsimon/bild/adjust"
 	"github.com/anthonynsimon/bild/blend"
+	"github.com/anthonynsimon/bild/blur"
 	"github.com/anthonynsimon/bild/clone"
 	"github.com/anthonynsimon/bild/convolution"
 	"github.com/anthonynsimon/bild/math/f64"
@@ -137,6 +138,45 @@ func Sharpen(src image.Image) *image.RGBA {
 	}
 
 	return convolution.Convolve(src, &k, &convolution.Options{Bias: 0, Wrap: false})
+}
+
+func UnsharpMask(img image.Image, radius float64) *image.RGBA {
+	blurred := blur.Gaussian(img, radius)
+
+	bounds := img.Bounds()
+	src := clone.AsRGBA(img)
+	dst := image.NewRGBA(bounds)
+	w, h := bounds.Dx(), bounds.Dy()
+
+	parallel.Line(h, func(start, end int) {
+		for y := start; y < end; y++ {
+			for x := 0; x < w; x++ {
+				pos := y*dst.Stride + x*4
+
+				r := float64(src.Pix[pos+0])
+				g := float64(src.Pix[pos+1])
+				b := float64(src.Pix[pos+2])
+				a := float64(src.Pix[pos+3])
+
+				rBlur := float64(blurred.Pix[pos+0])
+				gBlur := float64(blurred.Pix[pos+1])
+				bBlur := float64(blurred.Pix[pos+2])
+				aBlur := float64(blurred.Pix[pos+3])
+
+				r = 2*r - rBlur
+				g = 2*g - gBlur
+				b = 2*b - bBlur
+				a = 2*a - aBlur
+
+				dst.Pix[pos+0] = uint8(f64.Clamp(r, 0, 255))
+				dst.Pix[pos+1] = uint8(f64.Clamp(g, 0, 255))
+				dst.Pix[pos+2] = uint8(f64.Clamp(b, 0, 255))
+				dst.Pix[pos+3] = uint8(f64.Clamp(a, 0, 255))
+			}
+		}
+	})
+
+	return dst
 }
 
 // Sobel returns an image emphasising edges using an approximation to the Sobel–Feldman operator.
