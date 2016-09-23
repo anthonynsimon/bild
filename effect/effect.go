@@ -140,8 +140,10 @@ func Sharpen(src image.Image) *image.RGBA {
 	return convolution.Convolve(src, &k, &convolution.Options{Bias: 0, Wrap: false})
 }
 
-func UnsharpMask(img image.Image, radius float64) *image.RGBA {
-	blurred := blur.Gaussian(img, radius)
+func UnsharpMask(img image.Image, radius, amount float64) *image.RGBA {
+	amount = f64.Clamp(amount, 0, 1)
+
+	blurred := blur.Gaussian(img, 5*radius) // scale radius by matching factor
 
 	bounds := img.Bounds()
 	src := clone.AsRGBA(img)
@@ -163,10 +165,10 @@ func UnsharpMask(img image.Image, radius float64) *image.RGBA {
 				bBlur := float64(blurred.Pix[pos+2])
 				aBlur := float64(blurred.Pix[pos+3])
 
-				r = 2*r - rBlur
-				g = 2*g - gBlur
-				b = 2*b - bBlur
-				a = 2*a - aBlur
+				r = r + (r-rBlur)*amount
+				g = g + (g-gBlur)*amount
+				b = b + (b-bBlur)*amount
+				a = a + (a-aBlur)*amount
 
 				dst.Pix[pos+0] = uint8(f64.Clamp(r, 0, 255))
 				dst.Pix[pos+1] = uint8(f64.Clamp(g, 0, 255))
