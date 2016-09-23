@@ -140,8 +140,12 @@ func Sharpen(src image.Image) *image.RGBA {
 	return convolution.Convolve(src, &k, &convolution.Options{Bias: 0, Wrap: false})
 }
 
+// UnsharpMask returns a copy of the image with its high-frecuency components amplified.
+// Parameter radius corresponds to the radius to be samples per pixel.
+// Parameter amount is the normalized strength of the effect. A value of 0.0 will leave
+// the image untouched and a value of 1.0 will fully apply the unsharp mask.
 func UnsharpMask(img image.Image, radius, amount float64) *image.RGBA {
-	amount = f64.Clamp(amount, 0, 1)
+	amount = f64.Clamp(amount, 0, 10)
 
 	blurred := blur.Gaussian(img, 5*radius) // scale radius by matching factor
 
