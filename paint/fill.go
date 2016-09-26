@@ -136,12 +136,10 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, t uint8) *image.R
 }
 
 func isColorMatch(im *image.RGBA, pos int, mc color.NRGBA, tSquared float64) bool {
-	c := color.NRGBA{R: im.Pix[pos+0], G: im.Pix[pos+1], B: im.Pix[pos+2], A: im.Pix[pos+3]}
-
-	rDiff := (float64(mc.R) - float64(c.R))
-	gDiff := (float64(mc.G) - float64(c.G))
-	bDiff := (float64(mc.B) - float64(c.B))
-	aDiff := (float64(mc.A) - float64(c.A))
+	rDiff := float64(mc.R) - float64(im.Pix[pos+0])
+	gDiff := float64(mc.G) - float64(im.Pix[pos+1])
+	bDiff := float64(mc.B) - float64(im.Pix[pos+2])
+	aDiff := float64(mc.A) - float64(im.Pix[pos+3])
 
 	distanceR := math.Max(rDiff*rDiff, math.Pow(rDiff-aDiff, 2))
 	distanceG := math.Max(gDiff*gDiff, math.Pow(gDiff-aDiff, 2))
