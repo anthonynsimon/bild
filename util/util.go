@@ -8,7 +8,7 @@ import (
 )
 
 // SortRGBA sorts a slice of RGBA values.
-// Parameter min and max correspond to the start and end slice indicies
+// Parameter min and max correspond to the start and end slice indices
 // that determine the range to be sorted.
 func SortRGBA(data []color.RGBA, min, max int) {
 	if min > max {

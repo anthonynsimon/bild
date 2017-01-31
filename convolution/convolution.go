@@ -84,7 +84,7 @@ func execute(img image.Image, k Matrix, bias float64, wrap, keepAlpha bool) *ima
 						}
 					}
 
-					// Map x and y indicies to non-padded range
+					// Map x and y indices to non-padded range
 					pos := (y-radiusY)*dst.Stride + (x-radiusX)*4
 
 					dst.Pix[pos+0] = uint8(math.Max(math.Min(r+bias, 255), 0))
@@ -119,7 +119,7 @@ func execute(img image.Image, k Matrix, bias float64, wrap, keepAlpha bool) *ima
 						}
 					}
 
-					// Map x and y indicies to non-padded range
+					// Map x and y indices to non-padded range
 					pos := (y-radiusY)*dst.Stride + (x-radiusX)*4
 
 					dst.Pix[pos+0] = uint8(math.Max(math.Min(r+bias, 255), 0))
