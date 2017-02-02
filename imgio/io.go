@@ -9,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"golang.org/x/image/bmp"
 )
 
 // Format is used to identify the image encoding type
@@ -18,6 +20,7 @@ type Format int
 const (
 	JPEG = iota
 	PNG
+	BMP
 )
 
 // Open loads and decodes an image from a file and returns it.
@@ -47,7 +50,7 @@ func Open(filename string) (image.Image, error) {
 // Usage example:
 //		// Encode an image to a writer in PNG format,
 //		// returns an error if something went wrong
-//		err := Encode(outFile, img, bild.PNG)
+//		err := Encode(outFile, img, imgio.PNG)
 //
 func Encode(w io.Writer, img image.Image, format Format) error {
 	var err error
@@ -57,6 +60,8 @@ func Encode(w io.Writer, img image.Image, format Format) error {
 		err = png.Encode(w, img)
 	case JPEG:
 		err = jpeg.Encode(w, img, &jpeg.Options{Quality: 95})
+	case BMP:
+		err = bmp.Encode(w, img)
 	}
 
 	return err
@@ -77,6 +82,8 @@ func Save(filename string, img image.Image, format Format) error {
 		filename += ".png"
 	case JPEG:
 		filename += ".jpg"
+	case BMP:
+		filename += ".bmp"
 	}
 
 	f, err := os.Create(filename)
