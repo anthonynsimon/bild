@@ -47,7 +47,7 @@ func Grayscale(img image.Image) *image.Gray {
 				dstPos := y*dst.Stride + x
 
 				c := 0.3*float64(src.Pix[srcPos+0]) + 0.6*float64(src.Pix[srcPos+1]) + 0.1*float64(src.Pix[srcPos+2])
-				dst.Pix[dstPos] = uint8(c)
+				dst.Pix[dstPos] = uint8(c + 0.5)
 			}
 		}
 	})
