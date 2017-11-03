@@ -131,7 +131,7 @@ func TestGrayscale(t *testing.T) {
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 2,
 				Pix: []uint8{
-					0xb8, 0x7f,
+					0xb9, 0x7f,
 					0xa8, 0x99,
 				},
 			},
@@ -149,8 +149,26 @@ func TestGrayscale(t *testing.T) {
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 2,
 				Pix: []uint8{
-					0xaf, 0x7e,
+					0xaf, 0x7f,
 					0xbb, 0xb3,
+				},
+			},
+		},
+		{
+			value: &image.RGBA{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 8,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0xFF, 0x88, 0x88, 0x88, 0xFF,
+					0x88, 0x88, 0x88, 0x00, 0xFF, 0xFF, 0xFF, 0xFF,
+				},
+			},
+			expected: &image.Gray{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 2,
+				Pix: []uint8{
+					0x00, 0x88,
+					0x88, 0xFF,
 				},
 			},
 		},
