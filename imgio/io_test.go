@@ -3,23 +3,19 @@ package imgio
 import (
 	"bytes"
 	"image"
+	"strings"
 	"testing"
 )
 
-var encodeFormats = map[string]Format{
-	"png":  PNG,
-	"jpeg": JPEG,
-	"jpg":  JPEG,
-	"bmp":  BMP,
-}
-
 func TestEncode(t *testing.T) {
 	cases := []struct {
-		format Format
-		value  image.Image
+		format  string
+		encoder Encoder
+		value   image.Image
 	}{
 		{
-			format: PNG,
+			format:  "png",
+			encoder: PNGEncoder(),
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 3, 3),
 				Stride: 3 * 4,
@@ -31,7 +27,8 @@ func TestEncode(t *testing.T) {
 			},
 		},
 		{
-			format: JPEG,
+			format:  "jpg,jpeg",
+			encoder: JPEGEncoder(95),
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 3, 3),
 				Stride: 3 * 4,
@@ -43,7 +40,8 @@ func TestEncode(t *testing.T) {
 			},
 		},
 		{
-			format: BMP,
+			format:  "bmp",
+			encoder: BMPEncoder(),
 			value: &image.RGBA{
 				Rect:   image.Rect(0, 0, 3, 3),
 				Stride: 3 * 4,
@@ -58,13 +56,13 @@ func TestEncode(t *testing.T) {
 
 	for _, c := range cases {
 		buf := bytes.Buffer{}
-		Encode(&buf, c.value, c.format)
+		c.encoder(&buf, c.value)
 		_, outFormat, err := image.Decode(&buf)
 		if err != nil {
 			t.Error(err)
 		}
-		if encodeFormats[outFormat] != c.format {
-			t.Errorf("%s: expected: %#v, actual: %#v", "Encode", c.format, outFormat)
+		if !strings.Contains(c.format, outFormat) {
+			t.Errorf("%s: expected: %#v, actual: %#v", "Encoder", c.format, outFormat)
 		}
 	}
 }

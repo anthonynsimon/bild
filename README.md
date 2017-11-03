@@ -33,24 +33,25 @@ Notice the '...' at the end, this is to signify that you want all the packages o
 package main
 
 import (
-	"github.com/anthonynsimon/bild/effect"
-	"github.com/anthonynsimon/bild/imgio"
-	"github.com/anthonynsimon/bild/transform"
+    "github.com/anthonynsimon/bild/effect"
+    "github.com/anthonynsimon/bild/imgio"
+    "github.com/anthonynsimon/bild/transform"
 )
 
 func main() {
-	img, err := imgio.Open("filename.jpg")
-	if err != nil {
-		panic(err)
-	}
+    img, err := imgio.Open("filename.jpg")
+    if err != nil {
+        panic(err)
+    }
 
-	inverted := effect.Invert(img)
-	resized := transform.Resize(inverted, 800, 800, transform.Linear)
-	rotated := transform.Rotate(resized, 45, nil)
+    inverted := effect.Invert(img)
+    resized := transform.Resize(inverted, 800, 800, transform.Linear)
+    rotated := transform.Rotate(resized, 45, nil)
 
-	if err := imgio.Save("filename", rotated, imgio.PNG); err != nil {
-		panic(err)
-	}
+    // Or imgio.JPEGEncoder(95) as encoder for JPG with quality of 95%
+    if err := imgio.Save("filename.png", rotated, imgio.PNGEncoder()); err != nil {
+        panic(err)
+    }
 }
 
 ```
@@ -186,7 +187,7 @@ func main() {
 ![example](https://anthonynsimon.github.io/projects/bild/sobel.jpg)  
 
 ### Unsharp Mask
-	result := effect.UnsharpMask(img, 0.6, 1.2)
+    result := effect.UnsharpMask(img, 0.6, 1.2)
 
 ![example](https://anthonynsimon.github.io/projects/bild/unsharpmask.jpg)  
 
@@ -195,7 +196,7 @@ func main() {
     import "github.com/anthonynsimon/bild/histogram"
 
 ### RGBA Histogram
-	hist := histogram.NewRGBAHistogram(img)
+    hist := histogram.NewRGBAHistogram(img)
     result := hist.Image()
 
 ![example](https://anthonynsimon.github.io/projects/bild/histogram.png)  
@@ -205,19 +206,19 @@ func main() {
     import "github.com/anthonynsimon/bild/noise"
 
 ### Uniform colored
-	result := noise.Generate(280, 280, &noise.Options{Monochrome: false, NoiseFn: noise.Uniform})
+    result := noise.Generate(280, 280, &noise.Options{Monochrome: false, NoiseFn: noise.Uniform})
 
 ![example](https://anthonynsimon.github.io/projects/bild/noiseuniform.jpg)  
 
 
 ### Binary monochrome
-	result := noise.Generate(280, 280, &noise.Options{Monochrome: true, NoiseFn: noise.Binary})
+    result := noise.Generate(280, 280, &noise.Options{Monochrome: true, NoiseFn: noise.Binary})
 
 ![example](https://anthonynsimon.github.io/projects/bild/noisebinary.jpg)  
 
 
 ### Gaussian monochrome
-	result := noise.Generate(280, 280, &noise.Options{Monochrome: true, NoiseFn: noise.Gaussian})
+    result := noise.Generate(280, 280, &noise.Options{Monochrome: true, NoiseFn: noise.Gaussian})
 
 ![example](https://anthonynsimon.github.io/projects/bild/noisegaussian.jpg)  
 
@@ -227,7 +228,7 @@ func main() {
 
 ### Flood Fill
     // Fuzz is the percentage of maximum color distance that is tolerated
-	result := paint.FloodFill(img, image.Point{240, 0}, color.RGBA{255, 0, 0, 255}, 15)
+    result := paint.FloodFill(img, image.Point{240, 0}, color.RGBA{255, 0, 0, 255}, 15)
 
 ![example](https://anthonynsimon.github.io/projects/bild/floodfill.jpg) 
 
@@ -236,7 +237,7 @@ func main() {
     import "github.com/anthonynsimon/bild/segment"
 
 ### Threshold
-	result := segment.Threshold(img, 128)
+    result := segment.Threshold(img, 128)
 
 ![example](https://anthonynsimon.github.io/projects/bild/threshold.jpg)
 
@@ -299,7 +300,7 @@ func main() {
 ![example](https://anthonynsimon.github.io/projects/bild/shearv.jpg) 
 
 ### Translate
-	result := transform.Translate(img, 80, 0)
+    result := transform.Translate(img, 80, 0)
 
 ![example](https://anthonynsimon.github.io/projects/bild/translate.jpg) 
 
