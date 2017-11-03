@@ -48,7 +48,7 @@ func main() {
     resized := transform.Resize(inverted, 800, 800, transform.Linear)
     rotated := transform.Rotate(resized, 45, nil)
 
-// Or imgio.JPEGEncoder(95) as encoder for JPG with quality of 95%
+    // Or imgio.JPEGEncoder(95) as encoder for JPG with quality of 95%
     if err := imgio.Save("filename.png", rotated, imgio.PNGEncoder()); err != nil {
         panic(err)
     }
