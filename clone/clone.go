@@ -28,7 +28,7 @@ func AsRGBA(src image.Image) *image.RGBA {
 	return img
 }
 
-// Pad returns an RGBA copy of the src image paramter with its edges padded
+// Pad returns an RGBA copy of the src image parameter with its edges padded
 // using the supplied PadMethod.
 // Parameter padX and padY correspond to the amount of padding to be applied
 // on each side.
