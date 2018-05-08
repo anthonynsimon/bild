@@ -3,6 +3,7 @@
 ![bild logo](https://anthonynsimon.github.io/projects/bild/logo.png)  
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ea2b6aba032458e98fb22b7c292d92c)](https://app.codacy.com/app/anthonynajjars/bild?utm_source=github.com&utm_medium=referral&utm_content=anthonynsimon/bild&utm_campaign=badger)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ea2b6aba032458e98fb22b7c292d92c)](https://app.codacy.com/app/anthonynajjars/bild?utm_source=github.com&utm_medium=referral&utm_content=anthonynsimon/bild&utm_campaign=badger)
 [![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/anthonynsimon/bild/blob/master/LICENSE)
 [![GoDoc](https://godoc.org/github.com/anthonynsimon/bild?status.svg)](https://godoc.org/github.com/anthonynsimon/bild)
 [![Build Status](https://travis-ci.org/anthonynsimon/bild.svg?branch=master)](https://travis-ci.org/anthonynsimon/bild)
