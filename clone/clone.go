@@ -28,6 +28,14 @@ func AsRGBA(src image.Image) *image.RGBA {
 	return img
 }
 
+// AsGray returns an grayscale copy of the supplied image.
+func AsGray(src image.Image) *image.Gray {
+	bounds := src.Bounds()
+	img := image.NewGray(bounds)
+	draw.Draw(img, bounds, src, bounds.Min, draw.Src)
+	return img
+}
+
 // Pad returns an RGBA copy of the src image parameter with its edges padded
 // using the supplied PadMethod.
 // Parameter padX and padY correspond to the amount of padding to be applied
