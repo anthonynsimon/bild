@@ -12,8 +12,8 @@ func TestParallelize(t *testing.T) {
 			}
 		})
 
-		for i := range data {
-			if data[i] != true {
+		for _, d := range data {
+			if !d {
 				t.Errorf("Test parallelize failed. Failure at n = %v", n)
 			}
 		}
