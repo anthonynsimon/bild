@@ -27,6 +27,12 @@ func Threshold(img image.Image, level uint8) *image.Gray {
 			c := src.Pix[srcPos : srcPos+4]
 			r := util.Rank(color.RGBA{c[0], c[1], c[2], c[3]})
 
+			// transparent pixel is always white
+			if c[0] == 0 && c[1] == 0 && c[2] == 0 && c[3] == 0 {
+				dst.Pix[dstPos] = 0xFF
+				continue
+			}
+
 			if uint8(r) >= level {
 				dst.Pix[dstPos] = 0xFF
 			} else {
