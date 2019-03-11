@@ -154,6 +154,82 @@ func TestFloodFill(t *testing.T) {
 				},
 			},
 		},
+		{
+			tolerance:  0,
+			fillColor:  color.RGBA{0xAA, 0xAA, 0xAA, 0xAA},
+			startPoint: image.Point{2, 0},
+			value: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00,
+				},
+			},
+			expected: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00,
+				},
+			},
+		},
+		{
+			tolerance:  0,
+			fillColor:  color.RGBA{0xAA, 0xAA, 0xAA, 0xAA},
+			startPoint: image.Point{0, 2},
+			value: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00,
+				},
+			},
+			expected: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00,
+				},
+			},
+		},
+		{
+			tolerance:  0,
+			fillColor:  color.RGBA{0xAA, 0xAA, 0xAA, 0xAA},
+			startPoint: image.Point{-1, 0},
+			value: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00,
+				},
+			},
+			expected: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00,
+				},
+			},
+		},
+		{
+			tolerance:  0,
+			fillColor:  color.RGBA{0xAA, 0xAA, 0xAA, 0xAA},
+			startPoint: image.Point{0, -1},
+			value: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00,
+				},
+			},
+			expected: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00,
+				},
+			},
+		},
 	}
 
 	for _, c := range cases {

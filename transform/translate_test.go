@@ -32,8 +32,8 @@ func TestTranslate(t *testing.T) {
 		},
 		{
 			name: "empty no translation",
-			dx:   1,
-			dy:   1,
+			dx:   0,
+			dy:   0,
 			img: &image.RGBA{
 				Stride: 0,
 				Rect:   image.Rect(0, 0, 0, 0),
@@ -43,6 +43,27 @@ func TestTranslate(t *testing.T) {
 				Stride: 0,
 				Rect:   image.Rect(0, 0, 0, 0),
 				Pix:    []uint8{},
+			},
+		},
+		{
+			name: "no translation",
+			dx:   0,
+			dy:   0,
+			img: &image.RGBA{
+				Stride: 2 * 4,
+				Rect:   image.Rect(0, 0, 2, 2),
+				Pix: []uint8{
+					0xFF, 0xFF, 0xFF, 0xFF, 0x40, 0x40, 0x40, 0xFF,
+					0x80, 0x80, 0x80, 0xFF, 0x20, 0x20, 0x20, 0xFF,
+				},
+			},
+			expected: &image.RGBA{
+				Stride: 2 * 4,
+				Rect:   image.Rect(0, 0, 2, 2),
+				Pix: []uint8{
+					0xFF, 0xFF, 0xFF, 0xFF, 0x40, 0x40, 0x40, 0xFF,
+					0x80, 0x80, 0x80, 0xFF, 0x20, 0x20, 0x20, 0xFF,
+				},
 			},
 		},
 		{

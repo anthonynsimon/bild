@@ -284,6 +284,57 @@ func TestRGBAImageEqual(t *testing.T) {
 			},
 			expected: false,
 		},
+		{
+			a: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00,
+				},
+			},
+			b: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0xAA, 0x00, 0x00, 0x00,
+				},
+			},
+			expected: false,
+		},
+		{
+			a: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00,
+				},
+			},
+			b: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0xAA, 0x00,
+				},
+			},
+			expected: false,
+		},
+		{
+			a: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0x00,
+				},
+			},
+			b: &image.RGBA{
+				Rect:   image.Rect(0, 0, 1, 1),
+				Stride: 1 * 4,
+				Pix: []uint8{
+					0x00, 0x00, 0x00, 0xAA,
+				},
+			},
+			expected: false,
+		},
 	}
 
 	for _, c := range cases {
