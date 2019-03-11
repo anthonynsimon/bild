@@ -78,7 +78,7 @@ func (h *Histogram) Image() *image.Gray {
 	}
 
 	for x := 0; x < dstW; x++ {
-		value := ((int(h.Bins[x]) << 16 / max) * dstH) >> 16
+		value := ((h.Bins[x] << 16 / max) * dstH) >> 16
 		// Fill from the bottom up
 		for y := dstH - 1; y > dstH-value-1; y-- {
 			dst.Pix[y*dst.Stride+x] = 0xFF
@@ -169,9 +169,9 @@ func (h *RGBAHistogram) Image() *image.RGBA {
 	}
 
 	for x := 0; x < dstW; x++ {
-		binHeightR := ((int(h.R.Bins[x]) << 16 / maxR) * dstH) >> 16
-		binHeightG := ((int(h.G.Bins[x]) << 16 / maxG) * dstH) >> 16
-		binHeightB := ((int(h.B.Bins[x]) << 16 / maxB) * dstH) >> 16
+		binHeightR := ((h.R.Bins[x] << 16 / maxR) * dstH) >> 16
+		binHeightG := ((h.G.Bins[x] << 16 / maxG) * dstH) >> 16
+		binHeightB := ((h.B.Bins[x] << 16 / maxB) * dstH) >> 16
 		// Fill from the bottom up
 		for y := dstH - 1; y >= 0; y-- {
 			pos := y*dst.Stride + x*4

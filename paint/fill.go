@@ -103,7 +103,7 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, t uint8) *image.R
 				if skipCheckBelow {
 					skipCheckBelow = !skipCheckBelow
 				} else {
-					if point.MarkedFromBelow == true || outOfPreviousRange {
+					if point.MarkedFromBelow || outOfPreviousRange {
 						if point.Y > 0 {
 							pixOffset = im.PixOffset(x, point.Y-1)
 							if !visited[pixOffset] && isColorMatch(im, pixOffset, matchColor, tSquared) {
@@ -117,7 +117,7 @@ func FloodFill(img image.Image, sp image.Point, c color.Color, t uint8) *image.R
 				if skipCheckAbove {
 					skipCheckAbove = !skipCheckAbove
 				} else {
-					if point.MarkedFromAbove == true || outOfPreviousRange {
+					if point.MarkedFromAbove || outOfPreviousRange {
 						if point.Y < maxY {
 
 							pixOffset = im.PixOffset(x, point.Y+1)
@@ -146,9 +146,5 @@ func isColorMatch(im *image.RGBA, pos int, mc color.NRGBA, tSquared float64) boo
 	distanceB := math.Max(bDiff*bDiff, math.Pow(bDiff-aDiff, 2))
 	distance := distanceR + distanceG + distanceB
 
-	if distance > tSquared {
-		return false
-	}
-
-	return true
+	return distance <= tSquared
 }
