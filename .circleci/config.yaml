@@ -17,63 +17,63 @@ jobs:
   "test-go-1.4":
     docker:
       - image: circleci/golang:1.4
-    working_directory: /workspace
+    working_directory: /go/src/github.com/anthonynsimon/bild
     steps:
       - procedure: install-and-test
   
   "test-go-1.5":
     docker:
       - image: circleci/golang:1.5
-    working_directory: /workspace
+    working_directory: /go/src/github.com/anthonynsimon/bild
     steps:
       - procedure: install-and-test
   
   "test-go-1.6":
     docker:
       - image: circleci/golang:1.6
-    working_directory: /workspace
+    working_directory: /go/src/github.com/anthonynsimon/bild
     steps:
       - procedure: install-and-test
   
   "test-go-1.7":
     docker:
       - image: circleci/golang:1.7
-    working_directory: /workspace
+    working_directory: /go/src/github.com/anthonynsimon/bild
     steps:
       - procedure: install-and-test
   
   "test-go-1.8":
     docker:
       - image: circleci/golang:1.8
-    working_directory: /workspace
+    working_directory: /go/src/github.com/anthonynsimon/bild
     steps:
       - procedure: install-and-test
   
   "test-go-1.9":
     docker:
       - image: circleci/golang:1.9
-    working_directory: /workspace
+    working_directory: /go/src/github.com/anthonynsimon/bild
     steps:
       - procedure: install-and-test
   
   "test-go-1.10":
     docker:
       - image: circleci/golang:1.10
-    working_directory: /workspace
+    working_directory: /go/src/github.com/anthonynsimon/bild
     steps:
       - procedure: install-and-test
   
   "test-go-1.11":
     docker:
       - image: circleci/golang:1.11
-    working_directory: /workspace
+    working_directory: /go/src/github.com/anthonynsimon/bild
     steps:
       - procedure: install-and-test
   
   "test-go-1.12":
     docker:
       - image: circleci/golang:1.12
-    working_directory: /workspace
+    working_directory: /go/src/github.com/anthonynsimon/bild
     steps:
       - procedure: install-and-test
 
