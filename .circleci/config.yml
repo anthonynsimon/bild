@@ -1,97 +1,80 @@
 version: 2.1
 
-references:
-  cmd-install-and-test: &cmd-install-and-test
-    run:
-      name: Install deps and run checks
-      command: |
-        go get ./...
-        go vet ./...
-        go test -v ./...
+executors:
+  go:
+    parameters:
+      goversion:
+        type: string
+    docker:
+      - image: circleci/golang:<< parameters.goversion >>
+    working_directory: /go/src/github.com/anthonynsimon/bild
+    
+
+commands:
+  check:
+    steps:
+      - checkout
+      - run: |
+          go get ./...
+          go vet ./...
+          go test -v ./...
 
 jobs:
-  "test-go-1.4":
-    docker:
-      - image: "circleci/golang:1.4"
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    steps:
-      - checkout
-      - *cmd-install-and-test
+  test_go_1_4:
+    parameters: { goversion: 1.4 }
+    steps: [check]
+    
 
-  "test-go-1.5":
-    docker:
-      - image: "circleci/golang:1.5"
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    steps:
-      - checkout
-      - *cmd-install-and-test
+  test_go_1_5:
+    parameters: { goversion: 1.5 }
+    steps: [check]
+    
 
-  "test-go-1.6":
-    docker:
-      - image: "circleci/golang:1.6"
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    steps:
-      - checkout
-      - *cmd-install-and-test
+  test_go_1_6:
+    parameters: { goversion: 1.6 }
+    steps: [check]
+    
 
-  "test-go-1.7":
-    docker:
-      - image: "circleci/golang:1.7"
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    steps:
-      - checkout
-      - *cmd-install-and-test
+  test_go_1_7:
+    parameters: { goversion: 1.7 }
+    steps: [check]
+    
 
-  "test-go-1.8":
-    docker:
-      - image: "circleci/golang:1.8"
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    steps:
-      - checkout
-      - *cmd-install-and-test
+  test_go_1_8:
+    parameters: { goversion: 1.8 }
+    steps: [check]
+    
 
-  "test-go-1.9":
-    docker:
-      - image: "circleci/golang:1.9"
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    steps:
-      - checkout
-      - *cmd-install-and-test
+  test_go_1_9:
+    parameters: { goversion: 1.9 }
+    steps: [check]
+    
 
-  "test-go-1.10":
-    docker:
-      - image: "circleci/golang:1.10"
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    steps:
-      - checkout
-      - *cmd-install-and-test
+  test_go_1_10:
+    parameters: { goversion: 1.10 }
+    steps: [check]
+    
 
-  "test-go-1.11":
-    docker:
-      - image: "circleci/golang:1.11"
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    steps:
-      - checkout
-      - *cmd-install-and-test
+  test_go_1_11:
+    parameters: { goversion: 1.11 }
+    steps: [check]
+    
 
-  "test-go-1.12":
-    docker:
-      - image: "circleci/golang:1.12"
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    steps:
-      - checkout
-      - *cmd-install-and-test
+  test_go_1_12:
+    parameters: { goversion: 1.12 }
+    steps: [check]
+    
 
 workflows:
   version: 2
   test:
     jobs:
-      - "test-go-1.4"
-      - "test-go-1.5"
-      - "test-go-1.6"
-      - "test-go-1.7"
-      - "test-go-1.8"
-      - "test-go-1.9"
-      - "test-go-1.10"
-      - "test-go-1.11"
-      - "test-go-1.12"
+      - test_go_1_4
+      - test_go_1_5
+      - test_go_1_6
+      - test_go_1_7
+      - test_go_1_8
+      - test_go_1_9
+      - test_go_1_10
+      - test_go_1_11
+      - test_go_1_12
