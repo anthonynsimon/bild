@@ -1,7 +1,7 @@
 version: 2.1
 
 references:
-  install-and-test: &install-and-test
+  cmd-install-and-test: &cmd-install-and-test
     run:
       name: Install deps and run checks
       command: |
@@ -15,7 +15,8 @@ jobs:
       - image: "circleci/golang:${CIRCLE_JOB##test-go-}"
     working_directory: /go/src/github.com/anthonynsimon/bild
     steps:
-      - *install-and-test
+      - checkout
+      - *cmd-install-and-test
 
 workflows:
   version: 2
