@@ -116,7 +116,7 @@ func TestInvert(t *testing.T) {
 func TestGrayscale(t *testing.T) {
 	cases := []struct {
 		value    image.Image
-		expected *image.Gray
+		expected *image.RGBA
 	}{
 		{
 			value: &image.RGBA{
@@ -127,12 +127,12 @@ func TestGrayscale(t *testing.T) {
 					0x31, 0xFF, 0x0, 0xFF, 0x0, 0xFF, 0x0, 0xFF,
 				},
 			},
-			expected: &image.Gray{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 2,
 				Pix: []uint8{
-					0xb9, 0x7f,
-					0xa8, 0x99,
+					0xb9, 0xb9, 0xb9, 0x80, 0x7f, 0x7f, 0x7f, 0xff,
+					0xa8, 0xa8, 0xa8, 0xff, 0x99, 0x99, 0x99, 0xff,
 				},
 			},
 		},
@@ -145,12 +145,12 @@ func TestGrayscale(t *testing.T) {
 					0x71, 0xFF, 0x0, 0xFF, 0x0, 0xFF, 0xFF, 0xFF,
 				},
 			},
-			expected: &image.Gray{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 2,
 				Pix: []uint8{
-					0xaf, 0x7f,
-					0xbb, 0xb3,
+					0xaf, 0xaf, 0xaf, 0x80, 0x7f, 0x7f, 0x7f, 0xff,
+					0xbb, 0xbb, 0xbb, 0xff, 0xb3, 0xb3, 0xb3, 0xff,
 				},
 			},
 		},
@@ -163,12 +163,12 @@ func TestGrayscale(t *testing.T) {
 					0x88, 0x88, 0x88, 0x00, 0xFF, 0xFF, 0xFF, 0xFF,
 				},
 			},
-			expected: &image.Gray{
+			expected: &image.RGBA{
 				Rect:   image.Rect(0, 0, 2, 2),
 				Stride: 2,
 				Pix: []uint8{
-					0x00, 0x88,
-					0x88, 0xFF,
+					0x00, 0x00, 0x00, 0xFF, 0x88, 0x88, 0x88, 0xFF,
+					0x88, 0x88, 0x88, 0x00, 0xFF, 0xFF, 0xFF, 0xFF,
 				},
 			},
 		},
@@ -176,8 +176,67 @@ func TestGrayscale(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Grayscale(c.value)
-		if !util.GrayImageEqual(actual, c.expected) {
+		if !util.RGBAImageEqual(actual, c.expected) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "Grayscale", c.expected, actual)
+		}
+	}
+}
+
+func TestGrayscaleWithWeigths(t *testing.T) {
+	cases := []struct {
+		value    image.Image
+		expected *image.RGBA
+	}{
+		{
+			value: &image.RGBA{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 8,
+				Pix: []uint8{
+					0xAA, 0x00, 0x7B, 0x80,
+					0x7f, 0x00, 0x7f, 0xFF,
+					0x31, 0x00, 0x0, 0xFF,
+					0x0, 0x00, 0x0, 0xFF,
+				},
+			},
+			expected: &image.RGBA{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 2,
+				Pix: []uint8{
+					0x93, 0x93, 0x93, 0x80,
+					0x7f, 0x7f, 0x7f, 0xff,
+					0x19, 0x19, 0x19, 0xff,
+					0x0, 0x0, 0x0, 0xff,
+				},
+			},
+		},
+		{
+			value: &image.RGBA{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 8,
+				Pix: []uint8{
+					0xAA, 0xCA, 0x7B, 0x80,
+					0x7f, 0x7f, 0x7f, 0xFF,
+					0x31, 0xFF, 0x0, 0xFF,
+					0x0, 0xFF, 0x0, 0xFF,
+				},
+			},
+			expected: &image.RGBA{
+				Rect:   image.Rect(0, 0, 2, 2),
+				Stride: 2,
+				Pix: []uint8{
+					0x93, 0x93, 0x93, 0x80,
+					0x7f, 0x7f, 0x7f, 0xff,
+					0x19, 0x19, 0x19, 0xff,
+					0x0, 0x0, 0x0, 0xff,
+				},
+			},
+		},
+	}
+
+	for _, c := range cases {
+		actual := GrayscaleWithWeights(c.value, 0.5, 0.0, 0.5)
+		if !util.RGBAImageEqual(actual, c.expected) {
+			t.Errorf("%s: expected: %#v, actual: %#v", "GrayscaleWithWeigths", c.expected, actual)
 		}
 	}
 }
