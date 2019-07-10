@@ -1,0 +1,92 @@
+version: 2
+
+procedures:
+  install-and-test:
+      - checkout
+      - run:
+          name: Install deps
+          command: |
+            go get ./...
+      - run:
+          name: Run vet and test
+          command: |
+            go vet ./...
+            go test -v ./...
+
+jobs:
+  "test-go-1.4":
+    docker:
+      - image: circleci/golang:1.4
+    working_directory: /workspace
+    steps:
+      - procedure: install-and-test
+  
+  "test-go-1.5":
+    docker:
+      - image: circleci/golang:1.5
+    working_directory: /workspace
+    steps:
+      - procedure: install-and-test
+  
+  "test-go-1.6":
+    docker:
+      - image: circleci/golang:1.6
+    working_directory: /workspace
+    steps:
+      - procedure: install-and-test
+  
+  "test-go-1.7":
+    docker:
+      - image: circleci/golang:1.7
+    working_directory: /workspace
+    steps:
+      - procedure: install-and-test
+  
+  "test-go-1.8":
+    docker:
+      - image: circleci/golang:1.8
+    working_directory: /workspace
+    steps:
+      - procedure: install-and-test
+  
+  "test-go-1.9":
+    docker:
+      - image: circleci/golang:1.9
+    working_directory: /workspace
+    steps:
+      - procedure: install-and-test
+  
+  "test-go-1.10":
+    docker:
+      - image: circleci/golang:1.10
+    working_directory: /workspace
+    steps:
+      - procedure: install-and-test
+  
+  "test-go-1.11":
+    docker:
+      - image: circleci/golang:1.11
+    working_directory: /workspace
+    steps:
+      - procedure: install-and-test
+  
+  "test-go-1.12":
+    docker:
+      - image: circleci/golang:1.12
+    working_directory: /workspace
+    steps:
+      - procedure: install-and-test
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - "test-go-1.4"
+      - "test-go-1.5"
+      - "test-go-1.6"
+      - "test-go-1.7"
+      - "test-go-1.8"
+      - "test-go-1.9"
+      - "test-go-1.10"
+      - "test-go-1.11"
+      - "test-go-1.12"
