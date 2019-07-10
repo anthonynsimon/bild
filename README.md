@@ -18,7 +18,7 @@ http://godoc.org/github.com/anthonynsimon/bild
 
 ## Install
 
-bild requires Go version 1.7 or greater.
+bild requires Go version 1.11 or greater.
 ```bash
 go get -u github.com/anthonynsimon/bild/...
 ```

@@ -9,34 +9,6 @@ commands:
           command: make install check
 
 jobs:    
-  test_go_1_7:
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    docker:
-      - image: circleci/golang:1.7
-    steps:
-      - check
-    
-  test_go_1_8:
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    docker:
-      - image: circleci/golang:1.8
-    steps:
-      - check
-    
-  test_go_1_9:
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    docker:
-      - image: circleci/golang:1.9
-    steps:
-      - check
-    
-  test_go_1_10:
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    docker:
-      - image: circleci/golang:1.10
-    steps:
-      - check
-    
   test_go_1_11:
     working_directory: /go/src/github.com/anthonynsimon/bild
     docker:
@@ -56,9 +28,5 @@ workflows:
   version: 2
   test:
     jobs:
-      - test_go_1_7
-      - test_go_1_8
-      - test_go_1_9
-      - test_go_1_10
       - test_go_1_11
       - test_go_1_12
