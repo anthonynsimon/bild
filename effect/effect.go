@@ -30,6 +30,11 @@ func Invert(src image.Image) *image.RGBA {
 // Grayscale returns a copy of the image in Grayscale using the weights
 // 0.3R + 0.6G + 0.1B as a heuristic.
 func Grayscale(img image.Image) *image.Gray {
+	return GrayscaleWithWeights(img, 0.3, 0.6, 0.1)
+}
+
+// GrayscaleWithWeights returns a copy of the image in Grayscale using the given weights
+func GrayscaleWithWeights(img image.Image, r, g, b float64) *image.Gray {
 	src := clone.AsRGBA(img)
 	bounds := src.Bounds()
 	srcW, srcH := bounds.Dx(), bounds.Dy()
@@ -46,7 +51,7 @@ func Grayscale(img image.Image) *image.Gray {
 				srcPos := y*src.Stride + x*4
 				dstPos := y*dst.Stride + x
 
-				c := 0.3*float64(src.Pix[srcPos+0]) + 0.6*float64(src.Pix[srcPos+1]) + 0.1*float64(src.Pix[srcPos+2])
+				c := r*float64(src.Pix[srcPos+0]) + g*float64(src.Pix[srcPos+1]) + b*float64(src.Pix[srcPos+2])
 				dst.Pix[dstPos] = uint8(c + 0.5)
 			}
 		}
