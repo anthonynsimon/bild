@@ -6,10 +6,7 @@ commands:
       - checkout
       - run:
           name: 'Run checks'
-          command: |
-            go get ./...
-            go vet ./...
-            go test -v ./...
+          command: make install check
 
 jobs:    
   test_go_1_7:

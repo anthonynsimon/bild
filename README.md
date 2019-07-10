@@ -10,9 +10,6 @@
 A collection of parallel image processing algorithms in pure Go.
 
 The aim of this project is simplicity in use and development over high performance, but most algorithms are designed to be efficient and make use of parallelism when available. It is based on standard Go packages to reduce dependency use and development abstractions.
-
-**Notice:** This package is under heavy development and the API might change at any time until a 1.0 version is reached.
-
  
 ## Documentation
 
@@ -21,12 +18,10 @@ http://godoc.org/github.com/anthonynsimon/bild
 
 ## Install
 
-bild requires Go version 1.4 or greater.
-
-    go get -u github.com/anthonynsimon/bild/...
-
-Notice the '...' at the end, this is to signify that you want all the packages on the repo. In your code, simply import the specific package that you want to use (see example below).
-
+bild requires Go version 1.7 or greater.
+```bash
+go get -u github.com/anthonynsimon/bild/...
+```
 
 ## Basic example:
 ```go

@@ -111,7 +111,7 @@ func EdgeDetection(src image.Image, radius float64) *image.RGBA {
 
 		}
 	}
-	return convolution.Convolve(src, k, &convolution.Options{Bias: 0, Wrap: false, KeepAlpha: false})
+	return convolution.Convolve(src, k, &convolution.Options{Bias: 0, Wrap: false, KeepAlpha: true})
 }
 
 // Emboss returns a copy of the image in which each pixel has been
