@@ -1,15 +1,5 @@
 version: 2.1
 
-executors:
-  go:
-    parameters:
-      goversion:
-        type: string
-    docker:
-      - image: circleci/golang:<< parameters.goversion >>
-    working_directory: /go/src/github.com/anthonynsimon/bild
-    
-
 commands:
   check:
     steps:
@@ -21,47 +11,65 @@ commands:
 
 jobs:
   test_go_1_4:
-    parameters: { goversion: 1.4 }
+    working_directory: /go/src/github.com/anthonynsimon/bild
+    docker:
+      - image: circleci/golang:1.4
     steps: [check]
     
 
   test_go_1_5:
-    parameters: { goversion: 1.5 }
+    working_directory: /go/src/github.com/anthonynsimon/bild
+    docker:
+      - image: circleci/golang:1.5
     steps: [check]
     
 
   test_go_1_6:
-    parameters: { goversion: 1.6 }
+    working_directory: /go/src/github.com/anthonynsimon/bild
+    docker:
+      - image: circleci/golang:1.6
     steps: [check]
     
 
   test_go_1_7:
-    parameters: { goversion: 1.7 }
+    working_directory: /go/src/github.com/anthonynsimon/bild
+    docker:
+      - image: circleci/golang:1.7
     steps: [check]
     
 
   test_go_1_8:
-    parameters: { goversion: 1.8 }
+    working_directory: /go/src/github.com/anthonynsimon/bild
+    docker:
+      - image: circleci/golang:1.8
     steps: [check]
     
 
   test_go_1_9:
-    parameters: { goversion: 1.9 }
+    working_directory: /go/src/github.com/anthonynsimon/bild
+    docker:
+      - image: circleci/golang:1.9
     steps: [check]
     
 
   test_go_1_10:
-    parameters: { goversion: 1.10 }
+    working_directory: /go/src/github.com/anthonynsimon/bild
+    docker:
+      - image: circleci/golang:1.10
     steps: [check]
     
 
   test_go_1_11:
-    parameters: { goversion: 1.11 }
+    working_directory: /go/src/github.com/anthonynsimon/bild
+    docker:
+      - image: circleci/golang:1.11
     steps: [check]
     
 
   test_go_1_12:
-    parameters: { goversion: 1.12 }
+    working_directory: /go/src/github.com/anthonynsimon/bild
+    docker:
+      - image: circleci/golang:1.12
     steps: [check]
     
 
