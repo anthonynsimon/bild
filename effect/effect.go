@@ -33,7 +33,8 @@ func Grayscale(img image.Image) *image.Gray {
 	return GrayscaleWithWeights(img, 0.3, 0.6, 0.1)
 }
 
-// GrayscaleWithWeights returns a copy of the image in Grayscale using the given weights
+// GrayscaleWithWeights returns a copy of the image in Grayscale using the given weights.
+// The weights should be in the range 0.0 to 1.0 inclusive.
 func GrayscaleWithWeights(img image.Image, r, g, b float64) *image.Gray {
 	src := clone.AsRGBA(img)
 	bounds := src.Bounds()
