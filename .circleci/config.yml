@@ -15,7 +15,7 @@ jobs:
       - image: "circleci/golang:${CIRCLE_JOB##test-go-}"
     working_directory: /go/src/github.com/anthonynsimon/bild
     steps:
-      - procedure: *install-and-test
+      - *install-and-test
 
 workflows:
   version: 2
