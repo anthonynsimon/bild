@@ -14,11 +14,9 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	adjust := createAdjust()
-	rootCmd.AddCommand(adjust)
-
-	blend := createBlend()
-	rootCmd.AddCommand(blend)
+	rootCmd.AddCommand(createAdjust())
+	rootCmd.AddCommand(createBlend())
+	rootCmd.AddCommand(createBlur())
 }
 
 // Execute starts the cli's root command

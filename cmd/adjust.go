@@ -1,23 +1,117 @@
 package cmd
 
 import (
-	"fmt"
+	"image"
+
+	"github.com/anthonynsimon/bild/adjust"
 
 	"github.com/spf13/cobra"
 )
 
-func buildAdjustCommand(name string) *cobra.Command {
+func brightness() *cobra.Command {
 	var change float64
 
 	var cmd = &cobra.Command{
-		Use:     name,
-		Short:   fmt.Sprintf("adjust the relative %s of an image", name),
-		Args:    cobra.ExactArgs(1),
-		Example: fmt.Sprintf("%s --change 0.5 image.jpg", name),
+		Use:     "brightness",
+		Short:   "adjust the relative brightness of an image",
+		Args:    cobra.ExactArgs(2),
+		Example: "brightness --change 0.5 input.jpg output.jpg",
 		Run: func(cmd *cobra.Command, args []string) {
+			fin := args[0]
+			fout := args[1]
 
-		},
-	}
+			apply(fin, fout, func(img image.Image) (image.Image, error) {
+				return adjust.Brightness(img, change), nil
+			})
+		}}
+
+	cmd.Flags().Float64VarP(&change, "change", "c", 0, "adjust change")
+
+	return cmd
+}
+
+func contrast() *cobra.Command {
+	var change float64
+
+	var cmd = &cobra.Command{
+		Use:     "contrast",
+		Short:   "adjust the relative contrast of an image",
+		Args:    cobra.ExactArgs(2),
+		Example: "contrast --change 0.5 input.jpg output.jpg",
+		Run: func(cmd *cobra.Command, args []string) {
+			fin := args[0]
+			fout := args[1]
+
+			apply(fin, fout, func(img image.Image) (image.Image, error) {
+				return adjust.Contrast(img, change), nil
+			})
+		}}
+
+	cmd.Flags().Float64VarP(&change, "change", "c", 0, "adjust change")
+
+	return cmd
+}
+
+func gamma() *cobra.Command {
+	var change float64
+
+	var cmd = &cobra.Command{
+		Use:     "gamma",
+		Short:   "adjust the gamma of an image",
+		Args:    cobra.ExactArgs(2),
+		Example: "gamma --gamma 1.1 input.jpg output.jpg",
+		Run: func(cmd *cobra.Command, args []string) {
+			fin := args[0]
+			fout := args[1]
+
+			apply(fin, fout, func(img image.Image) (image.Image, error) {
+				return adjust.Gamma(img, change), nil
+			})
+		}}
+
+	cmd.Flags().Float64VarP(&change, "gamma", "g", 0, "set the gamma of the image")
+
+	return cmd
+}
+
+func hue() *cobra.Command {
+	var change int
+
+	var cmd = &cobra.Command{
+		Use:     "hue",
+		Short:   "adjust the hue of an image",
+		Args:    cobra.ExactArgs(2),
+		Example: "hue --change 170 input.jpg output.jpg",
+		Run: func(cmd *cobra.Command, args []string) {
+			fin := args[0]
+			fout := args[1]
+
+			apply(fin, fout, func(img image.Image) (image.Image, error) {
+				return adjust.Hue(img, change), nil
+			})
+		}}
+
+	cmd.Flags().IntVarP(&change, "change", "c", 0, "adjust change")
+
+	return cmd
+}
+
+func saturation() *cobra.Command {
+	var change float64
+
+	var cmd = &cobra.Command{
+		Use:     "saturation",
+		Short:   "adjust the saturation of an image",
+		Args:    cobra.ExactArgs(2),
+		Example: "saturation --change 170 input.jpg output.jpg",
+		Run: func(cmd *cobra.Command, args []string) {
+			fin := args[0]
+			fout := args[1]
+
+			apply(fin, fout, func(img image.Image) (image.Image, error) {
+				return adjust.Saturation(img, change), nil
+			})
+		}}
 
 	cmd.Flags().Float64VarP(&change, "change", "c", 0, "adjust change")
 
@@ -30,20 +124,11 @@ func createAdjust() *cobra.Command {
 		Short: "adjust basic image features like brightness or contrast",
 	}
 
-	brightnessCmd := buildAdjustCommand("brightness")
-	adjustCmd.AddCommand(brightnessCmd)
-
-	contrastCmd := buildAdjustCommand("contrast")
-	adjustCmd.AddCommand(contrastCmd)
-
-	gammaCmd := buildAdjustCommand("gamma")
-	adjustCmd.AddCommand(gammaCmd)
-
-	hueCmd := buildAdjustCommand("hue")
-	adjustCmd.AddCommand(hueCmd)
-
-	saturationCmd := buildAdjustCommand("saturation")
-	adjustCmd.AddCommand(saturationCmd)
+	adjustCmd.AddCommand(brightness())
+	adjustCmd.AddCommand(contrast())
+	adjustCmd.AddCommand(gamma())
+	adjustCmd.AddCommand(hue())
+	adjustCmd.AddCommand(saturation())
 
 	return adjustCmd
 }

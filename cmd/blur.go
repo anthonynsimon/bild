@@ -1,23 +1,52 @@
 package cmd
 
 import (
-	"fmt"
+	"image"
 
+	"github.com/anthonynsimon/bild/blur"
 	"github.com/spf13/cobra"
 )
 
-func buildBlurCommand(name string) *cobra.Command {
-	var strength float64
+func box() *cobra.Command {
+	var radius float64
 
 	var cmd = &cobra.Command{
-		Use:     name,
-		Args:    cobra.ExactArgs(1),
-		Example: fmt.Sprintf("%s --strength 0.5 image.jpg", name),
+		Use:     "box",
+		Short:   "apply box blur to an input image",
+		Args:    cobra.ExactArgs(2),
+		Example: "box --radius 0.5 input.jpg output.jpg",
 		Run: func(cmd *cobra.Command, args []string) {
-		},
-	}
+			fin := args[0]
+			fout := args[1]
 
-	cmd.Flags().Float64VarP(&strength, "strength", "s", 1.0, "blend mode strength")
+			apply(fin, fout, func(img image.Image) (image.Image, error) {
+				return blur.Box(img, radius), nil
+			})
+		}}
+
+	cmd.Flags().Float64VarP(&radius, "radius", "r", 0, "the blur's radius")
+
+	return cmd
+}
+
+func gaussian() *cobra.Command {
+	var radius float64
+
+	var cmd = &cobra.Command{
+		Use:     "gaussian",
+		Short:   "apply gaussian blur to an input image",
+		Args:    cobra.ExactArgs(2),
+		Example: "gaussian --radius 0.5 input.jpg output.jpg",
+		Run: func(cmd *cobra.Command, args []string) {
+			fin := args[0]
+			fout := args[1]
+
+			apply(fin, fout, func(img image.Image) (image.Image, error) {
+				return blur.Gaussian(img, radius), nil
+			})
+		}}
+
+	cmd.Flags().Float64VarP(&radius, "radius", "r", 0, "the blur's radius")
 
 	return cmd
 }
@@ -25,14 +54,11 @@ func buildBlurCommand(name string) *cobra.Command {
 func createBlur() *cobra.Command {
 	var blurCmd = &cobra.Command{
 		Use:   "blur",
-		Short: "blur an image using the specified algorithm",
+		Short: "blur an image using the specified method",
 	}
 
-	boxCmd := buildBlurCommand("box")
-	blurCmd.AddCommand(boxCmd)
-
-	gaussianCmd := buildBlurCommand("gaussian")
-	blurCmd.AddCommand(gaussianCmd)
+	blurCmd.AddCommand(box())
+	blurCmd.AddCommand(gaussian())
 
 	return blurCmd
 }
