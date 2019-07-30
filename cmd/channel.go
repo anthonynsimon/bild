@@ -15,7 +15,7 @@ func extractChannel() *cobra.Command {
 		Use:     "extract",
 		Short:   "extracts RGBA channels from an input image",
 		Args:    cobra.ExactArgs(2),
-		Example: "extract --channels rb input.jpg output.png",
+		Example: "extract --channels rba input.jpg output.png",
 		Run: func(cmd *cobra.Command, args []string) {
 			fin := args[0]
 			fout := args[1]
