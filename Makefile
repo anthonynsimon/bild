@@ -6,17 +6,20 @@ MAC_LDFLAGS = -ldflags "-X $(PKG)/cmd.Version=$(VERSION)"
 
 release: release-x64 release-mac
 
-release-bin:
-	GOOS=linux GOARCH=amd64 go build -o bild $(LDFLAGS)
+ensure-dist:
+	mkdir -p dist
 
-release-x64:
-	GOOS=linux GOARCH=amd64 go build -o bild $(LDFLAGS) && tar -czf bild_$(VERSION)_x64.tar.gz bild && rm bild
+release-bin: ensure-dist
+	GOOS=linux GOARCH=amd64 go build -o dist/bild $(LDFLAGS)
 
-release-x86:
-	GOOS=linux GOARCH=386 go build -o bild $(LDFLAGS) && tar -czf bild_$(VERSION)_x86.tar.gz bild && rm bild
+release-x64: ensure-dist
+	GOOS=linux GOARCH=amd64 go build -o dist/bild $(LDFLAGS) && tar -czf dist/bild_$(VERSION)_x64.tar.gz dist/bild && rm dist/bild
 
-release-mac:
-	go build $(MAC_LDFLAGS) -o bild && tar -czf bild_$(VERSION)_mac.tar.gz bild && rm bild
+release-x86: ensure-dist
+	GOOS=linux GOARCH=386 go build -o dist/bild $(LDFLAGS) && tar -czf dist/bild_$(VERSION)_x86.tar.gz dist/bild && rm dist/bild
+
+release-mac: ensure-dist
+	go build $(MAC_LDFLAGS) -o dist/bild && tar -czf dist/bild_$(VERSION)_mac.tar.gz dist/bild && rm dist/bild
 
 install:
 	go install $(MAC_LDFLAGS)

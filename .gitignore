@@ -37,3 +37,6 @@ _testmain.go
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# Dist
+dist
