@@ -7,6 +7,9 @@ import (
 	"github.com/anthonynsimon/bild/util"
 )
 
+// benchResult is used to avoid having the compiler optimize the benchmark code calls
+var benchResult interface{}
+
 func TestConvolve(t *testing.T) {
 	cases := []struct {
 		options  *Options
@@ -222,6 +225,6 @@ func benchConvolve(b *testing.B, w, h int, k *Kernel) {
 	img := image.NewRGBA(image.Rect(0, 0, w, h))
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
-		Convolve(img, k, &Options{Wrap: false})
+		benchResult = Convolve(img, k, &Options{Wrap: false})
 	}
 }

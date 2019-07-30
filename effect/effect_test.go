@@ -7,6 +7,9 @@ import (
 	"github.com/anthonynsimon/bild/util"
 )
 
+// benchResult is used to avoid having the compiler optimize the benchmark code calls
+var benchResult interface{}
+
 func TestSepia(t *testing.T) {
 	cases := []struct {
 		value    image.Image
@@ -854,20 +857,20 @@ func TestUnsharpMask(t *testing.T) {
 func BenchmarkMedian1(b *testing.B) {
 	img := image.NewRGBA(image.Rect(0, 0, 256, 256))
 	for n := 0; n < b.N; n++ {
-		Median(img, 1)
+		benchResult = Median(img, 1)
 	}
 }
 
 func BenchmarkMedian4(b *testing.B) {
 	img := image.NewRGBA(image.Rect(0, 0, 256, 256))
 	for n := 0; n < b.N; n++ {
-		Median(img, 4)
+		benchResult = Median(img, 4)
 	}
 }
 
 func BenchmarkMedian8(b *testing.B) {
 	img := image.NewRGBA(image.Rect(0, 0, 256, 256))
 	for n := 0; n < b.N; n++ {
-		Median(img, 8)
+		benchResult = Median(img, 8)
 	}
 }

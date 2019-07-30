@@ -1,5 +1,4 @@
 PKG = github.com/anthonynsimon/bild
-BENCHMARK = BenchmarkRAWInput
 VERSION ?= dev
 LDFLAGS = -ldflags "-X $(PKG)/cmd.Version=$(VERSION) -extldflags \"-static\""
 MAC_LDFLAGS = -ldflags "-X $(PKG)/cmd.Version=$(VERSION)"
@@ -21,7 +20,7 @@ fmt:
 	go fmt ./...
 
 bench: deps
-	go test ./... $(LDFLAGS) -v -run NOT_EXISTING -bench $(BENCHMARK) -benchtime 5s
+	go test $(LDFLAGS) -benchmem -bench=. -benchtime=5s ./...
 
 race: deps
 	go test ./... -v -race -timeout 15s

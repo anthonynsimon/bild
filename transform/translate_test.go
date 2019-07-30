@@ -7,6 +7,17 @@ import (
 	"github.com/anthonynsimon/bild/util"
 )
 
+// benchResult is used to avoid having the compiler optimize the benchmark code calls
+var benchResult interface{}
+
+func BenchmarkTranslate(b *testing.B) {
+	img := image.NewRGBA(image.Rect(0, 0, 1024, 1024))
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		benchResult = Translate(img, 512, 512)
+	}
+}
+
 func TestTranslate(t *testing.T) {
 	cases := []struct {
 		name     string

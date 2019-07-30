@@ -7,6 +7,9 @@ import (
 	"github.com/anthonynsimon/bild/histogram"
 )
 
+// benchResult is used to avoid having the compiler optimize the benchmark code calls
+var benchResult interface{}
+
 func TestMonochromeNoise(t *testing.T) {
 	cases := []struct {
 		w, h int
@@ -163,13 +166,13 @@ func TestBinaryNoise(t *testing.T) {
 
 func BenchmarkUniformMonochrome(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		Generate(512, 512, &Options{NoiseFn: Uniform, Monochrome: true})
+		benchResult = Generate(512, 512, &Options{NoiseFn: Uniform, Monochrome: true})
 	}
 }
 
 func BenchmarkUniformColored(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		Generate(512, 512, &Options{NoiseFn: Uniform, Monochrome: false})
+		benchResult = Generate(512, 512, &Options{NoiseFn: Uniform, Monochrome: false})
 	}
 }
 

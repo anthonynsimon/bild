@@ -347,6 +347,6 @@ func benchRotate(w, h int, rot float64, bench *testing.B) {
 	img := image.NewRGBA(image.Rect(0, 0, w, h))
 	bench.ResetTimer()
 	for i := 0; i < bench.N; i++ {
-		Rotate(img, rot, nil)
+		benchResult = Rotate(img, rot, nil)
 	}
 }

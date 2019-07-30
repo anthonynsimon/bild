@@ -830,6 +830,6 @@ func benchResize(b *testing.B, w, h int, scale float64, f ResampleFilter) {
 	img := image.NewRGBA(image.Rect(0, 0, w, h))
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
-		Resize(img, newW, newH, f)
+		benchResult = Resize(img, newW, newH, f)
 	}
 }
