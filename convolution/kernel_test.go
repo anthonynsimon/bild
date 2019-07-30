@@ -261,6 +261,86 @@ func TestKernelNormalized(t *testing.T) {
 	}
 }
 
+func TestKernelTransposed(t *testing.T) {
+    cases := []struct {
+        desc     string
+        kernel   *Kernel
+        expected *Kernel
+    }{
+        {
+            desc: "all zero",
+            kernel: &Kernel{[]float64{
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+            }, 3, 3},
+            expected: &Kernel{[]float64{
+                0, 0, 0,
+                0, 0, 0,
+                0, 0, 0,
+            }, 3, 3},
+        },
+        {
+            desc: "one element",
+            kernel: &Kernel{[]float64{
+                0, 0, 0,
+                0, 1, 0,
+                0, 0, 0,
+            }, 3, 3},
+            expected: &Kernel{[]float64{
+                0, 0, 0,
+                0, 1, 0,
+                0, 0, 0,
+            }, 3, 3},
+        },
+        {
+            desc: "diagonal",
+            kernel: &Kernel{[]float64{
+                1, 0, 0,
+                0, 1, 0,
+                0, 0, 1,
+            }, 3, 3},
+            expected: &Kernel{[]float64{
+                1, 0, 0,
+                0, 1, 0,
+                0, 0, 1,
+            }, 3, 3},
+        },
+        {
+            desc: "3x2",
+            kernel: &Kernel{[]float64{
+                1, 1, 1,
+                0, 1, 0,
+            }, 3, 2},
+            expected: &Kernel{[]float64{
+                1, 0,
+                1, 1,
+                1, 0,
+            }, 2, 3},
+        },
+        {
+            desc: "5x1",
+            kernel: &Kernel{[]float64{
+                1, 1, 1, 0, 1,
+            }, 5, 1},
+            expected: &Kernel{[]float64{
+                1,
+                1,
+                1,
+                0,
+                1,
+            }, 1, 5},
+        },
+    }
+
+    for i, c := range cases {
+        actual := c.kernel.Transposed()
+        if !kernelEqual(actual.(*Kernel), c.expected) {
+            t.Errorf("%s case #%d: expected: %#v, actual: %#v", "KernelTransposed "+c.desc, i, c.expected, actual)
+        }
+    }
+}
+
 func TestKernelString(t *testing.T) {
 	cases := []struct {
 		kernel   *Kernel

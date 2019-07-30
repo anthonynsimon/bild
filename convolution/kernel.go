@@ -15,6 +15,7 @@ type Matrix interface {
 	Normalized() Matrix
 	MaxX() int
 	MaxY() int
+    Transposed() Matrix
 }
 
 // NewKernel returns a kernel of the provided length.
@@ -61,6 +62,21 @@ func (k *Kernel) MaxY() int {
 // At returns the matrix value at position x, y.
 func (k *Kernel) At(x, y int) float64 {
 	return k.Matrix[y*k.Width+x]
+}
+
+// Transposed returns a new Kernel that has the columns as rows and vice versa
+func (k *Kernel) Transposed() Matrix {
+    w := k.Width;
+    h := k.Height;
+    nk := NewKernel(h, w)
+
+    for x := 0; x<w; x++ {
+        for y := 0; y<h; y++ {
+            nk.Matrix[x*h + y] = k.Matrix[y*w + x];
+        }
+    }
+
+    return nk
 }
 
 // String returns the string representation of the matrix.
