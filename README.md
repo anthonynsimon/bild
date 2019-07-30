@@ -350,10 +350,6 @@ func main() {
 ![example](https://anthonynsimon.com/projects/bild/translate.jpg) 
 
 
-## License
-
-This project is licensed under the MIT license. Please read the LICENSE file.
-
 ## Contribute
 
 Want to hack on the project? Any kind of contribution is welcome!  
@@ -367,3 +363,12 @@ Simply follow the next steps:
 
 In case you want to add a feature, please create a new issue and briefly explain what the feature would consist of. 
 For bugs or requests, before creating an issue please check if one has already been created for it.
+
+
+## Changelog
+
+Please see the [changelog](CHANGELOG.md) for more details.
+
+## License
+
+This project is licensed under the MIT license. Please read the LICENSE file.
