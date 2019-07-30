@@ -9,7 +9,11 @@
 
 A collection of parallel image processing algorithms in pure Go.
 
-The aim of this project is simplicity in use and development over high performance, but most algorithms are designed to be efficient and make use of parallelism when available. It is based on standard Go packages to reduce dependency use and development abstractions.
+The aim of this project is simplicity in use and development over absolute high performance, but most algorithms are designed to be efficient and make use of parallelism when available.
+
+It uses packages from the standard library whenever possible to reduce dependency use and development abstractions.
+
+All operations return image types from the standard library.
  
 ## Documentation
 
@@ -26,36 +30,36 @@ go get github.com/anthonynsimon/bild
 Or get the pre-compiled binaries for your platform on the [releases page](https://github.com/anthonynsimon/bild/releases)
 
 
-```bash
+```
+bild
 
-# Available commands
-$ bild
+A collection of parallel image processing algorithms in pure Go
 
-> A collection of parallel image processing algorithms in pure Go
-> 
-> Usage:
->   bild [command]
-> 
-> Available Commands:
->   adjust      adjust basic image features like brightness or contrast
->   blend       blend two images together
->   blur        blur an image using the specified method
->   channel     channel operations on images
->   effect      apply effects on images
->   help        Help about any command
->   histogram   histogram operations on images
->   imgio       i/o operations on images
->   noise       noise generators
->   segment     segment an image using the specified method
-> 
-> Flags:
->   -h, --help      help for bild
->       --version   version for bild
-> 
-> Use "bild [command] --help" for more information about a command.
+Usage:
+  bild [command]
 
-# For example
-$ bild effect median --radius 1.5 input.png output.png
+Available Commands:
+  adjust      adjust basic image features like brightness or contrast
+  blend       blend two images together
+  blur        blur an image using the specified method
+  channel     channel operations on images
+  effect      apply effects on images
+  help        Help about any command
+  histogram   histogram operations on images
+  imgio       i/o operations on images
+  noise       noise generators
+  segment     segment an image using the specified method
+
+Flags:
+  -h, --help      help for bild
+      --version   version for bild
+
+Use "bild [command] --help" for more information about a command.
+```
+
+For example, to apply a median effect with a radius of 1.5 on the image `input.png`, writing the result into a new file called `output.png`:
+```
+bild effect median --radius 1.5 input.png output.png
 ```
 
 
@@ -78,21 +82,21 @@ import (
 )
 
 func main() {
-    img, err := imgio.Open("filename.jpg")
+    img, err := imgio.Open("input.jpg")
     if err != nil {
-        panic(err)
+        fmt.Println(err)
+        return
     }
 
     inverted := effect.Invert(img)
     resized := transform.Resize(inverted, 800, 800, transform.Linear)
     rotated := transform.Rotate(resized, 45, nil)
 
-    // Or imgio.JPEGEncoder(95) as encoder for JPG with quality of 95%
-    if err := imgio.Save("filename.png", rotated, imgio.PNGEncoder()); err != nil {
-        panic(err)
+    if err := imgio.Save("output.png", rotated, imgio.PNGEncoder()); err != nil {
+        fmt.Println(err)
+        return
     }
 }
-
 ```
 
 # Output examples
