@@ -23,7 +23,49 @@ bild requires Go version 1.11 or greater.
 go get -u github.com/anthonynsimon/bild/...
 ```
 
-## Basic example:
+## CLI usage
+```bash
+# Download and compile from sources
+$ go get github.com/anthonynsimon/bild
+
+# See available commands
+$ bild
+> A collection of parallel image processing algorithms in pure Go
+> 
+> Usage:
+>   bild [command]
+> 
+> Available Commands:
+>   adjust      adjust basic image features like brightness or contrast
+>   blend       blend two images together
+>   blur        blur an image using the specified method
+>   channel     channel operations on images
+>   effect      apply effects on images
+>   help        Help about any command
+>   histogram   histogram operations on images
+>   imgio       i/o operations on images
+>   noise       noise generators
+>   segment     segment an image using the specified method
+> 
+> Flags:
+>   -h, --help      help for bild
+>       --version   version for bild
+> 
+> Use "bild [command] --help" for more information about a command.
+
+# Example command
+$ bild effect median --radius 1.5 input.png output.png
+```
+
+
+## Install
+
+bild requires Go version 1.11 or greater.
+```bash
+go get -u github.com/anthonynsimon/bild/...
+```
+
+## Basic package usage example:
 ```go
 package main
 
@@ -122,11 +164,13 @@ func main() {
 ## Channel
     import "github.com/anthonynsimon/bild/channel"
 
-### Extract Channel
+### Extract Channels
     result := channel.Extract(img, channel.Alpha)
 
-![example](https://anthonynsimon.com/projects/bild/extractchannel.jpg)  
+![example](https://anthonynsimon.com/projects/bild/extractchannel.jpg)
 
+### Extract Multiple Channels
+    result := channel.ExtractMultiple(img, channel.Red, channel.Alpha)
 
 ## Effect
     import "github.com/anthonynsimon/bild/effect"
