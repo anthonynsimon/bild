@@ -4,28 +4,31 @@ VERSION ?= dev
 LDFLAGS = -ldflags "-X $(PKG)/cmd.Version=$(VERSION) -extldflags \"-static\""
 MAC_LDFLAGS = -ldflags "-X $(PKG)/cmd.Version=$(VERSION)"
 
+deps:
+	go get ./...
+
 install:
 	go install $(MAC_LDFLAGS)
 
-test:
+test: deps
 	go test ./... -timeout 60s $(LDFLAGS) -v
 
-cover:
+cover: deps
 	go test ./... -race -v -timeout 15s -coverprofile=coverage.out
 	go tool cover -html=coverage.out
 
 fmt:
 	go fmt ./...
 
-bench:
+bench: deps
 	go test ./... $(LDFLAGS) -v -run NOT_EXISTING -bench $(BENCHMARK) -benchtime 5s
 
-race:
+race: deps
 	go test ./... -v -race -timeout 15s
 
 release: release-x64 release-mac
 
-ensure-dist:
+ensure-dist: deps
 	mkdir -p dist
 
 release-bin: ensure-dist
