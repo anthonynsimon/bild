@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Version of bild's CLI, set by the compiler on release
 var Version string
 
 var rootCmd = &cobra.Command{
