@@ -7,8 +7,6 @@ MAC_LDFLAGS = -ldflags "-X $(PKG)/cmd.Version=$(VERSION)"
 install:
 	go install $(MAC_LDFLAGS)
 
-check: lint test
-
 test:
 	go test ./... -timeout 60s $(LDFLAGS) -v
 
@@ -21,9 +19,6 @@ fmt:
 
 bench:
 	go test ./... $(LDFLAGS) -v -run NOT_EXISTING -bench $(BENCHMARK) -benchtime 5s
-
-lint:
-	golint $(PKG)
 
 race:
 	go test ./... -v -race -timeout 15s
