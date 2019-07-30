@@ -24,10 +24,10 @@ echo "Running tests"
 make test
 
 echo "Tagging and pushing release to upstream"
-# git tag $RELEASE -m "Release $RELEASE, please check the changelog for more details"
+git tag $RELEASE -m "Release $RELEASE, please check the changelog for more details"
 
 VERSION=RELEASE make release
 echo "Release binaries located in ./dist"
 
-# git push origin master --follow-tags
-echo "Successfully pushed release $RELEASE to upstream"
+git push origin master --follow-tags
+echo "Successfully pushed release $RELEASE to upstream, you might still need to uplaod the release assets"
