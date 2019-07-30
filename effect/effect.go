@@ -272,10 +272,10 @@ func spatialFilter(img image.Image, radius float64, pickerFn func(neighbors []co
 		return clone.AsRGBA(img)
 	}
 
-	padding := int(radius + 0.5)
+	padding := int(radius + 1.5)
 	src := clone.Pad(img, padding, padding, clone.EdgeExtend)
 
-	kernelSize := int(2*radius + 1 + 0.5)
+	kernelSize := int(2*radius + 1.5)
 
 	bounds := img.Bounds()
 	dst := image.NewRGBA(bounds)
