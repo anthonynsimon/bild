@@ -43,7 +43,7 @@ func extractChannel() *cobra.Command {
 			})
 		}}
 
-	cmd.Flags().StringVarP(&channels, "channels", "c", "rgb", "the channels to include in the histogram")
+	cmd.Flags().StringVarP(&channels, "channels", "c", "rgba", "the channels to include in the histogram")
 
 	return cmd
 }
