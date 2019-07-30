@@ -13,13 +13,13 @@ release-bin: ensure-dist
 	GOOS=linux GOARCH=amd64 go build -o dist/bild $(LDFLAGS)
 
 release-x64: ensure-dist
-	GOOS=linux GOARCH=amd64 go build -o dist/bild $(LDFLAGS) && tar -czf dist/bild_$(VERSION)_x64.tar.gz dist/bild && rm dist/bild
+	GOOS=linux GOARCH=amd64 go build -o dist/bild $(LDFLAGS) && cd dist && tar -czf bild_$(VERSION)_x64.tar.gz bild && rm bild
 
 release-x86: ensure-dist
-	GOOS=linux GOARCH=386 go build -o dist/bild $(LDFLAGS) && tar -czf dist/bild_$(VERSION)_x86.tar.gz dist/bild && rm dist/bild
+	GOOS=linux GOARCH=386 go build -o dist/bild $(LDFLAGS) && cd dist && tar -czf bild_$(VERSION)_x86.tar.gz bild && rm bild
 
 release-mac: ensure-dist
-	go build $(MAC_LDFLAGS) -o dist/bild && tar -czf dist/bild_$(VERSION)_mac.tar.gz dist/bild && rm dist/bild
+	go build $(MAC_LDFLAGS) -o dist/bild && cd dist && tar -czf bild_$(VERSION)_mac.tar.gz bild && rm bild
 
 install:
 	go install $(MAC_LDFLAGS)
