@@ -20,6 +20,59 @@ const (
 	Alpha
 )
 
+var (
+	allChannels = []Channel{Red, Green, Blue, Alpha}
+)
+
+// ExtractMultiple returns a RGBA image containing the values of the selected channels.
+//
+// Usage example:
+//
+//      result := channel.ExtractMultiple(img, channel.Blue, channel.Alpha)
+//
+func ExtractMultiple(img image.Image, channels ...Channel) *image.RGBA {
+	for _, c := range channels {
+		if c < 0 || 3 < c {
+			panic(fmt.Sprintf("channel index '%v' out of bounds. Red: 0, Green: 1, Blue: 2, Alpha: 3", c))
+		}
+	}
+
+	dst := clone.AsRGBA(img)
+	bounds := dst.Bounds()
+	dstW, dstH := bounds.Dx(), bounds.Dy()
+
+	if bounds.Empty() {
+		return &image.RGBA{}
+	}
+
+	channelsToRemove := []Channel{}
+	for _, channel := range allChannels {
+		shouldRemove := true
+		for _, enabled := range channels {
+			if enabled == channel {
+				shouldRemove = false
+				break
+			}
+		}
+		if shouldRemove {
+			channelsToRemove = append(channelsToRemove, channel)
+		}
+	}
+
+	parallel.Line(dstH, func(start, end int) {
+		for y := start; y < end; y++ {
+			for x := 0; x < dstW; x++ {
+				pos := y*dst.Stride + x*4
+				for _, c := range channelsToRemove {
+					dst.Pix[pos+int(c)] = 0x00
+				}
+			}
+		}
+	})
+
+	return dst
+}
+
 // Extract returns a grayscale image containing the values of the selected channel.
 //
 // Usage example:
