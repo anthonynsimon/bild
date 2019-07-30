@@ -6,7 +6,7 @@ commands:
       - checkout
       - run:
           name: 'Run checks'
-          command: make install check
+          command: make check
 
 jobs:    
   test_go_1_11:
