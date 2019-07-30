@@ -16,20 +16,21 @@ The aim of this project is simplicity in use and development over high performan
 http://godoc.org/github.com/anthonynsimon/bild
 
 
-## Install
+## CLI usage
 
-bild requires Go version 1.11 or greater.
-```bash
-go get -u github.com/anthonynsimon/bild/...
+Download and compile from sources:
+```
+go get github.com/anthonynsimon/bild
 ```
 
-## CLI usage
-```bash
-# Download and compile from sources
-$ go get github.com/anthonynsimon/bild
+Or get the pre-compiled binaries for your platform on the [releases page](https://github.com/anthonynsimon/bild/releases)
 
-# See available commands
+
+```bash
+
+# Available commands
 $ bild
+
 > A collection of parallel image processing algorithms in pure Go
 > 
 > Usage:
@@ -53,16 +54,17 @@ $ bild
 > 
 > Use "bild [command] --help" for more information about a command.
 
-# Example command
+# For example
 $ bild effect median --radius 1.5 input.png output.png
 ```
 
 
-## Install
+## Install package
 
 bild requires Go version 1.11 or greater.
+
 ```bash
-go get -u github.com/anthonynsimon/bild/...
+go get github.com/anthonynsimon/bild/...
 ```
 
 ## Basic package usage example:
