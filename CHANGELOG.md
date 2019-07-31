@@ -3,6 +3,9 @@
 ## next
 - 
 
+## 0.11.1
+- [PR-71:](https://github.com/anthonynsimon/bild/pull/71) Gaussian blur is now ~10x faster.
+
 ## 0.11.0
 - bild now comes with a built-in CLI
 - Added extract multiple channels functionality
