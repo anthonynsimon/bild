@@ -35,19 +35,18 @@ func Gaussian(src image.Image, radius float64) *image.RGBA {
 		return clone.AsRGBA(src)
 	}
 
+    // Create the 1-d gaussian kernel
 	length := int(math.Ceil(2*radius + 1))
-	k := convolution.NewKernel(length, length)
+	k := convolution.NewKernel(length, 1)
+    for i, x := 0, -radius; i < length; i, x = i+1, x+1 {
+        k.Matrix[i] = math.Exp(-(x*x/4/radius))
+    }
+    normK := k.Normalized()
 
-	gaussianFn := func(x, y, sigma float64) float64 {
-		return math.Exp(-(x*x/sigma + y*y/sigma))
-	}
+    // Perform separable convolution
+    options := convolution.Options{Bias: 0, Wrap: false, KeepAlpha: false}
+    result := convolution.Convolve(src, normK, &options)
+    result = convolution.Convolve(result, normK.Transposed(), &options)
 
-	for x := 0; x < length; x++ {
-		for y := 0; y < length; y++ {
-			k.Matrix[y*length+x] = gaussianFn(float64(x)-radius, float64(y)-radius, 4*radius)
-
-		}
-	}
-
-	return convolution.Convolve(src, k.Normalized(), &convolution.Options{Bias: 0, Wrap: false, KeepAlpha: false})
+    return result
 }
