@@ -6,18 +6,28 @@ BenchmarkConvolve3-8                 200          43031408 ns/op         8413514
 BenchmarkConvolve8-8                  30         219642438 ns/op         8462644 B/op          8 allocs/op
 BenchmarkConvolve32-8                  2        2869904037 ns/op         8659296 B/op          8 allocs/op
 BenchmarkConvolve64-8                  1       15558563740 ns/op         8929584 B/op          8 allocs/op
+BenchmarkConvolve3-12                500          22189699 ns/op         8413607 B/op          8 allocs/op
+BenchmarkConvolve8-12                100         123948431 ns/op         8462645 B/op          8 allocs/op
+BenchmarkConvolve32-12                 3        1821159724 ns/op         8659248 B/op          8 allocs/op
+BenchmarkConvolve64-12                 1        9513050684 ns/op         8929584 B/op          8 allocs/op
 
 pkg: github.com/anthonynsimon/bild/effect
 BenchmarkMedian1-8                  2000           6637173 ns/op         3686887 B/op      65544 allocs/op
 BenchmarkMedian4-8                    30         251734934 ns/op        23627210 B/op      65551 allocs/op
 BenchmarkMedian8-8                     2        2844636597 ns/op        84584800 B/op      65567 allocs/op
+BenchmarkMedian1-12                 2000           4019268 ns/op         3686994 B/op      65545 allocs/op
+BenchmarkMedian4-12                   50         152600630 ns/op        23624964 B/op      65564 allocs/op
+BenchmarkMedian8-12                    5        1641163671 ns/op        84507696 B/op      65582 allocs/op
 
 pkg: github.com/anthonynsimon/bild/noise
 BenchmarkUniformMonochrome-8         200          34201494 ns/op         1048900 B/op          5 allocs/op
 BenchmarkUniformColored-8            100          96952189 ns/op         1048754 B/op          4 allocs/op
+BenchmarkUniformMonochrome-12        300          19967397 ns/op         1048987 B/op          6 allocs/op
+BenchmarkUniformColored-12           100          62178734 ns/op         1048776 B/op          5 allocs/op
 
 pkg: github.com/anthonynsimon/bild/paint
 BenchmarkFloodFill-8                 100          75234019 ns/op        24616194 B/op     259073 allocs/op
+BenchmarkFloodFill-12                100          63458091 ns/op        24615253 B/op     259067 allocs/op
 
 pkg: github.com/anthonynsimon/bild/transform
 BenchmarkResizeTenth-8                50         121855364 ns/op        74483576 B/op         13 allocs/op
@@ -35,3 +45,18 @@ BenchmarkRotation2048-8              100          93141358 ns/op        33554704
 BenchmarkRotation4096-8               20         386209001 ns/op       134217995 B/op          7 allocs/op
 BenchmarkRotation8192-8                3        1751796711 ns/op       536871202 B/op          7 allocs/op
 BenchmarkTranslate-8                5000           1657326 ns/op         8389660 B/op          6 allocs/op
+BenchmarkResizeTenth-12              100          73977782 ns/op        74483930 B/op         14 allocs/op
+BenchmarkResizeQuarter-12            100          94810269 ns/op        88080954 B/op         10 allocs/op
+BenchmarkResizeHalf-12                50         117193580 ns/op       117440974 B/op         10 allocs/op
+BenchmarkResize1x-12                 500          14194787 ns/op        12583368 B/op         10 allocs/op
+BenchmarkResize2x-12                 200          40732878 ns/op        29360604 B/op         10 allocs/op
+BenchmarkResize4x-12                  50         133090301 ns/op        88080816 B/op         10 allocs/op
+BenchmarkResize8x-12                  10         527309738 ns/op       306184614 B/op         10 allocs/op
+BenchmarkResize16x-12                  3        1989897406 ns/op      1145045408 B/op         10 allocs/op
+BenchmarkRotation256-12            10000            951667 ns/op          524564 B/op          7 allocs/op
+BenchmarkRotation512-12             2000           3308632 ns/op         2097462 B/op          7 allocs/op
+BenchmarkRotation1024-12             500          14476517 ns/op         8388960 B/op          8 allocs/op
+BenchmarkRotation2048-12             100          66453857 ns/op        33554782 B/op          8 allocs/op
+BenchmarkRotation4096-12              20         283408820 ns/op       134218065 B/op          8 allocs/op
+BenchmarkRotation8192-12               5        1209410028 ns/op       536871204 B/op          7 allocs/op
+BenchmarkTranslate-12               5000           1427415 ns/op         8388833 B/op          6 allocs/op
