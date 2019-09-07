@@ -55,6 +55,7 @@ func PerlinGenerate(height, width int, freq float64) *image.RGBA {
 
 	// serial implimentation
 	// works well
+	// see output folder
 	for x := 0.; x < float64(height); x++ {
 		for y := 0.; y < float64(width); y++ {
 			t := p.Noise2D((x/10)*freq, (y/10)*freq)
@@ -69,6 +70,7 @@ func PerlinGenerate(height, width int, freq float64) *image.RGBA {
 	// parrel implimentation but doesnt work quite well
 	// which means output image has pixellated effect
 	// could be  useful for somecases
+	// see output folder
 
 	// parallel.Line(height, func(start, end int) {
 	// 	for y := start; y < end; y++ {
