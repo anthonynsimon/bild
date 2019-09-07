@@ -1,7 +1,16 @@
 package main
 
-import "github.com/anthonynsimon/bild/cmd"
+import (
+	"image/png"
+	"os"
+
+	"github.com/roz3x/bild/noise"
+)
 
 func main() {
-	cmd.Execute()
+	// t := noise.Options{}
+	// img := noise.Generate(200, 200, &t)
+	img := noise.PerlinGenerate(200, 200)
+	f, _ := os.Create("file.png")
+	png.Encode(f, img)
 }

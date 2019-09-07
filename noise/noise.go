@@ -43,6 +43,20 @@ type Options struct {
 	Monochrome bool
 }
 
+//PerlinGenerate produces perlin image
+func PerlinGenerate(height, width int) *image.RGBA {
+	rect := image.Rect(0, 0, height, width)
+	img := image.NewRGBA(rect)
+
+	p := NewPerlin(2, 2, 3, rand.Int63())
+	for i := 0; i < height; i++ {
+		for j := 0; j < width; j++ {
+			fmt.Printf("%v", p.Noise2D(float64(i/height), float64(j/width)))
+		}
+	}
+	return img
+}
+
 // Generate returns an image of the parameter width and height filled
 // with the values from a noise function.
 // If no options are provided, defaults will be used.
@@ -101,18 +115,4 @@ func fillColored(img *image.RGBA, noiseFn Fn) {
 			}
 		}
 	})
-}
-
-//PerlinGenerate produces perlin image
-func PerlinGenerate(height, width int) *image.RGBA {
-	rect := image.Rect(0, 0, height, width)
-	img := image.NewRGBA(rect)
-
-	p := NewPerlin(2, 2, 3, rand.Int63())
-	for i := 0; i < height; i++ {
-		for j := 0; j < width; j++ {
-			fmt.Printf("%v", p.Noise2D(float64(i), float64(j)))
-		}
-	}
-	return img
 }
