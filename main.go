@@ -8,9 +8,7 @@ import (
 )
 
 func main() {
-	// t := noise.Options{}
-	// img := noise.Generate(200, 200, &t)
-	img := noise.PerlinGenerate(200, 200)
+	img := noise.PerlinGenerate(200, 200, 0.2)
 	f, _ := os.Create("file.png")
 	png.Encode(f, img)
 }
