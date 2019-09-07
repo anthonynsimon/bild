@@ -1,7 +1,7 @@
-/*Package noise provides functions to generate various types of image noise.*/
 package noise
 
 import (
+	"fmt"
 	"image"
 	"math/rand"
 	"time"
@@ -101,4 +101,18 @@ func fillColored(img *image.RGBA, noiseFn Fn) {
 			}
 		}
 	})
+}
+
+//PerlinGenerate produces perlin image
+func PerlinGenerate(height, width int) *image.RGBA {
+	rect := image.Rect(0, 0, height, width)
+	img := image.NewRGBA(rect)
+
+	p := NewPerlin(2, 2, 3, rand.Int63())
+	for i := 0; i < height; i++ {
+		for j := 0; j < width; j++ {
+			fmt.Printf("%v", p.Noise2D(float64(i), float64(j)))
+		}
+	}
+	return img
 }
