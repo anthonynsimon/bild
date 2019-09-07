@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	img := noise.PerlinGenerate(200, 200, 0.2)
-	f, _ := os.Create("file.png")
+	img := noise.PerlinGenerate(200, 200, 1)
+	f, _ := os.Create("output/perlin_freq_1_parrallel.png")
 	png.Encode(f, img)
 }

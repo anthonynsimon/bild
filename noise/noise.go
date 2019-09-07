@@ -50,10 +50,11 @@ func PerlinGenerate(height, width int, freq float64) *image.RGBA {
 	//keep these values as such
 	alpha, beta, n := 2., 2., 3
 
-	// serial implimentation
-	// works well
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 	p := perlin.NewPerlin(alpha, beta, n, rand.Int63())
+
+	// serial implimentation
+	// works well
 	for x := 0.; x < float64(height); x++ {
 		for y := 0.; y < float64(width); y++ {
 			t := p.Noise2D((x/10)*freq, (y/10)*freq)
