@@ -1,3 +1,5 @@
+// file  is taken from aquilax/go-perlin
+
 // Package perlin provides coherent noise function over 1, 2 or 3 dimensions
 // This code is go adaptagion based on C implementation that can be found here:
 // http://git.gnome.org/browse/gegl/tree/operations/common/perlin/perlin.c
