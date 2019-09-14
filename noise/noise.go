@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/anthonynsimon/bild/parallel"
-	"github.com/roz3x/bild/perlin"
+	"github.com/anthonynsimon/bild/perlin"
 )
 
 // Fn is a noise function that generates values between 0 and 255.
