@@ -44,21 +44,16 @@ type Options struct {
 	Monochrome bool
 }
 
-// PerlinGenerate outputs the perlin image of given height and width
-// and freqency , freq from 0.1 to 2 is a good range
-func PerlinGenerate(height, width int, freq float64) *image.RGBA {
-	//keep these values as such
+// GeneratePerlin outputs the perlin image of given height and width and freqency
+func GeneratePerlin(width, height int, frequency float64) *image.RGBA {
 	alpha, beta, n := 2., 2., 3
 
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 	p := perlin.NewPerlin(alpha, beta, n, rand.Int63())
 
-	// serial implimentation
-	// works well
-	// see output folder
 	for x := 0.; x < float64(height); x++ {
 		for y := 0.; y < float64(width); y++ {
-			t := p.Noise2D((x/10)*freq, (y/10)*freq)
+			t := p.Noise2D((x/10)*frequency, (y/10)*frequency)
 			img.Set(int(x), int(y), color.NRGBA{
 				R: uint8((t + 1) * 126),
 				G: uint8((t + 1) * 126),
@@ -67,24 +62,6 @@ func PerlinGenerate(height, width int, freq float64) *image.RGBA {
 			})
 		}
 	}
-	// parrel implimentation but doesnt work quite well
-	// which means output image has pixellated effect
-	// could be  useful for somecases
-	// see output folder
-
-	// parallel.Line(height, func(start, end int) {
-	// 	for y := start; y < end; y++ {
-	// 		for x := 0; x < width; x++ {
-	// 			t := p.Noise2D(float64(x/10)*freq, float64(y/10)*freq)
-	// 			img.Set(int(x), int(y), color.NRGBA{
-	// 				R: uint8((t + 1) * 126),
-	// 				G: uint8((t + 1) * 126),
-	// 				B: uint8((t + 1) * 126),
-	// 				A: 255,
-	// 			})
-	// 		}
-	// 	}
-	// })
 
 	return img
 }
