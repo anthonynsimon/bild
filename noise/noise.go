@@ -1,12 +1,13 @@
-/*Package noise provides functions to generate various types of image noise.*/
 package noise
 
 import (
 	"image"
+	"image/color"
 	"math/rand"
 	"time"
 
 	"github.com/anthonynsimon/bild/parallel"
+	"github.com/anthonynsimon/bild/perlin"
 )
 
 // Fn is a noise function that generates values between 0 and 255.
@@ -41,6 +42,51 @@ type Options struct {
 	// Monochrome sets if the resulting image is grayscale or colored,
 	// the latter meaning that each RGB channel was filled with different values.
 	Monochrome bool
+}
+
+// PerlinGenerate outputs the perlin image of given height and width
+// and freqency , freq from 0.1 to 2 is a good range
+func PerlinGenerate(height, width int, freq float64) *image.RGBA {
+	//keep these values as such
+	alpha, beta, n := 2., 2., 3
+
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
+	p := perlin.NewPerlin(alpha, beta, n, rand.Int63())
+
+	// serial implimentation
+	// works well
+	// see output folder
+	for x := 0.; x < float64(height); x++ {
+		for y := 0.; y < float64(width); y++ {
+			t := p.Noise2D((x/10)*freq, (y/10)*freq)
+			img.Set(int(x), int(y), color.NRGBA{
+				R: uint8((t + 1) * 126),
+				G: uint8((t + 1) * 126),
+				B: uint8((t + 1) * 126),
+				A: 255,
+			})
+		}
+	}
+	// parrel implimentation but doesnt work quite well
+	// which means output image has pixellated effect
+	// could be  useful for somecases
+	// see output folder
+
+	// parallel.Line(height, func(start, end int) {
+	// 	for y := start; y < end; y++ {
+	// 		for x := 0; x < width; x++ {
+	// 			t := p.Noise2D(float64(x/10)*freq, float64(y/10)*freq)
+	// 			img.Set(int(x), int(y), color.NRGBA{
+	// 				R: uint8((t + 1) * 126),
+	// 				G: uint8((t + 1) * 126),
+	// 				B: uint8((t + 1) * 126),
+	// 				A: 255,
+	// 			})
+	// 		}
+	// 	}
+	// })
+
+	return img
 }
 
 // Generate returns an image of the parameter width and height filled

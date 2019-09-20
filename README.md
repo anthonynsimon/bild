@@ -266,8 +266,9 @@ func main() {
     result := noise.Generate(280, 280, &noise.Options{Monochrome: true, NoiseFn: noise.Gaussian})
 
 ![example](https://anthonynsimon.com/projects/bild/noisegaussian.jpg)  
-
-
+### Perlin Noise 
+    result := noise.PerlinGenerate(800,800,0.2)
+![example](https://github.com/roz3x/bild/blob/master/output/perlin_freq_0.2_serial.png)
 ## Paint
     import "github.com/anthonynsimon/bild/paint"
 
