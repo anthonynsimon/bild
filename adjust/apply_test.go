@@ -111,3 +111,21 @@ func TestClampFloat64(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkApply(b *testing.B) {
+	val := &image.RGBA{
+		Rect:   image.Rect(0, 0, 2, 2),
+		Stride: 2 * 4,
+		Pix: []uint8{
+			0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+			0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+		},
+	}
+	fn := func(c color.RGBA) color.RGBA {
+		return color.RGBA{c.R - 64, c.G - 64, c.B - 64, c.A - 64}
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Apply(val, fn)
+	}
+}
