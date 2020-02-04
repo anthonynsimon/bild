@@ -21,17 +21,22 @@ func Apply(img image.Image, fn func(color.RGBA) color.RGBA) *image.RGBA {
 
 				c := color.RGBA{}
 
-				c.R = dst.Pix[dstPos+0]
-				c.G = dst.Pix[dstPos+1]
-				c.B = dst.Pix[dstPos+2]
-				c.A = dst.Pix[dstPos+3]
+				dr := &dst.Pix[dstPos+0]
+				dg := &dst.Pix[dstPos+1]
+				db := &dst.Pix[dstPos+2]
+				da := &dst.Pix[dstPos+3]
+
+				c.R = *dr
+				c.G = *dg
+				c.B = *db
+				c.A = *da
 
 				c = fn(c)
 
-				dst.Pix[dstPos+0] = c.R
-				dst.Pix[dstPos+1] = c.G
-				dst.Pix[dstPos+2] = c.B
-				dst.Pix[dstPos+3] = c.A
+				*dr = c.R
+				*dg = c.G
+				*db = c.B
+				*da = c.A
 			}
 		}
 	})
