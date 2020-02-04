@@ -2,6 +2,7 @@
 
 ## next
 - [PR-74:](https://github.com/anthonynsimon/bild/pull/74) Add Perlin noise function
+- [PR-77:](https://github.com/anthonynsimon/bild/pull/77) Performance improvements for the image adjustment function
 
 ## 0.11.1
 - [PR-71:](https://github.com/anthonynsimon/bild/pull/71) Gaussian blur is up to ~20x faster.
