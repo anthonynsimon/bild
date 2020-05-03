@@ -2,6 +2,7 @@ package transform
 
 import (
 	"image"
+	"image/color"
 	"math"
 
 	"github.com/anthonynsimon/bild/clone"
@@ -106,9 +107,14 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 					continue
 				}
 
-				srcPos := iy*src.Stride + ix*4
-				dstPos := (y+offsetY)*dst.Stride + (x+offsetX)*4
-				copy(dst.Pix[dstPos:dstPos+4], src.Pix[srcPos:srcPos+4])
+				red, green, blue, alpha := src.At(ix, iy).RGBA()
+
+				dst.Set(x+offsetX, y+offsetY, color.RGBA64{
+					R: uint16(red),
+					G: uint16(green),
+					B: uint16(blue),
+					A: uint16(alpha),
+				})
 			}
 		}
 	})
