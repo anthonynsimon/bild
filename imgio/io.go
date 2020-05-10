@@ -17,7 +17,7 @@ type Encoder func(io.Writer, image.Image) error
 // Open loads and decodes an image from a file and returns it.
 //
 // Usage example:
-//		// Encode an image to a writer in PNG format,
+//		// Decodes an image from a file with the given filename
 //		// returns an error if something went wrong
 //		img, err := Open("exampleName")
 //

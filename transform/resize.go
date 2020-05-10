@@ -15,7 +15,7 @@ import (
 //
 // Usage example:
 //
-//		result := bild.Resize(img, 800, 600, bild.Linear)
+//		result := transform.Resize(img, 800, 600, transform.Linear)
 //
 func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RGBA {
 	if width <= 0 || height <= 0 || img.Bounds().Empty() {
@@ -42,7 +42,7 @@ func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RG
 //
 // Usage example:
 //
-//		result := bild.Crop(img, image.Rect(0,0,512,256))
+//		result := transform.Crop(img, image.Rect(0, 0, 512, 256))
 //
 func Crop(img image.Image, rect image.Rectangle) *image.RGBA {
 	src := clone.AsRGBA(img)

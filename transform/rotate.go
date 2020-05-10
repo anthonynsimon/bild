@@ -26,7 +26,7 @@ type RotationOptions struct {
 // Usage example:
 //
 // 		// Rotate 90.0 degrees clockwise, preserving the image size and the pivot point at the top left corner
-// 		result := bild.Rotate(img, 90.0, &bild.RotationOptions{PreserveSize: true, Pivot: &image.Point{0, 0}})
+// 		result := transform.Rotate(img, 90.0, &transform.RotationOptions{ResizeBounds: true, Pivot: &image.Point{0, 0}})
 //
 func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGBA {
 	src := clone.AsRGBA(img)
