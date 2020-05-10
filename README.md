@@ -17,7 +17,7 @@ All operations return image types from the standard library.
  
 ## Documentation
 
-http://godoc.org/github.com/anthonynsimon/bild
+https://pkg.go.dev/github.com/anthonynsimon/bild
 
 
 ## CLI usage
