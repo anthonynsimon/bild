@@ -1,8 +1,11 @@
 # Changelog
 
-## next
+## 0.12.0
 - [PR-74:](https://github.com/anthonynsimon/bild/pull/74) Add Perlin noise function
 - [PR-77:](https://github.com/anthonynsimon/bild/pull/77) Performance improvements for the image adjustment function
+- [PR-81:](https://github.com/anthonynsimon/bild/pull/81) Make blend() exported to allow for custom blending implementations
+- [PR-82:](https://github.com/anthonynsimon/bild/pull/82) Fix rotate panic
+- Minor additional fixes and documentation improvements.
 
 ## 0.11.1
 - [PR-71:](https://github.com/anthonynsimon/bild/pull/71) Gaussian blur is up to ~20x faster.
