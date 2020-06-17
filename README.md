@@ -1,6 +1,6 @@
 # bild
 
-![bild logo](https://anthonynsimon.com/projects/bild/logo.png)  
+![bild logo](assets/img/logo.png)  
 
 [![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/anthonynsimon/bild/blob/master/LICENSE)
 [![GoDoc](https://godoc.org/github.com/anthonynsimon/bild?status.svg)](https://godoc.org/github.com/anthonynsimon/bild)
@@ -106,28 +106,28 @@ func main() {
 ### Brightness
     result := adjust.Brightness(img, 0.25)
 
-![example](https://anthonynsimon.com/projects/bild/brightness.jpg)  
+![example](assets/img/brightness.jpg)  
 
 ### Contrast
     result := adjust.Contrast(img, -0.5)
 
-![example](https://anthonynsimon.com/projects/bild/contrast.jpg)  
+![example](assets/img/contrast.jpg)  
 
 ### Gamma
     result := adjust.Gamma(img, 2.2)
 
-![example](https://anthonynsimon.com/projects/bild/gamma.jpg)  
+![example](assets/img/gamma.jpg)  
 
 
 ### Hue
     result := adjust.Hue(img, -42)
 
-![example](https://anthonynsimon.com/projects/bild/hue.jpg)  
+![example](assets/img/hue.jpg)  
 
 ### Saturation
     result := adjust.Saturation(img, 0.5)
 
-![example](https://anthonynsimon.com/projects/bild/saturation.jpg)  
+![example](assets/img/saturation.jpg)  
 
 
 
@@ -138,17 +138,17 @@ func main() {
 
 | Add | Color Burn | Color Dodge |
 | :----------: | :---------: | :------: |
-| ![](https://anthonynsimon.com/projects/bild/add.jpg) | ![](https://anthonynsimon.com/projects/bild/colorburn.jpg) | ![](https://anthonynsimon.com/projects/bild/colordodge.jpg) |
+| ![](assets/img/add.jpg) | ![](assets/img/colorburn.jpg) | ![](assets/img/colordodge.jpg) |
 | **Darken** | **Difference** | **Divide** |
-| ![](https://anthonynsimon.com/projects/bild/darken.jpg) | ![](https://anthonynsimon.com/projects/bild/difference.jpg) | ![](https://anthonynsimon.com/projects/bild/divide.jpg) |
+| ![](assets/img/darken.jpg) | ![](assets/img/difference.jpg) | ![](assets/img/divide.jpg) |
 | **Exclusion** | **Lighten** | **Linear Burn** |
-| ![](https://anthonynsimon.com/projects/bild/exclusion.jpg) | ![](https://anthonynsimon.com/projects/bild/lighten.jpg) | ![](https://anthonynsimon.com/projects/bild/linearburn.jpg) |
+| ![](assets/img/exclusion.jpg) | ![](assets/img/lighten.jpg) | ![](assets/img/linearburn.jpg) |
 | **Linear Light** | **Multiply** | **Normal** |
-| ![](https://anthonynsimon.com/projects/bild/linearlight.jpg) | ![](https://anthonynsimon.com/projects/bild/multiply.jpg) | ![](https://anthonynsimon.com/projects/bild/normal.jpg) |
+| ![](assets/img/linearlight.jpg) | ![](assets/img/multiply.jpg) | ![](assets/img/normal.jpg) |
 | **Opacity** | **Overlay** | **Screen** |
-| ![](https://anthonynsimon.com/projects/bild/opacity.jpg) | ![](https://anthonynsimon.com/projects/bild/overlay.jpg) | ![](https://anthonynsimon.com/projects/bild/screen.jpg) |
+| ![](assets/img/opacity.jpg) | ![](assets/img/overlay.jpg) | ![](assets/img/screen.jpg) |
 | **Soft Light** | **Subtract** | |
-| ![](https://anthonynsimon.com/projects/bild/softlight.jpg) | ![](https://anthonynsimon.com/projects/bild/subtract.jpg) | |
+| ![](assets/img/softlight.jpg) | ![](assets/img/subtract.jpg) | |
 
 
 ## Blur
@@ -157,14 +157,14 @@ func main() {
 ### Box Blur
     result := blur.Box(img, 3.0)
 
-![example](https://anthonynsimon.com/projects/bild/boxblur.jpg)  
+![example](assets/img/boxblur.jpg)  
 
 
 ### Gaussian Blur
     result := blur.Gaussian(img, 3.0)
 
 
-![example](https://anthonynsimon.com/projects/bild/gaussianblur.jpg)  
+![example](assets/img/gaussianblur.jpg)  
 
 
 ## Channel
@@ -173,7 +173,7 @@ func main() {
 ### Extract Channels
     result := channel.Extract(img, channel.Alpha)
 
-![example](https://anthonynsimon.com/projects/bild/extractchannel.jpg)
+![example](assets/img/extractchannel.jpg)
 
 ### Extract Multiple Channels
     result := channel.ExtractMultiple(img, channel.Red, channel.Alpha)
@@ -184,57 +184,57 @@ func main() {
 ### Dilate
     result := effect.Dilate(img, 3)
 
-![example](https://anthonynsimon.com/projects/bild/dilate.jpg)     
+![example](assets/img/dilate.jpg)     
 
 ### Edge Detection
     result := effect.EdgeDetection(img, 1.0)
 
-![example](https://anthonynsimon.com/projects/bild/edgedetection.jpg)  
+![example](assets/img/edgedetection.jpg)  
 
 ### Emboss
     result := effect.Emboss(img)
 
-![example](https://anthonynsimon.com/projects/bild/emboss.jpg)  
+![example](assets/img/emboss.jpg)  
 
 ### Erode
     result := effect.Erode(img, 3)
 
-![example](https://anthonynsimon.com/projects/bild/erode.jpg)   
+![example](assets/img/erode.jpg)   
 
 ### Grayscale
     result := effect.Grayscale(img)
 
-![example](https://anthonynsimon.com/projects/bild/grayscale.jpg)  
+![example](assets/img/grayscale.jpg)  
 
 ### Invert
     result := effect.Invert(img)
 
-![example](https://anthonynsimon.com/projects/bild/invert.jpg)  
+![example](assets/img/invert.jpg)  
 
 ### Median
     result := effect.Median(img, 10.0)
 
-![example](https://anthonynsimon.com/projects/bild/median.jpg)  
+![example](assets/img/median.jpg)  
 
 ### Sepia
     result := effect.Sepia(img)
 
-![example](https://anthonynsimon.com/projects/bild/sepia.jpg)  
+![example](assets/img/sepia.jpg)  
 
 ### Sharpen
     result := effect.Sharpen(img)
 
-![example](https://anthonynsimon.com/projects/bild/sharpen.jpg)  
+![example](assets/img/sharpen.jpg)  
 
 ### Sobel
     result := effect.Sobel(img)
 
-![example](https://anthonynsimon.com/projects/bild/sobel.jpg)  
+![example](assets/img/sobel.jpg)  
 
 ### Unsharp Mask
     result := effect.UnsharpMask(img, 0.6, 1.2)
 
-![example](https://anthonynsimon.com/projects/bild/unsharpmask.jpg)  
+![example](assets/img/unsharpmask.jpg)  
 
 
 ## Histogram
@@ -244,7 +244,7 @@ func main() {
     hist := histogram.NewRGBAHistogram(img)
     result := hist.Image()
 
-![example](https://anthonynsimon.com/projects/bild/histogram.png)  
+![example](assets/img/histogram.png)  
 
 
 ## Noise
@@ -253,23 +253,23 @@ func main() {
 ### Uniform colored
     result := noise.Generate(280, 280, &noise.Options{Monochrome: false, NoiseFn: noise.Uniform})
 
-![example](https://anthonynsimon.com/projects/bild/noiseuniform.jpg)  
+![example](assets/img/noiseuniform.jpg)  
 
 
 ### Binary monochrome
     result := noise.Generate(280, 280, &noise.Options{Monochrome: true, NoiseFn: noise.Binary})
 
-![example](https://anthonynsimon.com/projects/bild/noisebinary.jpg)  
+![example](assets/img/noisebinary.jpg)  
 
 
 ### Gaussian monochrome
     result := noise.Generate(280, 280, &noise.Options{Monochrome: true, NoiseFn: noise.Gaussian})
 
-![example](https://anthonynsimon.com/projects/bild/noisegaussian.jpg)  
+![example](assets/img/noisegaussian.jpg)  
 
 ### Perlin Noise 
     result := noise.GeneratePerlin(280, 280, 0.25)
-![example](https://anthonynsimon.com/projects/bild/perlin.jpg)  
+![example](assets/img/perlin.jpg)  
 
 ## Paint
     import "github.com/anthonynsimon/bild/paint"
@@ -278,7 +278,7 @@ func main() {
     // Fuzz is the percentage of maximum color distance that is tolerated
     result := paint.FloodFill(img, image.Point{240, 0}, color.RGBA{255, 0, 0, 255}, 15)
 
-![example](https://anthonynsimon.com/projects/bild/floodfill.jpg) 
+![example](assets/img/floodfill.jpg) 
 
 
 ## Segmentation
@@ -287,7 +287,7 @@ func main() {
 ### Threshold
     result := segment.Threshold(img, 128)
 
-![example](https://anthonynsimon.com/projects/bild/threshold.jpg)
+![example](assets/img/threshold.jpg)
 
 
 ## Transform
@@ -297,17 +297,17 @@ func main() {
     // Source image is 280x280
     result := transform.Crop(img, image.Rect(70,70,210,210))
 
-![example](https://anthonynsimon.com/projects/bild/crop.jpg)
+![example](assets/img/crop.jpg)
 
 ### FlipH
     result := transform.FlipH(img)
 
-![example](https://anthonynsimon.com/projects/bild/fliph.jpg)  
+![example](assets/img/fliph.jpg)  
 
 ### FlipV
     result := transform.FlipV(img)
 
-![example](https://anthonynsimon.com/projects/bild/flipv.jpg) 
+![example](assets/img/flipv.jpg) 
 
 
 ### Resize Resampling Filters
@@ -315,42 +315,42 @@ func main() {
 
 | Nearest Neighbor | Linear | Gaussian |
 |:----------: | :---------: | :------: |
-| ![](https://anthonynsimon.com/projects/bild/resizenearestneighbor.jpg) | ![](https://anthonynsimon.com/projects/bild/resizelinear.jpg) | ![](https://anthonynsimon.com/projects/bild/resizegaussian.jpg) |
+| ![](assets/img/resizenearestneighbor.jpg) | ![](assets/img/resizelinear.jpg) | ![](assets/img/resizegaussian.jpg) |
 | **Mitchell Netravali** | **Catmull Rom** | **Lanczos** |
-| ![](https://anthonynsimon.com/projects/bild/resizemitchell.jpg) | ![](https://anthonynsimon.com/projects/bild/resizecatmullrom.jpg) | ![](https://anthonynsimon.com/projects/bild/resizelanczos.jpg) |
+| ![](assets/img/resizemitchell.jpg) | ![](assets/img/resizecatmullrom.jpg) | ![](assets/img/resizelanczos.jpg) |
 
 
 ### Rotate
     // Options set to nil will use defaults (ResizeBounds set to false, Pivot at center)
     result := transform.Rotate(img, -45.0, nil)
 
-![example](https://anthonynsimon.com/projects/bild/rotation03.gif)
+![example](assets/img/rotation03.gif)
 
     // If ResizeBounds is set to true, the full rotation bounding area is used
     result := transform.Rotate(img, -45.0, &transform.RotationOptions{ResizeBounds: true})
 
-![example](https://anthonynsimon.com/projects/bild/rotation01.gif)
+![example](assets/img/rotation01.gif)
 
     // Pivot coordinates are set from the top-left corner
     // Notice ResizeBounds being set to default (false)
     result := transform.Rotate(img, -45.0, &transform.RotationOptions{Pivot: &image.Point{0, 0}})
 
-![example](https://anthonynsimon.com/projects/bild/rotation02.gif)
+![example](assets/img/rotation02.gif)
 
 ### Shear Horizontal
     result := transform.ShearH(img, 30)
 
-![example](https://anthonynsimon.com/projects/bild/shearh.jpg)  
+![example](assets/img/shearh.jpg)  
 
 ### Shear Vertical
     result := transform.ShearV(img, 30)
 
-![example](https://anthonynsimon.com/projects/bild/shearv.jpg) 
+![example](assets/img/shearv.jpg) 
 
 ### Translate
     result := transform.Translate(img, 80, 0)
 
-![example](https://anthonynsimon.com/projects/bild/translate.jpg) 
+![example](assets/img/translate.jpg) 
 
 
 ## Contribute
