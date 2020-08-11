@@ -28,6 +28,14 @@ func AsRGBA(src image.Image) *image.RGBA {
 	return img
 }
 
+// AsShallowRGBA tries to cast to image.RGBA to get reference. Otherwise makes a copy
+func AsShallowRGBA(src image.Image) *image.RGBA {
+	if rgba, ok := src.(*image.RGBA); ok {
+		return rgba
+	}
+	return AsRGBA(src)
+}
+
 // Pad returns an RGBA copy of the src image parameter with its edges padded
 // using the supplied PadMethod.
 // Parameter padX and padY correspond to the amount of padding to be applied

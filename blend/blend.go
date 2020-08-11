@@ -347,8 +347,8 @@ func Blend(bg image.Image, fg image.Image, fn func(fcolor.RGBAF64, fcolor.RGBAF6
 		h = fgBounds.Dy()
 	}
 
-	bgSrc := clone.AsRGBA(bg)
-	fgSrc := clone.AsRGBA(fg)
+	bgSrc := clone.AsShallowRGBA(bg)
+	fgSrc := clone.AsShallowRGBA(fg)
 	dst := image.NewRGBA(image.Rect(0, 0, w, h))
 
 	parallel.Line(h, func(start, end int) {
