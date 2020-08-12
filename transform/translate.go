@@ -13,7 +13,7 @@ import (
 // A positive dx value moves the image towards the right and a positive dy value
 // moves the image upwards.
 func Translate(img image.Image, dx, dy int) *image.RGBA {
-	src := clone.AsRGBA(img)
+	src := clone.AsShallowRGBA(img)
 
 	if dx == 0 && dy == 0 {
 		return src

@@ -12,7 +12,7 @@ import (
 // the parameter angle is the shear angle to be applied.
 // The transformation will be applied with the center of the image as the pivot.
 func ShearH(img image.Image, angle float64) *image.RGBA {
-	src := clone.AsRGBA(img)
+	src := clone.AsShallowRGBA(img)
 	srcW, srcH := src.Bounds().Dx(), src.Bounds().Dy()
 
 	// Supersample, currently hard set to 2x
