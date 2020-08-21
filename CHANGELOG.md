@@ -1,5 +1,8 @@
 # Changelog
 
+## next
+- [PR-85:](https://github.com/anthonynsimon/bild/pull/85) Up to 20% less allocations and 90% less bytes allocated.
+
 ## 0.12.0
 - [PR-74:](https://github.com/anthonynsimon/bild/pull/74) Add Perlin noise function
 - [PR-77:](https://github.com/anthonynsimon/bild/pull/77) Performance improvements for the image adjustment function
