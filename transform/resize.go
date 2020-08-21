@@ -22,7 +22,7 @@ func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RG
 		return image.NewRGBA(image.Rect(0, 0, 0, 0))
 	}
 
-	src := clone.AsRGBA(img)
+	src := clone.AsShallowRGBA(img)
 	var dst *image.RGBA
 
 	// NearestNeighbor is a special case, it's faster to compute without convolution matrix.
@@ -45,7 +45,7 @@ func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RG
 //		result := transform.Crop(img, image.Rect(0, 0, 512, 256))
 //
 func Crop(img image.Image, rect image.Rectangle) *image.RGBA {
-	src := clone.AsRGBA(img)
+	src := clone.AsShallowRGBA(img)
 	return clone.AsRGBA(src.SubImage(rect))
 }
 

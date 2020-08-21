@@ -29,7 +29,7 @@ type RotationOptions struct {
 // 		result := transform.Rotate(img, 90.0, &transform.RotationOptions{ResizeBounds: true, Pivot: &image.Point{0, 0}})
 //
 func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGBA {
-	src := clone.AsRGBA(img)
+	src := clone.AsShallowRGBA(img)
 	srcW, srcH := src.Bounds().Dx(), src.Bounds().Dy()
 
 	supersample := false
@@ -130,7 +130,7 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 // FlipH returns a horizontally flipped version of the image.
 func FlipH(img image.Image) *image.RGBA {
 	bounds := img.Bounds()
-	src := clone.AsRGBA(img)
+	src := clone.AsShallowRGBA(img)
 	dst := image.NewRGBA(bounds)
 	w, h := dst.Bounds().Dx(), dst.Bounds().Dy()
 
@@ -156,7 +156,7 @@ func FlipH(img image.Image) *image.RGBA {
 // FlipV returns a vertically flipped version of the image.
 func FlipV(img image.Image) *image.RGBA {
 	bounds := img.Bounds()
-	src := clone.AsRGBA(img)
+	src := clone.AsShallowRGBA(img)
 	dst := image.NewRGBA(bounds)
 	w, h := dst.Bounds().Dx(), dst.Bounds().Dy()
 

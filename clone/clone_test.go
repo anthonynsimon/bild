@@ -197,6 +197,29 @@ func TestCloneAsRGBA(t *testing.T) {
 			t.Errorf("%s: expected: %#v, actual: %#v", "CloneAsRGBA from "+c.desc, c.expected, actual)
 		}
 	}
+
+	//shallow copy should work the same
+	for _, c := range cases {
+		actual := AsShallowRGBA(c.value)
+		if !util.RGBAImageEqual(actual, c.expected) {
+			t.Errorf("%s: expected: %#v, actual: %#v", "CloneAsRGBA from "+c.desc, c.expected, actual)
+		}
+	}
+}
+
+func TestShallowRGBAReturnRef(t *testing.T) {
+	src := &image.RGBA{
+		Rect:   image.Rect(0, 0, 1, 2),
+		Stride: 4,
+		Pix: []uint8{
+			0x80, 0x80, 0x80, 0x80,
+			0xFF, 0xFF, 0xFF, 0xFF,
+		},
+	}
+
+	if copyRef := AsShallowRGBA(src); copyRef != src {
+		t.Errorf("ShallowRGBA should return the same ref (src=%p, copy=%p)", src, copyRef)
+	}
 }
 
 func TestPad(t *testing.T) {
