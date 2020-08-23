@@ -16,8 +16,7 @@ It uses packages from the standard library whenever possible to reduce dependenc
 All operations return image types from the standard library.
  
 ## Documentation
-
-https://pkg.go.dev/github.com/anthonynsimon/bild
+The documentation for the various packages is available [here](https://pkg.go.dev/mod/github.com/anthonynsimon/bild?tab=packages).
 
 
 ## CLI usage
