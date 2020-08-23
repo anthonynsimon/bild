@@ -1,7 +1,11 @@
 # Changelog
 
+## next
+- 
+
 ## 0.13.0
 - [PR-85:](https://github.com/anthonynsimon/bild/pull/85) Up to 20% less allocations and 90% less bytes allocated.
+- Minor documentation improvements.
 
 ## 0.12.0
 - [PR-74:](https://github.com/anthonynsimon/bild/pull/74) Add Perlin noise function
