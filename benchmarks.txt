@@ -1,62 +1,40 @@
 goos: darwin
 goarch: amd64
 
+pkg: github.com/anthonynsimon/bild/adjust
+BenchmarkApply-8   	25142976	       235 ns/op	     112 B/op	       3 allocs/op
+
 pkg: github.com/anthonynsimon/bild/convolution
-BenchmarkConvolve3-8                 200          43031408 ns/op         8413514 B/op          8 allocs/op
-BenchmarkConvolve8-8                  30         219642438 ns/op         8462644 B/op          8 allocs/op
-BenchmarkConvolve32-8                  2        2869904037 ns/op         8659296 B/op          8 allocs/op
-BenchmarkConvolve64-8                  1       15558563740 ns/op         8929584 B/op          8 allocs/op
-BenchmarkConvolve3-12                500          22189699 ns/op         8413607 B/op          8 allocs/op
-BenchmarkConvolve8-12                100         123948431 ns/op         8462645 B/op          8 allocs/op
-BenchmarkConvolve32-12                 3        1821159724 ns/op         8659248 B/op          8 allocs/op
-BenchmarkConvolve64-12                 1        9513050684 ns/op         8929584 B/op          8 allocs/op
+BenchmarkConvolve3-8    	     172	  34613389 ns/op	 8413690 B/op	       8 allocs/op
+BenchmarkConvolve8-8    	      32	 170457685 ns/op	 8462640 B/op	       8 allocs/op
+BenchmarkConvolve32-8   	       2	2603227291 ns/op	 8659248 B/op	       8 allocs/op
+BenchmarkConvolve64-8   	       1	10181854106 ns/op	 8929584 B/op	       8 allocs/op
 
 pkg: github.com/anthonynsimon/bild/effect
-BenchmarkMedian1-8                  2000           6637173 ns/op         3686887 B/op      65544 allocs/op
-BenchmarkMedian4-8                    30         251734934 ns/op        23627210 B/op      65551 allocs/op
-BenchmarkMedian8-8                     2        2844636597 ns/op        84584800 B/op      65567 allocs/op
-BenchmarkMedian1-12                 2000           4019268 ns/op         3686994 B/op      65545 allocs/op
-BenchmarkMedian4-12                   50         152600630 ns/op        23624964 B/op      65564 allocs/op
-BenchmarkMedian8-12                    5        1641163671 ns/op        84507696 B/op      65582 allocs/op
+BenchmarkMedian1-8   	    1005	   6275448 ns/op	 3687014 B/op	   65544 allocs/op
+BenchmarkMedian4-8   	      26	 226515953 ns/op	23628461 B/op	   65550 allocs/op
+BenchmarkMedian8-8   	       2	2524265186 ns/op	84585780 B/op	   65577 allocs/op
 
 pkg: github.com/anthonynsimon/bild/noise
-BenchmarkUniformMonochrome-8         200          34201494 ns/op         1048900 B/op          5 allocs/op
-BenchmarkUniformColored-8            100          96952189 ns/op         1048754 B/op          4 allocs/op
-BenchmarkUniformMonochrome-12        300          19967397 ns/op         1048987 B/op          6 allocs/op
-BenchmarkUniformColored-12           100          62178734 ns/op         1048776 B/op          5 allocs/op
+BenchmarkUniformMonochrome-8   	     194	  30926449 ns/op	 1048921 B/op	       4 allocs/op
+BenchmarkUniformColored-8      	      67	  87401332 ns/op	 1048712 B/op	       4 allocs/op
 
 pkg: github.com/anthonynsimon/bild/paint
-BenchmarkFloodFill-8                 100          75234019 ns/op        24616194 B/op     259073 allocs/op
-BenchmarkFloodFill-12                100          63458091 ns/op        24615253 B/op     259067 allocs/op
+BenchmarkFloodFill-8   	      82	  71237537 ns/op	24616143 B/op	  259073 allocs/op
 
 pkg: github.com/anthonynsimon/bild/transform
-BenchmarkResizeTenth-8                50         121855364 ns/op        74483576 B/op         13 allocs/op
-BenchmarkResizeQuarter-8              50         133837811 ns/op        88081303 B/op         11 allocs/op
-BenchmarkResizeHalf-8                 30         192098367 ns/op       117441409 B/op         11 allocs/op
-BenchmarkResize1x-8                  300          26409679 ns/op        12583343 B/op         10 allocs/op
-BenchmarkResize2x-8                  100          72839314 ns/op        29360562 B/op         10 allocs/op
-BenchmarkResize4x-8                   30         235221709 ns/op        88081381 B/op         11 allocs/op
-BenchmarkResize8x-8                   10         852207403 ns/op       306184608 B/op         10 allocs/op
-BenchmarkResize16x-8                   2        3481516525 ns/op      1145045440 B/op         10 allocs/op
-BenchmarkRotation256-8              5000           1232278 ns/op          524540 B/op          7 allocs/op
-BenchmarkRotation512-8              2000           5393780 ns/op         2097412 B/op          7 allocs/op
-BenchmarkRotation1024-8              300          24388950 ns/op         8388865 B/op          7 allocs/op
-BenchmarkRotation2048-8              100          93141358 ns/op        33554704 B/op          7 allocs/op
-BenchmarkRotation4096-8               20         386209001 ns/op       134217995 B/op          7 allocs/op
-BenchmarkRotation8192-8                3        1751796711 ns/op       536871202 B/op          7 allocs/op
-BenchmarkTranslate-8                5000           1657326 ns/op         8389660 B/op          6 allocs/op
-BenchmarkResizeTenth-12              100          73977782 ns/op        74483930 B/op         14 allocs/op
-BenchmarkResizeQuarter-12            100          94810269 ns/op        88080954 B/op         10 allocs/op
-BenchmarkResizeHalf-12                50         117193580 ns/op       117440974 B/op         10 allocs/op
-BenchmarkResize1x-12                 500          14194787 ns/op        12583368 B/op         10 allocs/op
-BenchmarkResize2x-12                 200          40732878 ns/op        29360604 B/op         10 allocs/op
-BenchmarkResize4x-12                  50         133090301 ns/op        88080816 B/op         10 allocs/op
-BenchmarkResize8x-12                  10         527309738 ns/op       306184614 B/op         10 allocs/op
-BenchmarkResize16x-12                  3        1989897406 ns/op      1145045408 B/op         10 allocs/op
-BenchmarkRotation256-12            10000            951667 ns/op          524564 B/op          7 allocs/op
-BenchmarkRotation512-12             2000           3308632 ns/op         2097462 B/op          7 allocs/op
-BenchmarkRotation1024-12             500          14476517 ns/op         8388960 B/op          8 allocs/op
-BenchmarkRotation2048-12             100          66453857 ns/op        33554782 B/op          8 allocs/op
-BenchmarkRotation4096-12              20         283408820 ns/op       134218065 B/op          8 allocs/op
-BenchmarkRotation8192-12               5        1209410028 ns/op       536871204 B/op          7 allocs/op
-BenchmarkTranslate-12               5000           1427415 ns/op         8388833 B/op          6 allocs/op
+BenchmarkResizeTenth-8     	      54	 106483274 ns/op	 7374290 B/op	      10 allocs/op
+BenchmarkResizeQuarter-8   	      52	 116070611 ns/op	20971935 B/op	       8 allocs/op
+BenchmarkResizeHalf-8      	      37	 162314807 ns/op	50332324 B/op	       8 allocs/op
+BenchmarkResize1x-8        	     267	  23252871 ns/op	 8389000 B/op	       8 allocs/op
+BenchmarkResize2x-8        	      94	  59867822 ns/op	25166217 B/op	       8 allocs/op
+BenchmarkResize4x-8        	      31	 188098593 ns/op	83886558 B/op	       8 allocs/op
+BenchmarkResize8x-8        	       8	 666375788 ns/op	301990720 B/op	       9 allocs/op
+BenchmarkResize16x-8       	       2	2523312624 ns/op	1140851040 B/op	       8 allocs/op
+BenchmarkRotation256-8     	    1586	   3397452 ns/op	 1310965 B/op	  196613 allocs/op
+BenchmarkRotation512-8     	     438	  13462494 ns/op	 5243236 B/op	  786437 allocs/op
+BenchmarkRotation1024-8    	     121	  49059303 ns/op	20971951 B/op	 3145733 allocs/op
+BenchmarkRotation2048-8    	      30	 201259553 ns/op	83886562 B/op	12582917 allocs/op
+BenchmarkRotation4096-8    	       7	 788848699 ns/op	335545040 B/op	50331653 allocs/op
+BenchmarkRotation8192-8    	       2	3243539872 ns/op	1342178584 B/op	201326597 allocs/op
+BenchmarkTranslate-8       	    6219	    932677 ns/op	 4194449 B/op	       4 allocs/op
