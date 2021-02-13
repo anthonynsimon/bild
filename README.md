@@ -351,6 +351,16 @@ func main() {
 
 ![example](assets/img/translate.jpg) 
 
+## Draw
+
+    import "github.com/anthonynsimon/bild/draw"
+
+### Rectangle
+    result := draw.FillRectangle(img, NewRectangle(0, 0, 150, 250, color.White))
+
+![example](assets/img/draw_fill_rect.jpg)
+    
+
 
 ## Contribute
 
