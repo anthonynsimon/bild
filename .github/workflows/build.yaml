@@ -1,12 +1,10 @@
 name: build
 
 on: push
+
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
     - name: install Go
       uses: actions/setup-go@v2
