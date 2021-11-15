@@ -17,7 +17,7 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: ${{ matrix.go-version }}
-    - name: Checkout code
+    - name: checkout code
       uses: actions/checkout@v2
 
     - name: deps
@@ -28,5 +28,15 @@ jobs:
 
     - name: format code
       run: make fmt
-    - name: Test
+
+    - name: test
       run: make test
+
+    - name: test race conditions
+      run: make race
+
+    - name: coverage
+      run: make cover
+
+    - name: run benchmarks
+      run: make bench
