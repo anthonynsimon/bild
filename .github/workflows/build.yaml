@@ -24,16 +24,13 @@ jobs:
       run: make deps
     - name: install
       run: make install
-    # - name: format code
-    #   run: make fmt
     - name: test
       run: make test
     - name: test race conditions
       run: make race
     - name: coverage
       run: make cover
-    - name: run benchmarks
-      run: make bench
+
   fmt:
     runs-on: ubuntu-latest
     steps:
@@ -47,3 +44,11 @@ jobs:
       run: make deps
     - name: format code
       run: make fmt
+
+  bench:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v2
+    - name: run benchmarks
+      run: make bench
