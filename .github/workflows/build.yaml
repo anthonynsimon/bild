@@ -5,6 +5,9 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PKG: github.com/anthonynsimon/bild
+      VERSION: dev
     steps:
     - name: install Go
       uses: actions/setup-go@v2
