@@ -22,5 +22,5 @@ jobs:
     - name: format code
       run: go fmt ./...
     - name: Test
-      run: go test ./... -timeout 60s -ldflags "-X $(PKG)/cmd.Version=$(VERSION) -extldflags \"-static\"" -v
+      run: go test ./... -timeout 60s -ldflags "-X ${{env.PKG}}/cmd.Version=${{env.VERSION}} -extldflags \"-static\"" -v
     
