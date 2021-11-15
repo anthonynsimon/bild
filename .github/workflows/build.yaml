@@ -4,7 +4,10 @@ on: push
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ martrix.os }}
+    strategy:
+      matrix:
+        os: ubuntu-latest
     env:
       PKG: github.com/anthonynsimon/bild
       VERSION: dev
@@ -15,12 +18,16 @@ jobs:
         go-version: 1.17.x
     - name: Checkout code
       uses: actions/checkout@v2
+
     - name: deps
       run: go get ./...
+
     - name: install
       run: go install -ldflags "-X ${{env.PKG}}/cmd.Version=${{env.VERSION}}"
+
     - name: format code
       run: go fmt ./...
+
     - name: Test
       run: go test ./... -timeout 60s -ldflags "-X ${{env.PKG}}/cmd.Version=${{env.VERSION}} -extldflags \"-static\"" -v
     
