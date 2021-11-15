@@ -4,7 +4,7 @@ on: push
 
 jobs:
   build:
-    runs-on: ${{ martrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: ubuntu-latest
