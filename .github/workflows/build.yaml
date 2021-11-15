@@ -20,24 +20,28 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - name: checkout code
       uses: actions/checkout@v2
-
     - name: deps
       run: make deps
-
     - name: install
       run: make install
-
-    - name: format code
-      run: make fmt
-
+    # - name: format code
+    #   run: make fmt
     - name: test
       run: make test
-
     - name: test race conditions
       run: make race
-
     - name: coverage
       run: make cover
-
     - name: run benchmarks
       run: make bench
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+    - name: install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.12.x
+    - name: checkout code
+      uses: actions/checkout@v2
+    - name: format code
+      run: make fmt
