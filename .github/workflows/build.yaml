@@ -7,7 +7,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ ubuntu-latest, macos-latest ]
+        go-version: [1.16.x, 1.17.x]
     env:
       PKG: github.com/anthonynsimon/bild
       VERSION: dev
@@ -15,7 +16,7 @@ jobs:
     - name: install Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.17.x
+        go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v2
 
