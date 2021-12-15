@@ -4,7 +4,6 @@
 
 [![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/anthonynsimon/bild/blob/master/LICENSE)
 [![GoDoc](https://godoc.org/github.com/anthonynsimon/bild?status.svg)](https://godoc.org/github.com/anthonynsimon/bild)
-[![CircleCI](https://circleci.com/gh/anthonynsimon/bild/tree/master.svg?style=svg)](https://circleci.com/gh/anthonynsimon/bild/tree/master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/anthonynsimon/bild)](https://goreportcard.com/report/github.com/anthonynsimon/bild)
 
 A collection of parallel image processing algorithms in pure Go.
