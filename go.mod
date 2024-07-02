@@ -1,6 +1,6 @@
 module github.com/anthonynsimon/bild
 
-go 1.22
+go 1.21
 
 require (
 	github.com/spf13/cobra v0.0.5
