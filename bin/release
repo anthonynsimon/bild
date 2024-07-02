@@ -10,8 +10,8 @@ fi
 
 RELEASE=$1
 
-if ! [[ $RELEASE =~ ^([0-9.]+)$ ]]; then
-    echo "Release tag does not match expected pattern: MAJOR.MINOR.PATCH"
+if ! [[ $RELEASE =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+    echo "Release tag does not match expected pattern: vMAJOR.MINOR.PATCH"
     exit 1
 fi
 
