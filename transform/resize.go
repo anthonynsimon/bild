@@ -12,11 +12,9 @@ import (
 // Resize returns a new image with its size adjusted to the new width and height. The filter
 // param corresponds to the Resampling Filter to be used when interpolating between the sample points.
 //
-//
 // Usage example:
 //
-//		result := transform.Resize(img, 800, 600, transform.Linear)
-//
+//	result := transform.Resize(img, 800, 600, transform.Linear)
 func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RGBA {
 	if width <= 0 || height <= 0 || img.Bounds().Empty() {
 		return image.NewRGBA(image.Rect(0, 0, 0, 0))
@@ -42,8 +40,7 @@ func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RG
 //
 // Usage example:
 //
-//		result := transform.Crop(img, image.Rect(0, 0, 512, 256))
-//
+//	result := transform.Crop(img, image.Rect(0, 0, 512, 256))
 func Crop(img image.Image, rect image.Rectangle) *image.RGBA {
 	src := clone.AsShallowRGBA(img)
 	return clone.AsRGBA(src.SubImage(rect))

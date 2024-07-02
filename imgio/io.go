@@ -17,10 +17,10 @@ type Encoder func(io.Writer, image.Image) error
 // Open loads and decodes an image from a file and returns it.
 //
 // Usage example:
-//		// Decodes an image from a file with the given filename
-//		// returns an error if something went wrong
-//		img, err := Open("exampleName")
 //
+//	// Decodes an image from a file with the given filename
+//	// returns an error if something went wrong
+//	img, err := Open("exampleName")
 func Open(filename string) (image.Image, error) {
 	f, err := os.Open(filename)
 	if err != nil {
@@ -60,10 +60,10 @@ func BMPEncoder() Encoder {
 // Save creates a file and writes to it an image using the provided encoder.
 //
 // Usage example:
-//		// Save an image to a file in PNG format,
-//		// returns an error if something went wrong
-//		err := Save("exampleName", img, imgio.JPEGEncoder(100))
 //
+//	// Save an image to a file in PNG format,
+//	// returns an error if something went wrong
+//	err := Save("exampleName", img, imgio.JPEGEncoder(100))
 func Save(filename string, img image.Image, encoder Encoder) error {
 	// filename = strings.TrimSuffix(filename, filepath.Ext(filename))
 	f, err := os.Create(filename)

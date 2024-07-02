@@ -28,8 +28,7 @@ var (
 //
 // Usage example:
 //
-//      result := channel.ExtractMultiple(img, channel.Blue, channel.Alpha)
-//
+//	result := channel.ExtractMultiple(img, channel.Blue, channel.Alpha)
 func ExtractMultiple(img image.Image, channels ...Channel) *image.RGBA {
 	for _, c := range channels {
 		if c < 0 || 3 < c {
@@ -77,8 +76,7 @@ func ExtractMultiple(img image.Image, channels ...Channel) *image.RGBA {
 //
 // Usage example:
 //
-//      result := channel.Extract(img, channel.Alpha)
-//
+//	result := channel.Extract(img, channel.Alpha)
 func Extract(img image.Image, c Channel) *image.Gray {
 	if c < 0 || 3 < c {
 		panic(fmt.Sprintf("channel index '%v' out of bounds. Red: 0, Green: 1, Blue: 2, Alpha: 3", c))

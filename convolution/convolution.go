@@ -23,8 +23,7 @@ type Options struct {
 //
 // Usage example:
 //
-//		result := Convolve(img, kernel, &Options{Bias: 0, Wrap: false})
-//
+//	result := Convolve(img, kernel, &Options{Bias: 0, Wrap: false})
 func Convolve(img image.Image, k Matrix, o *Options) *image.RGBA {
 	// Config the convolution
 	bias := 0.0

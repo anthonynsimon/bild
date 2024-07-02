@@ -44,8 +44,7 @@ func AsShallowRGBA(src image.Image) *image.RGBA {
 //
 // Usage example:
 //
-//		result := Pad(img, 5,5, EdgeExtend)
-//
+//	result := Pad(img, 5,5, EdgeExtend)
 func Pad(src image.Image, padX, padY int, m PadMethod) *image.RGBA {
 	var result *image.RGBA
 

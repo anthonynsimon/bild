@@ -1,5 +1,7 @@
-/*Package transform provides basic image transformation functions, such as resizing, rotation and flipping.
-It includes a variety of resampling filters to handle interpolation in case that upsampling or downsampling is required.*/
+/*
+Package transform provides basic image transformation functions, such as resizing, rotation and flipping.
+It includes a variety of resampling filters to handle interpolation in case that upsampling or downsampling is required.
+*/
 package transform
 
 import "math"
