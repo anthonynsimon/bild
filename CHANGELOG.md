@@ -3,6 +3,10 @@
 ## next
 - 
 
+## 0.14.0
+- [PR-100:](https://github.com/anthonynsimon/bild/pull/101) Update dependencies
+- Update toolchain version
+
 ## 0.13.0
 - [PR-85:](https://github.com/anthonynsimon/bild/pull/85) Up to 20% less allocations and 90% less bytes allocated.
 - Minor documentation improvements.
