@@ -5,9 +5,9 @@
 
 ## 0.14.0
 - transform: reduce amount of calls to cos/sin by @sbinet in https://github.com/anthonynsimon/bild/pull/92
-- Bump golang.org/x/image from 0.0.0-20190703141733-d6a02ce849c9 to 0.5.0 by @dependabot in https://github.com/anthonynsimon/bild/pull/96
 - Fix: forward compat go mod by @anthonynsimon in https://github.com/anthonynsimon/bild/pull/102
 - Bump golang.org/x/image from 0.5.0 to 0.18.0 by @dependabot in https://github.com/anthonynsimon/bild/pull/101
+- Bump golang.org/x/image from 0.0.0-20190703141733-d6a02ce849c9 to 0.5.0 by @dependabot in https://github.com/anthonynsimon/bild/pull/96
 
 ## 0.13.0
 - [PR-85:](https://github.com/anthonynsimon/bild/pull/85) Up to 20% less allocations and 90% less bytes allocated.
