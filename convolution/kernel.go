@@ -85,7 +85,7 @@ func (k *Kernel) String() string {
 	stride := k.MaxX()
 	height := k.MaxY()
 	for y := 0; y < height; y++ {
-		result += fmt.Sprintf("\n")
+		result += "\n"
 		for x := 0; x < stride; x++ {
 			result += fmt.Sprintf("%-8.4f", k.At(x, y))
 		}
