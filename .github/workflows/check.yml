@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  check_build:
+  check:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
