@@ -188,7 +188,7 @@ checkLoop:
 			if fn(img.Pix[pos+0], img.Pix[pos+1], img.Pix[pos+2], img.Pix[pos+3]) != expected {
 				errorCount++
 				if errorCount > tolerance {
-					t.Errorf(failMsg)
+					t.Error(failMsg)
 					break checkLoop
 				}
 			}
