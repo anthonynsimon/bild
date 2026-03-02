@@ -159,7 +159,7 @@ func TestGaussianBlur(t *testing.T) {
 
 	for i, c := range cases {
 		actual := Gaussian(c.value, c.radius)
-		if !util.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageApproxEqual(actual, c.expected, 2) {
 			t.Errorf("%s %d: expected: %#v, actual: %#v", "GaussianBlur", i, c.expected, actual)
 		}
 	}

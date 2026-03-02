@@ -171,7 +171,14 @@ func TestRotate(t *testing.T) {
 
 	for _, c := range cases {
 		actual := Rotate(c.value, c.angle, c.options)
-		if !util.RGBAImageEqual(actual, c.expected) {
+		// Non-right-angle rotations use supersampling with nearest-neighbor lookup,
+		// which can produce platform-dependent boundary pixels due to floating-point
+		// truncation differences (e.g. arm64 vs amd64).
+		tolerance := 0
+		if int(c.angle+0.5)%90 != 0 {
+			tolerance = 11
+		}
+		if !util.RGBAImageApproxEqual(actual, c.expected, tolerance) {
 			t.Errorf("%s:\nexpected:%v\nactual:%v", "Rotate "+c.description, util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}

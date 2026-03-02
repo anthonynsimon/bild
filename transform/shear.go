@@ -21,8 +21,11 @@ func ShearH(img image.Image, angle float64) *image.RGBA {
 
 	// Calculate shear factor
 	kx := math.Tan(angle * (math.Pi / 180))
+	if r := math.Round(kx); math.Abs(kx-r) < 1e-10 {
+		kx = r
+	}
 
-	dstW, dstH := srcW+int(float64(srcH)*math.Abs(kx)), srcH
+	dstW, dstH := srcW+int(math.Round(float64(srcH)*math.Abs(kx))), srcH
 	dst := image.NewRGBA(image.Rect(0, 0, dstW, dstH))
 
 	pivotX := float64(dstW) / 2
@@ -81,8 +84,11 @@ func ShearV(img image.Image, angle float64) *image.RGBA {
 
 	// Calculate shear factor
 	ky := math.Tan(angle * (math.Pi / 180))
+	if r := math.Round(ky); math.Abs(ky-r) < 1e-10 {
+		ky = r
+	}
 
-	dstW, dstH := srcW, srcH+int(float64(srcW)*math.Abs(ky))
+	dstW, dstH := srcW, srcH+int(math.Round(float64(srcW)*math.Abs(ky)))
 	dst := image.NewRGBA(image.Rect(0, 0, dstW, dstH))
 
 	pivotX := float64(dstW) / 2

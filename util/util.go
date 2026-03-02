@@ -99,6 +99,12 @@ func GrayImageEqual(a, b *image.Gray) bool {
 // RGBAImageEqual returns true if the parameter images a and b match
 // or false if otherwise.
 func RGBAImageEqual(a, b *image.RGBA) bool {
+	return RGBAImageApproxEqual(a, b, 0)
+}
+
+// RGBAImageApproxEqual returns true if all pixel channel values in images a and b
+// differ by at most the given tolerance, or false otherwise.
+func RGBAImageApproxEqual(a, b *image.RGBA, tolerance int) bool {
 	if !a.Rect.Eq(b.Rect) {
 		return false
 	}
@@ -106,17 +112,11 @@ func RGBAImageEqual(a, b *image.RGBA) bool {
 	for y := 0; y < a.Bounds().Dy(); y++ {
 		for x := 0; x < a.Bounds().Dx(); x++ {
 			pos := y*a.Stride + x*4
-			if a.Pix[pos+0] != b.Pix[pos+0] {
-				return false
-			}
-			if a.Pix[pos+1] != b.Pix[pos+1] {
-				return false
-			}
-			if a.Pix[pos+2] != b.Pix[pos+2] {
-				return false
-			}
-			if a.Pix[pos+3] != b.Pix[pos+3] {
-				return false
+			for c := 0; c < 4; c++ {
+				d := int(a.Pix[pos+c]) - int(b.Pix[pos+c])
+				if d < -tolerance || d > tolerance {
+					return false
+				}
 			}
 		}
 	}

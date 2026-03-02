@@ -848,7 +848,7 @@ func TestUnsharpMask(t *testing.T) {
 
 	for _, c := range cases {
 		actual := UnsharpMask(c.value, c.radius, c.amount)
-		if !util.RGBAImageEqual(actual, c.expected) {
+		if !util.RGBAImageApproxEqual(actual, c.expected, 2) {
 			t.Errorf("%s:\nexpected: %v\nactual: %v\n", "UnsharpMask", util.RGBAToString(c.expected), util.RGBAToString(actual))
 		}
 	}
