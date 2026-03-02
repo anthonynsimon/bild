@@ -1,6 +1,7 @@
 # Changelog
 
 ## next
+- Add CLI support for all transform commands
 - New feature transform.Zoom with CLI support (`bild transform zoom`)
 - Support Go versions from 1.21 to 1.26
 - Fix flaky tests on arm64

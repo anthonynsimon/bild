@@ -61,6 +61,21 @@ For example, to apply a median effect with a radius of 1.5 on the image `input.p
 bild effect median --radius 1.5 input.png output.png
 ```
 
+To resize an image to 800x600 using the lanczos filter:
+```
+bild transform resize --width 800 --height 600 --filter lanczos input.png output.png
+```
+
+To rotate an image 90 degrees clockwise, expanding bounds to fit:
+```
+bild transform rotate --angle 90 --resize-bounds input.png output.png
+```
+
+To crop an image to a specific region:
+```
+bild transform crop --rect 0x0+512x256 input.png output.png
+```
+
 
 ## Install package
 
