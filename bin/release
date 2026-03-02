@@ -16,7 +16,7 @@ if ! [[ $RELEASE =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
 fi
 
 if ! [[ -z $(git status -s) ]]; then
-    echo "You have uncommited or staged changes on git, please commit them or stash them"
+    echo "You have uncommitted or staged changes on git, please commit them or stash them"
     exit 1
 fi
 
@@ -30,4 +30,4 @@ VERSION=$RELEASE make release
 echo "Release binaries located in ./dist"
 
 git push origin master --follow-tags
-echo "Successfully pushed release $RELEASE to upstream, you might still need to uplaod the release assets"
+echo "Successfully pushed release $RELEASE to upstream, you might still need to upload the release assets"

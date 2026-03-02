@@ -185,7 +185,7 @@ func TestGrayscale(t *testing.T) {
 	}
 }
 
-func TestGrayscaleWithWeigths(t *testing.T) {
+func TestGrayscaleWithWeights(t *testing.T) {
 	cases := []struct {
 		value    image.Image
 		expected *image.RGBA
@@ -239,7 +239,7 @@ func TestGrayscaleWithWeigths(t *testing.T) {
 	for _, c := range cases {
 		actual := GrayscaleWithWeights(c.value, 0.5, 0.0, 0.5)
 		if !util.RGBAImageEqual(actual, c.expected) {
-			t.Errorf("%s: expected: %#v, actual: %#v", "GrayscaleWithWeigths", c.expected, actual)
+			t.Errorf("%s: expected: %#v, actual: %#v", "GrayscaleWithWeights", c.expected, actual)
 		}
 	}
 }

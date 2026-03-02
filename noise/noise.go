@@ -44,7 +44,7 @@ type Options struct {
 	Monochrome bool
 }
 
-// GeneratePerlin outputs the perlin image of given height and width and freqency
+// GeneratePerlin outputs the perlin image of given height and width and frequency
 func GeneratePerlin(width, height int, frequency float64) *image.RGBA {
 	alpha, beta, n := 2., 2., 3
 
