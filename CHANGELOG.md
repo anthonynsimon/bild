@@ -2,6 +2,7 @@
 
 ## next
 - Support Go versions from 1.21 to 1.26
+- Fix flaky tests on arm64
 - Update deps
 
 ## 0.14.0
