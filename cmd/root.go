@@ -23,6 +23,7 @@ func init() {
 	rootCmd.AddCommand(createHistogram())
 	rootCmd.AddCommand(createChannel())
 	rootCmd.AddCommand(createEffect())
+	rootCmd.AddCommand(createTransform())
 }
 
 // Execute starts the cli's root command

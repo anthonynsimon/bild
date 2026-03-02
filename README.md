@@ -47,6 +47,7 @@ Available Commands:
   imgio       i/o operations on images
   noise       noise generators
   segment     segment an image using the specified method
+  transform   apply geometric transformations to images
 
 Flags:
   -h, --help      help for bild
@@ -348,7 +349,17 @@ func main() {
 ### Translate
     result := transform.Translate(img, 80, 0)
 
-![example](assets/img/translate.jpg) 
+![example](assets/img/translate.jpg)
+
+### Zoom
+    // Zoom in 2x, preserving the image size (out-of-bounds pixels are cropped)
+    result := transform.Zoom(img, 2.0, nil)
+
+    // Zoom in 2x, expanding the canvas to fit the full zoomed image
+    result := transform.Zoom(img, 2.0, &transform.ZoomOptions{ResizeBounds: true})
+
+    // Zoom with a custom pivot point
+    result := transform.Zoom(img, 2.0, &transform.ZoomOptions{Pivot: &image.Point{0, 0}})
 
 
 ## Contribute
