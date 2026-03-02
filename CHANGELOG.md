@@ -1,7 +1,8 @@
 # Changelog
 
 ## next
-- 
+- Support Go versions from 1.21 to 1.26
+- Update deps
 
 ## 0.14.0
 - transform: reduce amount of calls to cos/sin by @sbinet in https://github.com/anthonynsimon/bild/pull/92
