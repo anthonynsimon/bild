@@ -28,19 +28,15 @@ bench:
 race:
 	go test ./... -v -race -timeout 15s
 
-release: release-x64 release-mac
+release: release-linux release-darwin
 
-ensure-dist:
+ensure-dist: deps
 	mkdir -p dist
 
-release-bin: ensure-dist
-	GOOS=linux GOARCH=amd64 go build -o dist/bild $(LDFLAGS)
+release-linux: ensure-dist
+	GOOS=linux GOARCH=amd64 go build -o dist/bild $(LDFLAGS) && cd dist && tar -czf bild_linux_amd64.tar.gz bild && rm bild
+	GOOS=linux GOARCH=arm64 go build -o dist/bild $(LDFLAGS) && cd dist && tar -czf bild_linux_arm64.tar.gz bild && rm bild
 
-release-x64: ensure-dist
-	GOOS=linux GOARCH=amd64 go build -o dist/bild $(LDFLAGS) && cd dist && tar -czf bild_$(VERSION)_x64.tar.gz bild && rm bild
-
-release-x86: ensure-dist
-	GOOS=linux GOARCH=386 go build -o dist/bild $(LDFLAGS) && cd dist && tar -czf bild_$(VERSION)_x86.tar.gz bild && rm bild
-
-release-mac: ensure-dist
-	go build $(MAC_LDFLAGS) -o dist/bild && cd dist && tar -czf bild_$(VERSION)_mac.tar.gz bild && rm bild
+release-darwin: ensure-dist
+	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o dist/bild && cd dist && tar -czf bild_darwin_amd64.tar.gz bild && rm bild
+	GOOS=darwin GOARCH=arm64 go build $(LDFLAGS) -o dist/bild && cd dist && tar -czf bild_darwin_arm64.tar.gz bild && rm bild

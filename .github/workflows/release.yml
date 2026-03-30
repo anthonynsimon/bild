@@ -1,0 +1,38 @@
+name: Release
+
+# on tag push
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.26.0'
+
+    - name: Test
+      run: make test
+
+    - name: Build
+      run: VERSION=${{  github.ref_name }} make release
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        draft: true
+        files: |
+          dist/bild_darwin_amd64.tar.gz
+          dist/bild_darwin_arm64.tar.gz
+          dist/bild_linux_amd64.tar.gz
+          dist/bild_linux_arm64.tar.gz
