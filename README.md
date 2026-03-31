@@ -376,6 +376,16 @@ func main() {
     // Zoom with a custom pivot point
     result := transform.Zoom(img, 2.0, &transform.ZoomOptions{Pivot: &image.Point{0, 0}})
 
+## Draw
+
+    import "github.com/anthonynsimon/bild/draw"
+
+### Rectangle
+    result := draw.FillRectangle(img, NewRectangle(0, 0, 150, 250, color.White))
+
+![example](assets/img/draw_fill_rect.jpg)
+    
+
 
 ## Contribute
 
