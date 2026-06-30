@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/HugoSmits86/nativewebp"
 	"golang.org/x/image/bmp"
 )
 
@@ -56,6 +57,14 @@ func BMPEncoder() Encoder {
 		return bmp.Encode(w, img)
 	}
 }
+
+// WEBPEncoder returns an encoder to WEBP
+func WEBPEncoder(o *nativewebp.Options) Encoder {
+	return func(w io.Writer, img image.Image) error {
+		return  nativewebp.Encode(w, img, o)
+	}
+}
+
 
 // Save creates a file and writes to it an image using the provided encoder.
 //
