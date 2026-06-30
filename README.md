@@ -76,6 +76,11 @@ To crop an image to a specific region:
 bild transform crop --rect 0x0+512x256 input.png output.png
 ```
 
+To convert an image to another format (the encoder is chosen from the output extension):
+```
+bild imgio encode input.png output.webp
+```
+
 
 ## Install package
 
@@ -112,6 +117,17 @@ func main() {
     }
 }
 ```
+
+## Supported formats
+
+`imgio.Open` decodes PNG, JPEG, BMP and WebP images. The following encoders are available:
+
+- `imgio.PNGEncoder()`
+- `imgio.JPEGEncoder(quality)`
+- `imgio.BMPEncoder()`
+- `imgio.WEBPEncoder(options)` — pass `nil` for defaults
+
+The CLI selects the encoder from the output file extension (`.png`, `.jpg`/`.jpeg`, `.bmp`, `.webp`).
 
 # Output examples
 ## Adjustment

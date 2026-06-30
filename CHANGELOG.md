@@ -1,7 +1,7 @@
 # Changelog
 
-## next
--
+## 0.16.0
+- Add WebP encoding and decoding support via `imgio.WEBPEncoder` and `.webp` CLI output by @mibar-me in https://github.com/anthonynsimon/bild/pull/112
 
 ## 0.15.0
 - Add CLI support for all transform commands
