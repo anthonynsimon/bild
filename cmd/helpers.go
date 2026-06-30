@@ -15,6 +15,7 @@ import (
 var jpgExtensions = []string{".jpg", ".jpeg"}
 var pngExtensions = []string{".png"}
 var bmpExtensions = []string{".bmp"}
+var webpExtensions = []string{".webp"}
 
 var (
 	// ErrWrongSize is thrown when the provided size string does not match the expected form.
@@ -48,6 +49,12 @@ func resolveEncoder(outputfile string, defaultEncoding imgio.Encoder) imgio.Enco
 	for _, ext := range bmpExtensions {
 		if strings.HasSuffix(lower, ext) {
 			return imgio.BMPEncoder()
+		}
+	}
+
+	for _, ext := range webpExtensions {
+		if strings.HasSuffix(lower, ext) {
+			return imgio.WEBPEncoder(nil)
 		}
 	}
 
