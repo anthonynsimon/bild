@@ -61,10 +61,9 @@ func BMPEncoder() Encoder {
 // WEBPEncoder returns an encoder to WEBP
 func WEBPEncoder(o *nativewebp.Options) Encoder {
 	return func(w io.Writer, img image.Image) error {
-		return  nativewebp.Encode(w, img, o)
+		return nativewebp.Encode(w, img, o)
 	}
 }
-
 
 // Save creates a file and writes to it an image using the provided encoder.
 //
