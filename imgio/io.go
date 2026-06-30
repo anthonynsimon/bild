@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/HugoSmits86/nativewebp"
 	"golang.org/x/image/bmp"
 )
 
@@ -54,6 +55,13 @@ func PNGEncoder() Encoder {
 func BMPEncoder() Encoder {
 	return func(w io.Writer, img image.Image) error {
 		return bmp.Encode(w, img)
+	}
+}
+
+// WEBPEncoder returns an encoder to WEBP
+func WEBPEncoder(o *nativewebp.Options) Encoder {
+	return func(w io.Writer, img image.Image) error {
+		return nativewebp.Encode(w, img, o)
 	}
 }
 
