@@ -5,7 +5,7 @@ go 1.26
 require (
 	github.com/HugoSmits86/nativewebp v1.3.0
 	github.com/spf13/cobra v1.10.2
-	golang.org/x/image v0.38.0
+	golang.org/x/image v0.41.0
 )
 
 require (
