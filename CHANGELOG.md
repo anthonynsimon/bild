@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.16.1
+- Bump golang.org/x/image from 0.38.0 to 0.41.0 by @dependabot in https://github.com/anthonynsimon/bild/pull/113
+
 ## 0.16.0
 - Add WebP encoding and decoding support via `imgio.WEBPEncoder` and `.webp` CLI output by @mibar-me in https://github.com/anthonynsimon/bild/pull/112
 
