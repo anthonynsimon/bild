@@ -14,7 +14,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-latest
+          - macos-15
         go-version:
           - '1.21'
           - '1.22'
@@ -24,12 +24,14 @@ jobs:
           - '1.26'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ matrix.go-version }}
+          # Two deps only; the matrix shares one cache key and the restores race.
+          cache: false
 
       - name: Build
         run: make build
