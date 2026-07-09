@@ -1,5 +1,8 @@
 # Changelog
 
+## Next
+- Bump minimum supported Go version to 1.25
+
 ## 0.16.1
 - Bump golang.org/x/image from 0.38.0 to 0.41.0 by @dependabot in https://github.com/anthonynsimon/bild/pull/113
 

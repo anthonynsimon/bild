@@ -1,6 +1,6 @@
 module github.com/anthonynsimon/bild
 
-go 1.26
+go 1.25.0
 
 require (
 	github.com/HugoSmits86/nativewebp v1.3.0

@@ -4,7 +4,7 @@ LDFLAGS = -ldflags "-X $(PKG)/cmd.Version=$(VERSION) -extldflags \"-static\""
 MAC_LDFLAGS = -ldflags "-X $(PKG)/cmd.Version=$(VERSION)"
 
 deps:
-	go get ./...
+	go mod download
 
 build: ensure-dist
 	go build $(MAC_LDFLAGS) -o dist/ ./...

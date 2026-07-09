@@ -84,7 +84,7 @@ bild imgio encode input.png output.webp
 
 ## Install package
 
-bild requires Go version 1.11 or greater.
+bild requires Go version 1.25 or greater.
 
 ```bash
 go get github.com/anthonynsimon/bild/...

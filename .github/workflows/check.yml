@@ -15,11 +15,8 @@ jobs:
         os:
           - ubuntu-latest
           - macos-15
+        # 1.25 is the floor imposed by golang.org/x/image; keep in sync with go.mod.
         go-version:
-          - '1.21'
-          - '1.22'
-          - '1.23'
-          - '1.24'
           - '1.25'
           - '1.26'
 
