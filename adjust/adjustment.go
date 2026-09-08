@@ -72,7 +72,8 @@ func Contrast(src image.Image, change float64) *image.RGBA {
 func Hue(img image.Image, change int) *image.RGBA {
 	fn := func(c color.RGBA) color.RGBA {
 		h, s, l := util.RGBToHSL(c)
-		h = float64((int(h) + change) % 360)
+		// Go's % keeps the sign of the dividend, so a negative rotation needs re-normalizing
+		h = float64(((int(h)+change)%360 + 360) % 360)
 		outColor := util.HSLToRGB(h, s, l)
 		outColor.A = c.A
 		return outColor
