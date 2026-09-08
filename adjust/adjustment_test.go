@@ -539,3 +539,33 @@ func TestHue(t *testing.T) {
 		}
 	}
 }
+
+func TestHueFullRotation(t *testing.T) {
+	// Desaturated samples: a fully saturated pixel hides the wrap-around error
+	// because the out-of-range channel clamps back onto the correct value.
+	src := &image.RGBA{
+		Rect:   image.Rect(0, 0, 2, 2),
+		Stride: 8,
+		Pix: []uint8{
+			0xC0, 0x80, 0x40, 0xFF, 0x80, 0x40, 0xC0, 0xFF,
+			0x90, 0x70, 0x50, 0x80, 0x40, 0xC0, 0x80, 0xFF,
+		},
+	}
+
+	cases := []struct {
+		name   string
+		change int
+	}{
+		{"positive", 360},
+		{"negative", -360},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			actual := Hue(src, c.change)
+			if !util.RGBAImageEqual(actual, src) {
+				t.Errorf("Hue(src, %d):\nexpected: %v\nactual: %v", c.change, util.RGBAToString(src), util.RGBAToString(actual))
+			}
+		})
+	}
+}
