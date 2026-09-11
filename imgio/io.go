@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/HugoSmits86/nativewebp"
+	"github.com/gen2brain/h265/heic"
 	"golang.org/x/image/bmp"
 )
 
@@ -62,6 +63,17 @@ func BMPEncoder() Encoder {
 func WEBPEncoder(o *nativewebp.Options) Encoder {
 	return func(w io.Writer, img image.Image) error {
 		return nativewebp.Encode(w, img, o)
+	}
+}
+
+// HEICEncoder returns an encoder to HEIC. Pass nil to encode with the
+// default options, which are lossy 4:2:0 at 8 bits.
+func HEICEncoder(o *heic.EncodeOptions) Encoder {
+	return func(w io.Writer, img image.Image) error {
+		if o == nil {
+			return heic.Encode(w, img)
+		}
+		return heic.Encode(w, img, *o)
 	}
 }
 

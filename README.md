@@ -84,7 +84,7 @@ bild imgio encode input.png output.webp
 
 ## Install package
 
-bild requires Go version 1.25 or greater.
+bild requires Go version 1.26 or greater.
 
 ```bash
 go get github.com/anthonynsimon/bild/...
@@ -120,14 +120,19 @@ func main() {
 
 ## Supported formats
 
-`imgio.Open` decodes PNG, JPEG, BMP and WebP images. The following encoders are available:
+`imgio.Open` decodes PNG, JPEG, BMP, WebP and HEIC/HEIF images. The following encoders are available:
 
 - `imgio.PNGEncoder()`
 - `imgio.JPEGEncoder(quality)`
 - `imgio.BMPEncoder()`
 - `imgio.WEBPEncoder(options)` — pass `nil` for defaults
+- `imgio.HEICEncoder(options)` — pass `nil` for defaults
 
-The CLI selects the encoder from the output file extension (`.png`, `.jpg`/`.jpeg`, `.bmp`, `.webp`).
+The CLI selects the encoder from the output file extension (`.png`, `.jpg`/`.jpeg`, `.bmp`, `.webp`, `.heic`/`.heif`).
+
+HEIC support is pure Go and adds no transitive dependencies, but note that HEVC is
+covered by patents; distributing software that decodes or encodes it may require a
+licence from the patent holders.
 
 # Output examples
 ## Adjustment
