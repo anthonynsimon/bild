@@ -1,9 +1,10 @@
 module github.com/anthonynsimon/bild
 
-go 1.25.0
+go 1.26.4
 
 require (
 	github.com/HugoSmits86/nativewebp v1.3.0
+	github.com/gen2brain/h265 v0.2.2
 	github.com/spf13/cobra v1.10.2
 	golang.org/x/image v0.45.0
 )

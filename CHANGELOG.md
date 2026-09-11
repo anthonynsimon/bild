@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+- Add HEIC/HEIF decoding and encoding via `imgio.HEICEncoder` and `.heic`/`.heif` CLI output, backed by the pure Go `github.com/gen2brain/h265` codec
+- Bump minimum supported Go version to 1.26
+
 ## 0.17.1
 - Fix transparent pixels when resizing with the Box filter by @youdie006 in https://github.com/anthonynsimon/bild/pull/115
 - Bump golang.org/x/image from 0.44.0 to 0.45.0 to address CVE-2026-46603 in the VP8L decoder, reported in https://github.com/anthonynsimon/bild/pull/116
