@@ -29,6 +29,7 @@ type RotationOptions struct {
 //	result := transform.Rotate(img, 90.0, &transform.RotationOptions{ResizeBounds: true, Pivot: &image.Point{0, 0}})
 func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGBA {
 	src := clone.AsShallowRGBA(img)
+	srcOrigin := src.Bounds().Min
 	srcW, srcH := src.Bounds().Dx(), src.Bounds().Dy()
 
 	supersample := false
@@ -58,6 +59,7 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 		// Supersample, currently hard set to 2x
 		srcW, srcH = srcW*2, srcH*2
 		src = Resize(src, srcW, srcH, NearestNeighbor)
+		srcOrigin = src.Bounds().Min
 		pivotX, pivotY = pivotX*2, pivotY*2
 	}
 
@@ -107,7 +109,7 @@ func Rotate(img image.Image, angle float64, options *RotationOptions) *image.RGB
 					continue
 				}
 
-				red, green, blue, alpha := src.At(ix, iy).RGBA()
+				red, green, blue, alpha := src.At(ix+srcOrigin.X, iy+srcOrigin.Y).RGBA()
 
 				dst.Set(x+offsetX, y+offsetY, color.RGBA64{
 					R: uint16(red),

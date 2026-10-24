@@ -184,6 +184,38 @@ func TestRotate(t *testing.T) {
 	}
 }
 
+func TestRotateNonZeroOrigin(t *testing.T) {
+	src := &image.RGBA{
+		Rect:   image.Rect(1, 1, 3, 3),
+		Stride: 8,
+		Pix: []uint8{
+			0xFF, 0x00, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF,
+			0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0xFF,
+		},
+	}
+	rebased := &image.RGBA{
+		Rect:   image.Rect(0, 0, 2, 2),
+		Stride: 8,
+		Pix:    append([]uint8(nil), src.Pix...),
+	}
+
+	cases := []struct {
+		angle   float64
+		options *RotationOptions
+	}{
+		{angle: 90},
+		{angle: 45},
+		{angle: 45, options: &RotationOptions{ResizeBounds: true}},
+	}
+	for _, c := range cases {
+		actual := Rotate(src, c.angle, c.options)
+		expected := Rotate(rebased, c.angle, c.options)
+		if !util.RGBAImageEqual(actual, expected) {
+			t.Errorf("rotation by %g degrees differs for non-zero-origin image:\nexpected:%v\nactual:%v", c.angle, util.RGBAToString(expected), util.RGBAToString(actual))
+		}
+	}
+}
+
 func TestFlipH(t *testing.T) {
 	cases := []struct {
 		value    image.Image
