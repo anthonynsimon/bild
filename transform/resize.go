@@ -2,6 +2,7 @@ package transform
 
 import (
 	"image"
+	"image/draw"
 	"math"
 
 	"github.com/anthonynsimon/bild/clone"
@@ -42,8 +43,10 @@ func Resize(img image.Image, width, height int, filter ResampleFilter) *image.RG
 //
 //	result := transform.Crop(img, image.Rect(0, 0, 512, 256))
 func Crop(img image.Image, rect image.Rectangle) *image.RGBA {
-	src := clone.AsShallowRGBA(img)
-	return clone.AsRGBA(src.SubImage(rect))
+	rect = rect.Intersect(img.Bounds())
+	dst := image.NewRGBA(rect)
+	draw.Draw(dst, rect, img, rect.Min, draw.Src)
+	return dst
 }
 
 func resampleHorizontal(src *image.RGBA, width int, filter ResampleFilter) *image.RGBA {
